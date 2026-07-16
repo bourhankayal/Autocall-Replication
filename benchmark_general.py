@@ -52,13 +52,15 @@ def build_naive_vanilla_basis(spot0: float,
     strike_step: float = 5.0,
     strike_min_mult: float = 0.70,strike_max_mult: float = 1.30,
     family: str = "calls") -> list[VanillaProduct]:
-    """
-    Construit un panier naïf de vanilles.
+    """Construit un panier naïf de vanilles.
     family:
         - "calls"
         - "calls_puts"
-        - "full"  -> calls + puts + binaires
-    """
+        - "full"  -> calls + puts + binaires"""
+    valid_families = {"calls", "calls_puts", "full"}
+    if family not in valid_families:
+        raise ValueError(f"family='{family}' inconnu. Choisir parmi {sorted(valid_families)}.")
+
     valuation_date = pd.Timestamp(valuation_date)
     maturity_date = pd.Timestamp(maturity_date)
 
@@ -67,16 +69,26 @@ def build_naive_vanilla_basis(spot0: float,
     if product is not None:
         obs_dates = [pd.Timestamp(d) for d in product.build_observation_dates(valuation_date)]
         obs_dates = [d for d in obs_dates if d <= maturity_date]
-        maturities = sorted(set(maturities + obs_dates))
+        maturities = sorted(set(maturities + [valuation_date + pd.DateOffset(months=m) for m in range(1, 13)]))
+        maturities = [d for d in maturities if d <= maturity_date]
     
     strike_min = strike_step * np.floor(strike_min_mult * spot0 / strike_step)
     strike_max = strike_step * np.ceil(strike_max_mult * spot0 / strike_step)
     strikes = np.arange(strike_min, strike_max + 0.5 * strike_step, strike_step, dtype=float)
 
-    basis: list[VanillaProduct] = []
+    # The cash leg is the product's funding base, not one extra feature per
+    # option maturity. Matching notionals also makes its weight interpretable.
+    cash_notional = float(product.notional) if product is not None else float(spot0)
+    basis: list[VanillaProduct] = [
+        Cash(
+            name=f"CASH_{maturity_date.strftime('%Y%m%d')}",
+            strike=0.0,
+            maturity_date=maturity_date,
+            notional=cash_notional,
+        )
+    ]
     for T in maturities:
         tag = T.strftime("%Y%m%d")
-        basis.append(Cash(name=f"CASH_{tag}", strike=0.0, maturity_date=T, notional=1.0))
         for k in strikes:
             k = float(k)
             basis.append(EuropeanCall(name=f"C_{tag}_{k:.2f}", strike=k, maturity_date=T, notional=1.0))
@@ -93,23 +105,21 @@ def build_naive_vanilla_basis(spot0: float,
 
 
 
-
-
-
-
-
 def _smooth_abs(x: np.ndarray, eps: float = 1e-12) -> np.ndarray:
+    """Approximation lisse de |x|"""
     return np.sqrt(x * x + eps)
 
 def _smooth_abs_grad(x: np.ndarray, eps: float = 1e-12) -> np.ndarray:
+    """d/dx sqrt(x^2 + eps)"""
     return x / np.sqrt(x * x + eps)
 
 def _smooth_l12(x: np.ndarray, eps: float = 1e-12) -> np.ndarray:
+    """Approximation lisse de |x|^(1/2)"""
     # Approximation lisse de |x|^(1/2)
     return np.power(x * x + eps, 0.25)
 
 def _smooth_l12_grad(x: np.ndarray, eps: float = 1e-12) -> np.ndarray:
-    # d/dx (x^2 + eps)^(1/4)
+    """d/dx (x^2 + eps)^(1/4)"""
     return 0.5 * x * np.power(x * x + eps, -0.75)
 
 
@@ -121,7 +131,7 @@ def fit_linear(A: np.ndarray,b: np.ndarray,penalty: str = "l2",alpha: float = 1e
         - "none"        : moindres carrés
         - "l2"          : ridge
         - "l1"          : lasso lisse (approximation)
-        - "elastic_net" : mélange L1/L2
+        - "elastic_net" : mélange L1/L2, penalisation = L1_ratio * L1 + (1-L1_ratio) * L2
         - "huber"       : perte Huber sur les résidus, avec L2 sur les poids
         - "l1_2"        : pénalité |w|^(1/2) (approximation lisse)
 
@@ -131,32 +141,29 @@ def fit_linear(A: np.ndarray,b: np.ndarray,penalty: str = "l2",alpha: float = 1e
     """
     A = np.asarray(A, dtype=float)
     b = np.asarray(b, dtype=float).reshape(-1)
-    b_mean = float(b.mean()) 
-    b_fit = b - b_mean 
-    
     n_obs, n_features = A.shape
 
     if A.ndim != 2:                 raise ValueError("A doit être une matrice 2D.")
     if A.shape[0] != b.shape[0]:    raise ValueError("A et b doivent avoir le même nombre de lignes.")
 
-    # Cas simple : moindres carrés
+    # Cas simple : moindres carrés, solution analytique sans pénalisation
     if penalty == "none":
-        w, *_ = np.linalg.lstsq(A, b_fit, rcond=None)
+        w, *_ = np.linalg.lstsq(A, b, rcond=None)
         return w
 
     # Cas fermé : ridge
-    if penalty == "l2":
+    if penalty == "l2":         # ridge : approximation lisse de L2
         ATA = A.T @ A
         ATb = A.T @ b
-        reg = alpha * np.eye(n_features)
+        reg = alpha * np.eye(n_features)                    # On ajoute alpha sur la diagonale pour régulariser, plus alpha est grand, plus on pénalise les poids
         reg[0, 0] = 0.0  # CASH / intercept non pénalisé
         return np.linalg.solve(ATA + reg, ATb)
 
     # Point de départ : moindres carrés
-    w0, *_ = np.linalg.lstsq(A, b_fit, rcond=None)
+    w0, *_ = np.linalg.lstsq(A, b, rcond=None)
     
     def objective_and_grad(w: np.ndarray):
-        r = A @ w - b_fit
+        r = A @ w - b
         # Terme d'ajustement
         loss = 0.5 * np.mean(r * r)
         grad = (A.T @ r) / n_obs
@@ -165,12 +172,12 @@ def fit_linear(A: np.ndarray,b: np.ndarray,penalty: str = "l2",alpha: float = 1e
         w_reg = w.copy()
         w_reg[0] = 0.0
 
-        if penalty == "l1":
+        if penalty == "l1":             # lasso lisse (approximation)
             pen = alpha * np.sum(_smooth_abs(w_reg, eps=eps))
             grad_pen = alpha * _smooth_abs_grad(w_reg, eps=eps)
             grad_pen[0] = 0.0
 
-        elif penalty == "elastic_net":
+        elif penalty == "elastic_net":  # mélange L1/L2    
             l1_part = np.sum(_smooth_abs(w_reg, eps=eps))
             l2_part = 0.5 * np.sum(w_reg * w_reg)
             pen = alpha * (l1_ratio * l1_part + (1.0 - l1_ratio) * l2_part)

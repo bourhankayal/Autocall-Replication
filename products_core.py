@@ -279,6 +279,7 @@ class BinaryPut(VanillaProduct):
     
     from dataclasses import dataclass
 
+
 @dataclass
 class Cash(VanillaProduct):
     def payoff(self, spot_T: float) -> float:

@@ -80,9 +80,9 @@ def run_naive_benchmark_price(
     rate: float,dividend_yield: float,
     vol: float,
     family: str,
+    penalty: str,
     n_spots: int = 15,n_paths: int = 3000,
     spot_min_mult: float = 0.70, spot_max_mult: float = 1.30,
-    penalty: str = "l2", alpha: float = 1e-8,
     train_frac: float = 0.7, seed: int = 42) -> dict[str, object]:    
     """Pipeline complet pour entraîner un benchmark naïf sur un autocall.
     target = prix simulé de l'autocall sur une grille (dates x spots)
@@ -90,7 +90,7 @@ def run_naive_benchmark_price(
     
     valuation_date = pd.Timestamp(valuation_date)
     maturity_date = pd.Timestamp(maturity_date)
-    dates, spots = build_autocall_training_grid_axes(spot0=spot0,valuation_date=valuation_date,maturity_date=maturity_date,n_spots=n_spots,spot_min_mult=spot_min_mult, spot_max_mult=spot_max_mult,include_call_dates=True,product=product,)
+    dates, spots = build_autocall_training_grid_axes(spot0=spot0,valuation_date=valuation_date,maturity_date=maturity_date,n_spots=n_spots,spot_min_mult=spot_min_mult, spot_max_mult=spot_max_mult,include_call_dates=True,product=product)
     
     target_tensor = price_autocall_on_tensor_bs_mc(product=product, dates = dates, spots = spots, maturity_date=maturity_date, rate=rate, dividend_yield=dividend_yield, vol=vol, n_paths=n_paths, seed=seed)
     y = target_tensor.reshape(-1)           # On a besoin d'un vecteur 1D pour la régression, donc on aplati le tableau 2D (dates x spots) en un vecteur 1D.
@@ -106,7 +106,7 @@ def run_naive_benchmark_price(
     A_train, y_train = A[idx_train], y[idx_train]
     A_test, y_test = A[idx_test], y[idx_test]
 
-    w = fit_linear(A_train, y_train, penalty=penalty, alpha=alpha)
+    w = fit_linear(A_train, y_train, penalty=penalty)
     pred_train = A_train @ w
     pred_test = A_test @ w
 

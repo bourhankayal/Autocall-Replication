@@ -90,7 +90,7 @@ def run_naive_benchmark_payoff(
     penalty: str = "l2", alpha: float = 1e-8,
     n_spots: int = 15,n_paths: int = 3000,
     spot_min_mult: float = 0.70,spot_max_mult: float = 1.30,
-    l2: float = 1e-8,train_frac: float = 0.7,seed: int = 42) -> dict[str, object]:
+    train_frac: float = 0.7,seed: int = 42) -> dict[str, object]:
     valuation_date = pd.Timestamp(valuation_date)
     maturity_date = pd.Timestamp(maturity_date)
 
@@ -111,7 +111,7 @@ def run_naive_benchmark_payoff(
     A_train, y_train = A[idx_train], y[idx_train]
     A_test, y_test = A[idx_test], y[idx_test]
 
-    w = fit_linear(A_train, y_train, penalty=penalty, alpha=l2)
+    w = fit_linear(A_train, y_train, penalty=penalty, alpha=alpha)
 
     pred_train = A_train @ w
     pred_test = A_test @ w

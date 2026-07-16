@@ -15,7 +15,7 @@ def simulate_gbm_path(
     Retourne une Series pandas indexée par jours ouvrés"""
     
     # On utilise un calendrier journalier pour rester robuste quand une date de constatation tombe un week-end
-    dates = pd.bdate_range(pd.Timestamp(start_date).normalize(),pd.Timestamp(end_date).normalize(), freq="D")  # calendrier journalier, en incluant les week-ends pour rester robuste aux dates d'observation qui tombent un week-end
+    dates = pd.bdate_range(pd.Timestamp(start_date).normalize(), pd.Timestamp(end_date).normalize(), freq="D")
     if len(dates) < 2:    return pd.Series([spot0], index=dates)
 
     rng = np.random.default_rng(seed)

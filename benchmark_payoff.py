@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from products_core import AutocallProduct, VanillaProduct, _year_fraction
+from products_core import AutocallProduct, VanillaProduct, Cash, _year_fraction
 from monte_carlo import simulate_gbm_path, autocall_discounted_payoff_from_path
 from benchmark_general import fit_linear, benchmark_metrics, build_naive_vanilla_basis
 
@@ -16,24 +16,34 @@ def vanilla_discounted_payoff_from_path(
     valuation_date: str | pd.Timestamp,
     rate: float) -> float:
     """Calcule la valeur actualisée d'une vanille sur une trajectoire donnée.
-    Ici on prend le spot à maturité de la vanille sur la trajectoire simulée,
-    puis on actualise le payoff terminal."""
+    Ici on prend le spot à maturité de la vanille sur la trajectoire simulée, puis on actualise le payoff terminal."""
     valuation_date = pd.Timestamp(valuation_date)
     maturity_date = pd.Timestamp(vanilla.maturity_date)
     tau = _year_fraction(valuation_date, maturity_date)
 
-    if tau <= 0:    # Cas défensif : maturité déjà passée.
-        s_T = float(path.iloc[0])
+    if valuation_date > maturity_date:
+        return 0.0
+
+    position = path.index.searchsorted(maturity_date, side="left")
+    if position >= len(path):
+        raise ValueError(
+            f"La trajectoire ne couvre pas la maturité {maturity_date}."
+        )
+
+    s_T = float(path.iloc[position])
+
+    if valuation_date == maturity_date:
         return float(vanilla.payoff(s_T))
 
-    path_from_maturity = path.loc[path.index >= maturity_date]
-    if path_from_maturity.empty:            # Cas de sécurité : on prend la dernière valeur disponible.
-        s_T = float(path.iloc[-1])
-    else:
-        s_T = float(path_from_maturity.iloc[0])
+    tau = _year_fraction(valuation_date, maturity_date)
+
+    if isinstance(vanilla, Cash):
+        return float(vanilla.notional) * math.exp(-rate * tau)
 
     payoff = float(vanilla.payoff(s_T))
     return payoff * math.exp(-rate * tau)
+
+
 
 
 def build_pathwise_payoff_dataset(
