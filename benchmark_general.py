@@ -123,7 +123,7 @@ def _smooth_l12_grad(x: np.ndarray, eps: float = 1e-12) -> np.ndarray:
     return 0.5 * x * np.power(x * x + eps, -0.75)
 
 
-def fit_linear(A: np.ndarray,b: np.ndarray,penalty: str = "l2",alpha: float = 1e-8,l1_ratio: float = 0.5,huber_delta: float = 1.0,eps: float = 1e-12,max_iter: int = 5000,tol: float = 1e-10) -> np.ndarray:
+def fit_linear(A: np.ndarray,b: np.ndarray,scale_features: bool = True, penalty: str = "l2",alpha: float = 1e-4,l1_ratio: float = 0.5,huber_delta: float = 1.0,eps: float = 1e-12,max_iter: int = 5000,tol: float = 1e-6) -> np.ndarray:
     """Régression linéaire avec choix du type de pénalisation / robustification.
     Paramètres
     ----------
@@ -141,32 +141,39 @@ def fit_linear(A: np.ndarray,b: np.ndarray,penalty: str = "l2",alpha: float = 1e
     """
     A = np.asarray(A, dtype=float)
     b = np.asarray(b, dtype=float).reshape(-1)
-    n_obs, n_features = A.shape
-
     if A.ndim != 2:                 raise ValueError("A doit être une matrice 2D.")
     if A.shape[0] != b.shape[0]:    raise ValueError("A et b doivent avoir le même nombre de lignes.")
+    n_obs, n_features = A.shape
+
+    if scale_features:
+        column_scale = np.sqrt(np.mean(A**2, axis=0))
+        column_scale[column_scale < 1e-12] = 1.0
+    else : 
+        column_scale = np.ones(A.shape[1], dtype=float)
+    A_fit = A / column_scale
 
     # Cas simple : moindres carrés, solution analytique sans pénalisation
     if penalty == "none":
-        w, *_ = np.linalg.lstsq(A, b, rcond=None)
-        return w
+        w_scaled, *_ = np.linalg.lstsq(A_fit, b, rcond=None)
+        return np.asarray(w_scaled) / column_scale
 
     # Cas fermé : ridge
     if penalty == "l2":         # ridge : approximation lisse de L2
-        ATA = A.T @ A
-        ATb = A.T @ b
+        ATA = A_fit.T @ A_fit /n_obs
+        ATb = A_fit.T @ b /n_obs
         reg = alpha * np.eye(n_features)                    # On ajoute alpha sur la diagonale pour régulariser, plus alpha est grand, plus on pénalise les poids
         reg[0, 0] = 0.0  # CASH / intercept non pénalisé
-        return np.linalg.solve(ATA + reg, ATb)
+        w_scaled = np.linalg.solve(ATA + reg, ATb)
+        return np.asarray(w_scaled) / column_scale
 
     # Point de départ : moindres carrés
-    w0, *_ = np.linalg.lstsq(A, b, rcond=None)
+    w0, *_ = np.linalg.lstsq(A_fit, b, rcond=None)
     
     def objective_and_grad(w: np.ndarray):
-        r = A @ w - b
+        r = A_fit @ w - b
         # Terme d'ajustement
         loss = 0.5 * np.mean(r * r)
-        grad = (A.T @ r) / n_obs
+        grad = (A_fit.T @ r) / n_obs
 
         # On ne pénalise pas CASH / intercept
         w_reg = w.copy()
@@ -193,7 +200,7 @@ def fit_linear(A: np.ndarray,b: np.ndarray,penalty: str = "l2",alpha: float = 1e
             loss = np.mean(huber_loss)
 
             huber_grad_r = np.where(quad, r, huber_delta * np.sign(r))
-            grad = (A.T @ huber_grad_r) / n_obs
+            grad = (A_fit.T @ huber_grad_r) / n_obs
 
             # On ajoute un petit ridge sur les poids hors CASH pour stabiliser
             pen = 0.5 * alpha * np.sum(w_reg * w_reg)
@@ -211,17 +218,9 @@ def fit_linear(A: np.ndarray,b: np.ndarray,penalty: str = "l2",alpha: float = 1e
         grad_total = grad + grad_pen
         return obj, grad_total
 
-    res = minimize(fun=lambda x: objective_and_grad(x)[0],x0=w0,jac=lambda x: objective_and_grad(x)[1],method="L-BFGS-B",options={"maxiter": max_iter, "ftol": tol})
-    return res.x
-
-
-def fit_lstsq(A: np.ndarray, b: np.ndarray) -> np.ndarray:
-    """Moindres carrés classiques."""
-    return fit_linear(A, b, penalty="none")
-
-
-
-
+    res = minimize(fun=objective_and_grad,x0=w0,jac=True,method="L-BFGS-B",options={"maxiter": max_iter,"ftol": tol,"gtol": tol,"maxls": 50})
+    if not res.success:     raise RuntimeError(f"L'optimisation a échoué : {res.message}")
+    return np.asarray(res.x, dtype=float) / column_scale
 
 
 
