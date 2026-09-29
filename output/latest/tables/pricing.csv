@@ -1,0 +1,2 @@
+﻿actualized_price,std_error,ci95_low,ci95_high,n_paths,n_independent_samples,antithetic,control_variate,variance_reduction_ratio
+100.36289014505809,0.17416723795447295,100.0215286313805,100.70425165873567,2000,1000,True,False,1.0

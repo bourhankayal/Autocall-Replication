@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autocall-replication"
+version = "0.1.0"
+description = "Pricing Monte-Carlo et étude de réplication d'un autocall mono-sous-jacent"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "numpy>=2.0,<3",
+    "pandas>=2.2,<4",
+    "scipy>=1.12,<2",
+    "matplotlib>=3.8,<4",
+]
+
+[project.optional-dependencies]
+notebook = [
+    "ipython>=8,<10",
+    "jupyterlab>=4,<5",
+    "yfinance>=0.2,<1",
+]
+dev = [
+    "pytest>=8,<10",
+    "ruff>=0.8,<1",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]

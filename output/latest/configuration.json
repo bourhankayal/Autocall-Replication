@@ -1,0 +1,58 @@
+{
+  "product": {
+    "notional": 100.0,
+    "autocall_strike": 1.0,
+    "coupon_barrier": 0.8,
+    "coupon_rate": 0.02,
+    "down_barrier": 0.7,
+    "observation_months": [
+      3,
+      6,
+      9,
+      12
+    ]
+  },
+  "market": {
+    "spot0": 100.0,
+    "valuation_date": "2026-06-20T00:00:00",
+    "contract_start_date": "2026-06-22T00:00:00",
+    "maturity_date": "2027-06-22T00:00:00",
+    "rate": 0.03,
+    "dividend_yield": 0.01,
+    "volatility": 0.2
+  },
+  "execution": {
+    "mode": "fast",
+    "pricing_paths": 2000,
+    "surface_paths": 200,
+    "benchmark_paths": 200,
+    "pathwise_paths": 300,
+    "alpha_paths": 300,
+    "stability_paths": 300,
+    "stability_calibrations": 10,
+    "risk_paths": 2000,
+    "importance_bootstrap": 100,
+    "funding_paths": 200,
+    "curve_paths": 500
+  },
+  "families": [
+    "calls_puts",
+    "full"
+  ],
+  "solver": "legacy",
+  "flags": {
+    "importance_sampling": true,
+    "market_costs": false,
+    "market_exploration": false
+  },
+  "seeds": {
+    "pricing": 42,
+    "alpha_selection": 42,
+    "stability": 10500,
+    "standard_risk": 20500,
+    "importance_sampling": 20500,
+    "importance_bootstrap_standard_base": 31000,
+    "importance_bootstrap_is_base": 41000,
+    "funding": 20500
+  }
+}

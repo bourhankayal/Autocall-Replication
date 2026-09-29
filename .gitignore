@@ -1,0 +1,43 @@
+# Environnements Python
+.venv/
+venv/
+env/
+
+# Bytecode et caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Construction et installation
+build/
+dist/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Fichiers temporaires et rendus intermédiaires
+tmp/
+*.tmp
+*.log
+
+# Historique local des exécutions du notebook. Le dernier export de référence
+# reste versionné dans output/latest/, mais les runs datés sont redondants.
+output/runs/
+
+# Environnements et éditeurs
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/settings.json
+
+# Système d'exploitation
+.DS_Store
+Thumbs.db
+desktop.ini

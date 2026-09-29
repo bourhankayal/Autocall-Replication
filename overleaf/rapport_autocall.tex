@@ -1,0 +1,573 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=23mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,longtable,tabularx,array}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage{fancyhdr,lastpage}
+\usepackage{hyperref}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+\definecolor{navy}{HTML}{17324D}
+\definecolor{blue}{HTML}{1F6F8B}
+\definecolor{orange}{HTML}{E7903C}
+\definecolor{red}{HTML}{B33A3A}
+\definecolor{pale}{HTML}{EEF4F7}
+\definecolor{muted}{HTML}{667085}
+
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\emergencystretch}{1em}
+\renewcommand{\arraystretch}{1.17}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\color{muted}Conditional replication of an autocall}
+\fancyhead[R]{\footnotesize\color{muted}Research report}
+\fancyfoot[L]{\footnotesize\color{muted}Working version - September 2026}
+\fancyfoot[R]{\footnotesize\color{muted}Page \thepage/\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+\newcommand{\HRule}{\color{blue}\rule{\linewidth}{1.8pt}}
+\newcommand{\important}[1]{\par\noindent\colorbox{pale}{\parbox{0.96\linewidth}{\color{navy}\textbf{#1}}}\par}
+\newcommand{\warningbox}[1]{\par\noindent\colorbox{orange!15}{\parbox{0.96\linewidth}{\color{red}\textbf{Point of attention.} #1}}\par}
+\newcommand{\visual}[2]{%
+  \begin{center}
+  \fcolorbox{blue}{pale}{\parbox[c][42mm][c]{0.88\linewidth}{
+    \centering\color{navy}\textbf{Visual to be inserted manually}\par
+    \vspace{2mm}\color{muted}#1\par\vspace{2mm}\footnotesize #2}}
+  \end{center}}
+\newcommand{\R}{\mathbb{R}}
+
+\begin{document}
+
+\begin{titlepage}
+\thispagestyle{empty}
+\vspace*{20mm}
+\HRule
+\vspace{20mm}
+{\fontsize{27}{33}\selectfont\bfseries\color{navy}
+Conditional Replication of an Autocall}
+
+\vspace{7mm}
+{\Large\color{muted}
+Monte Carlo pricing, sparse selection, residual risk, rare events and funding}
+
+\vspace{18mm}
+\important{Research question: how far can a simple, liquid and interpretable static replication reduce the risk of an autocall before a dynamic hedge of the residual exposure becomes necessary?}
+
+\vfill
+\begin{center}
+{\large\color{navy}Research report}\par
+\vspace{2mm}
+{\color{muted}Bourhan - September 2026}
+\end{center}
+\end{titlepage}
+
+\begin{abstract}
+\large
+This report investigates the valuation, replication and risk management of a single-underlying autocall. The challenge is not limited to computing a fair value. The issuer must reproduce discontinuous and path-dependent contractual cash flows, account for early redemption, monitor coupon and protection barriers, finance successive hedging portfolios and retain enough liquidity to survive adverse scenarios. The central question is therefore economic as well as numerical: which portion of the liability can be captured by a sparse portfolio of standard options, and which residual risks require dynamic management?
+
+The project follows a deliberately progressive methodology. It first defines the contract without ambiguity and validates a risk-neutral Black-Scholes Monte Carlo engine. It then compares five replication formulations: fitting a date-spot value surface, matching expected payoffs, matching terminal pathwise payoffs, matching dated cash flows with one static basket, and applying a conditional policy that selects a new basket at each observation date using only information available at that time. Calls and puts form the liquid benchmark universe, while an extended Full universe adds digital options to represent payoff discontinuities. Portfolio weights are estimated with Ridge, Lasso and Elastic Net regularisation. Candidate solutions are selected along a regularisation path, filtered for sparsity and dominance, and tested over ten recalibrations.
+
+The analysis separates three layers of risk: the gross autocall liability, the residual exposure after option replication, and the future residual after dynamic hedging. Only the first two are implemented at this stage. Standard Monte Carlo and importance sampling are applied to exactly the same frozen portfolios, allowing rare-event estimation to be compared without changing the strategy. A self-financing cash account measures initial cost, gross exposure, interim borrowing needs and terminal profit and loss under three treatments of digital options: theoretical digitals, vertical-spread approximations and indicative OTC charges.
+
+The current results remain exploratory. They show that conditional replication can reduce global squared error substantially and that the extended option universe can reproduce discontinuities extremely well in an unconstrained benchmark. However, the sparse portfolios currently retained still increase the 97.5\% Expected Shortfall relative to the unhedged liability. This is the central result of the present study: average fit and tail protection are different objectives. A credible final policy must therefore combine out-of-sample accuracy, tail-risk control, stability, liquidity, transaction costs and funding requirements. The next stage is to analyse the scenarios responsible for tail losses and to design a self-financing dynamic hedge of the residual exposure.
+\end{abstract}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+Autocalls combine conditional coupons, early redemption and conditional capital protection. Their cash flows are intuitive from an investor's perspective, but the issuer's liability depends simultaneously on the level of the underlying, its past trajectory and the observation date. This creates discontinuities around contractual barriers and strong path dependence.
+
+Replication with simpler options aims to transform this nonlinear liability into a portfolio of standard instruments. Exact replication is generally unavailable when the tradable universe is restricted or the contract changes state through time. The problem is therefore an explicit trade-off between accuracy, sparsity, liquidity, stability and residual risk.
+
+This study does not declare an optimal strategy prematurely. It establishes a testable contractual and numerical foundation, compares several replication formulations, identifies multiple defensible candidates and measures what risk remains after replication.
+
+\subsection{Main contributions}
+
+\begin{itemize}
+\item an explicit contractual payoff and calendar convention;
+\item a risk-neutral Monte Carlo engine with variance reduction;
+\item Calls + Puts and Full instrument universes;
+\item Ridge, Lasso and Elastic Net optimisation with genuine sparse solutions;
+\item alpha-path selection and ten-recalibration stability analysis;
+\item a conditional policy with no look-ahead information;
+\item separate gross-liability and replication-residual risk measurements;
+\item importance sampling applied to frozen financial portfolios;
+\item a self-financing cash account and alternative digital implementations.
+\end{itemize}
+
+\section{Contractual Definition}
+
+\subsection{Economic structure}
+
+The reference product is a discrete, single-underlying autocall similar to a memoryless Athena. At each observation date, the coupon is evaluated before the early-redemption condition. If the call barrier is reached, the notional is repaid and the contract terminates. If the product survives until maturity, capital protection depends on whether a protection barrier has previously been breached.
+
+For notional $N$, contractual initial spot $S_0$, coupon barrier $B_C$, autocall barrier $B_A$, periodic coupon $c$ and observation dates $t_i$,
+\[
+C_i=cN\,\mathbf{1}_{\{S_{t_i}\geq B_CS_0\}},
+\qquad
+\tau=\inf\{t_i:S_{t_i}\geq B_AS_0\}.
+\]
+If the product survives to $T$, its terminal payment is
+\[
+H_T=N+C_T-N\left(1-\frac{S_T}{S_0}\right)^+
+\mathbf{1}_{\{\min_{u\leq T}S_u\leq B_PS_0\}}.
+\]
+
+\subsection{Contractual conventions}
+
+\begin{itemize}
+\item barriers are expressed relative to the contractual initial spot;
+\item the call condition is inclusive;
+\item coupons are conditional and memoryless;
+\item the protection barrier is monitored on all available simulated quotations;
+\item dates use a following convention on available observations;
+\item the pedagogical calendar excludes weekends but not market holidays;
+\item discounting is continuous and year fractions use ACT/365;
+\item no contractual cash flow remains after early redemption.
+\end{itemize}
+
+\subsection{Contractual and market configuration}
+
+All valuation, replication and risk analyses in this report use the same product and market configuration.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lr}
+\toprule
+Parameter & Current specification\\
+\midrule
+Notional & 100\\
+Autocall barrier & 100\% of the initial spot\\
+Coupon barrier & 80\% of the initial spot\\
+Periodic coupon & 2\% of notional\\
+Protection barrier & 70\% of the initial spot\\
+Observations & 3, 6, 9 and 12 months\\
+Volatility & 20\%\\
+Risk-free rate & 3\%\\
+Dividend yield & 1\%\\
+\bottomrule
+\end{tabular}
+\caption{Single reference configuration used throughout the study.}
+\end{table}
+
+\section{Valuation Framework}
+
+\subsection{Black-Scholes dynamics}
+
+Under the risk-neutral measure $\mathbb{Q}$,
+\[
+\frac{dS_t}{S_t}=(r-q)dt+\sigma dW_t.
+\]
+The exact geometric Brownian motion transition is
+\[
+S_{t+\Delta t}=S_t\exp\left[
+\left(r-q-\frac{\sigma^2}{2}\right)\Delta t
++\sigma\sqrt{\Delta t}\,Z\right],\qquad Z\sim\mathcal{N}(0,1).
+\]
+The initial value and Monte Carlo estimator are
+\[
+V_0=\mathbb{E}^{\mathbb{Q}}\left[\sum_k e^{-rt_k}CF_{t_k}\right],
+\quad
+\widehat V_0=\frac{1}{M}\sum_{m=1}^{M}H_0^{(m)},
+\quad
+SE(\widehat V_0)=\frac{s(H_0)}{\sqrt{M}}.
+\]
+
+\subsection{Variance reduction and validation}
+
+Antithetic paths pair $(Z,-Z)$. A control variate uses
+\[
+\widehat V_{CV}=\overline H-\widehat\beta(\overline X-\mathbb{E}[X]).
+\]
+Validation includes deterministic tests for every contractual branch, manually computed toy paths, date checks, convergence analysis and comparisons with and without variance reduction. Every result reported in this document refers to the single contractual and market configuration defined above.
+
+\visual{Monte Carlo convergence and confidence interval}{To be exported manually from a production-sized simulation using the definitive configuration.}
+
+\section{Replication Methodology}
+
+\subsection{Instrument universes}
+
+\begin{description}
+\item[Calls + Puts.] European vanilla options, close to a listed and liquid universe.
+\item[Full.] Calls, puts, cash and digital options. This universe captures discontinuities more accurately, but exact digitals are not generally listed.
+\end{description}
+
+For a payoff matrix $X\in\R^{n\times p}$, target $y\in\R^n$ and weights $w\in\R^p$,
+\[
+\widehat w=\arg\min_w\frac{1}{n}\lVert Xw-y\rVert_2^2+\Omega(w).
+\]
+
+\subsection{Regularisation penalties}
+
+\paragraph{Ridge.}
+\[
+\Omega(w)=\alpha\lVert w\rVert_2^2.
+\]
+Ridge stabilises coefficients but rarely creates exact zeros.
+
+\paragraph{Lasso.}
+\[
+\Omega(w)=\alpha\lVert w\rVert_1.
+\]
+Lasso creates exact zeros and sparse portfolios, but can shrink large positions excessively.
+
+\paragraph{Elastic Net.}
+\[
+\Omega(w)=\alpha\left[
+\rho\lVert w\rVert_1+\frac{1-\rho}{2}\lVert w\rVert_2^2\right].
+\]
+Elastic Net combines selection and stabilisation. The current exploration fixes $\rho=0.5$. Lasso and Elastic Net are solved with a proximal FISTA-type method; cash is kept outside the penalty.
+
+\subsection{Five benchmark levels}
+
+\begin{enumerate}
+\item fitting a date-spot value surface;
+\item replicating expected payoff over a grid;
+\item terminal pathwise payoff replication;
+\item static replication of cash flows at observation dates;
+\item a conditional policy indexed by the observable contractual state.
+\end{enumerate}
+
+These benchmarks answer different questions. The value surface tests geometry, the pathwise formulation tests payoff distributions, and the conditional policy uses the information available at each decision date without anticipating the future.
+
+\section{Conditional Replication Policy}
+
+At each observation date, the next basket depends only on whether the product is alive, whether the protection barrier has been hit, time to maturity and the current spot. The chronology is:
+
+\begin{enumerate}
+\item observe the current state;
+\item settle the coupon and the maturing option basket;
+\item stop if the product is called;
+\item otherwise purchase the basket assigned to the state;
+\item hold it until the next observation date.
+\end{enumerate}
+
+This explains why conditional replication can capture discontinuities better than one static basket. It also creates execution risk, reallocation costs and interim funding needs.
+
+\visual{Conditional-policy workflow}{Observation, state, settlement, possible early redemption and next-period basket.}
+
+\section{Alpha Selection and Stability}
+
+The procedure does not impose a fixed number of instruments. It explores an alpha path, then applies the following filters:
+
+\begin{itemize}
+\item between 2 and 100 active options;
+\item removal of dominated solutions within each penalty;
+\item removal of strict and near-strict duplicates;
+\item out-of-sample performance control;
+\item preservation of candidate diversity.
+\end{itemize}
+
+Performance, Compromise and Parsimony are representative profiles rather than three new optimisations. Stability is evaluated across ten recalibrations using solver convergence, validation-RMSE dispersion, active-count dispersion, median Jaccard support similarity and relative weight distance. Stability acts as a filter because a high-performing but unstable portfolio is difficult to implement and defend.
+
+\section{Risk Measurement}
+
+\subsection{Three layers of risk}
+
+For each path, $H_0$ is the discounted autocall liability, $R_0$ the discounted replication payoff and $G_0^{hedge}$ the future gains of a dynamic hedge:
+\begin{align*}
+L^{gross}&=H_0-V_0,\\
+L^{rep}&=H_0-R_0,\\
+L^{final}&=H_0-R_0-G_0^{hedge}.
+\end{align*}
+The project currently implements the first two layers. A positive value represents loss or under-replication for the issuer.
+
+\subsection{Metrics}
+
+\[
+RMSE=\sqrt{\mathbb{E}[L^2]},\qquad
+VaR_q=\inf\{x:\mathbb{P}(L\leq x)\geq q\},
+\qquad
+ES_q=\mathbb{E}[L\mid L\geq VaR_q].
+\]
+Bias, mean absolute error, maximum loss and under-replication frequency are also reported, both globally and by contractual regime. Results are expressed in amount, percentage and basis points of notional.
+
+\important{A reduction in RMSE does not imply a reduction in extreme risk. Average fit, Expected Shortfall, under-replication frequency and funding cost must be read jointly.}
+
+\section{Importance Sampling}
+
+Standard Monte Carlo is retained as the reference estimator. Importance sampling is added as a complementary diagnostic for rare, adverse scenarios; it does not replace the original simulation and does not recalibrate the portfolio weights.
+
+Let $P$ denote the original probability measure and $Q$ a proposal measure that produces more tail observations. For any integrable loss functional $g$,
+\[
+\mathbb{E}_{P}[g(X)]
+=
+\mathbb{E}_{Q}\!\left[g(X)\frac{dP}{dQ}(X)\right].
+\]
+The likelihood ratio $dP/dQ$ corrects the deliberate distortion of the sampling distribution. Adverse paths that become more frequent under $Q$ consequently receive an appropriate probability weight. The comparison therefore concerns two estimators of the same risk measure for the same frozen portfolio.
+
+The main benefit is statistical: if the proposal is well chosen, the tail is sampled more efficiently and the uncertainty surrounding Expected Shortfall can be reduced. The main danger is methodological: a poorly chosen proposal or unstable likelihood ratios may increase variance. For that reason, the report always presents standard Monte Carlo and importance sampling side by side, together with confidence intervals.
+
+\section{Cost, Digital Options and Funding}
+
+\subsection{Three implementation scenarios for digital options}
+
+The Full family relies on digital options, whose implementation cost is uncertain. It is therefore evaluated under three explicit scenarios:
+
+\begin{enumerate}
+\item \textbf{Theoretical digitals}: Black--Scholes values are used directly, without execution friction. This is an analytical reference, not necessarily a tradable quote.
+\item \textbf{Call-spread replication}: a digital is approximated by a narrow vertical spread of vanilla calls or puts. This is more directly connected to listed instruments, but introduces approximation and execution costs.
+\item \textbf{OTC digitals}: a dealer supplies the digital and an explicit cost surcharge is added. The exploratory favourable, central and stressed assumptions are respectively 5, 10 and 25 basis points.
+\end{enumerate}
+
+These scenarios must not be interpreted as market quotations. They form a transparent sensitivity analysis until reliable bid-ask observations are incorporated.
+
+\subsection{Initial cost and funding account}
+
+For positions $w_j$ with initial prices $p_j$, gross purchased exposure and net initial cost are distinguished:
+\[
+C_{gross}=\sum_j |w_j|p_j,
+\qquad
+C_{net}=\sum_j w_jp_j+C_{execution}.
+\]
+If the client pays the issue price $P_{client}$, the initial funding account is
+\[
+B_0=P_{client}-C_{net}.
+\]
+A positive $B_0$ is invested; a negative $B_0$ is borrowed. Reporting therefore includes borrowing frequency, the 95th percentile of additional capital, cumulative execution costs, terminal profit and loss, and loss Expected Shortfall. This separates replication quality from the economic feasibility of financing the basket.
+
+\section{Exploratory Results}
+
+\important{All figures in this section come from exploratory runs. They illustrate the behaviour of the methodology but must be recomputed with production-sized simulation samples before any definitive quantitative conclusion.}
+
+\subsection{Monte Carlo valuation benchmark}
+
+Under the baseline Black--Scholes assumptions $r=3\%$, $q=1\%$ and $\sigma=20\%$, the estimated issue value is:
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+Quantity & Value \\
+\midrule
+Estimated autocall value & 100.363 \\
+Monte Carlo standard error & 0.174 \\
+Number of simulated paths & 2,000 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The estimate is close to par, but its uncertainty remains too large for a final pricing statement. The purpose of this run is primarily functional validation.
+
+\subsection{Progression of the replication methodology}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{L{3.5cm}R{2.0cm}R{2.0cm}R{2.0cm}R{2.0cm}}
+\toprule
+Method & \multicolumn{2}{c}{Calls + Puts} & \multicolumn{2}{c}{Full} \\
+ & Test RMSE & Test MAE & Test RMSE & Test MAE \\
+\midrule
+Mean-payoff benchmark & 9.309 & 4.306 & 3.574 & 1.676 \\
+Terminal pathwise benchmark & 71.078 & 12.686 & 14.027 & 4.087 \\
+Static cash-flow benchmark & 28.285 & 16.710 & 27.010 & 13.716 \\
+Conditional benchmark & 10.515 & 3.701 & 0.036 & 0.003 \\
+\bottomrule
+\end{tabularx}
+\caption{Out-of-sample errors across successive formulations. The scales and target definitions differ across some stages, so the table is a methodological progression rather than a strict league table.}
+\end{table}
+
+The conditional formulation provides the strongest fit in the exploratory Full universe. This large gain is economically plausible because the basket is allowed to depend on survival and barrier information. It also reinforces the need to test whether the solution remains stable and implementable outside the calibration sample.
+
+\subsection{Representative compromise profiles}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{L{2.5cm}L{2.5cm}R{2.0cm}R{2.0cm}R{2.3cm}}
+\toprule
+Family & Penalty & Selected alpha & Active options & Validation RMSE \\
+\midrule
+Calls + Puts & L1 & 0.305 & 7 & 2.628 \\
+Calls + Puts & Ridge & 2,151.919 & 92 & 5.204 \\
+Calls + Puts & Elastic Net & 0.814 & 11 & 2.620 \\
+Full & L1 & 0.542 & 6 & 4.346 \\
+Full & Elastic Net & 0.814 & 17 & 3.375 \\
+\bottomrule
+\end{tabularx}
+\caption{Exploratory Compromise profiles after sparsity, dominance, duplicate and stability filters. Full/Ridge is excluded because it exceeds the 100-option implementation ceiling.}
+\end{table}
+
+The Ridge solution illustrates why L2 regularisation is retained as a diagnostic but not automatically promoted to an implementation candidate: it shrinks weights but does not create exact zeros. L1 and Elastic Net produce substantially smaller supports.
+
+\subsection{Residual risk of frozen portfolios}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{L{2.5cm}L{2.5cm}R{2.4cm}R{2.7cm}R{2.5cm}}
+\toprule
+Family & Penalty & Residual RMSE & Residual ES 97.5\% & ES multiplier \\
+\midrule
+Calls + Puts & L1 & 2.953 & 13.624 & 3.102 \\
+Calls + Puts & Ridge & 5.832 & 8.552 & 1.947 \\
+Calls + Puts & Elastic Net & 2.614 & 10.021 & 2.282 \\
+Full & L1 & 3.021 & 13.446 & 3.062 \\
+Full & Elastic Net & 2.692 & 10.557 & 2.404 \\
+\bottomrule
+\end{tabularx}
+\caption{Residual replication risk. The ES multiplier is residual ES divided by gross autocall ES; values above one indicate deterioration of the measured upper tail.}
+\end{table}
+
+The central result is deliberately uncomfortable: the portfolios reduce global error but increase the upper-tail loss metric. The static or conditional replica is therefore useful as a first layer of risk reduction, not yet sufficient as a complete hedge. A second, dynamic hedge of the residual exposure remains necessary.
+
+\subsection{Standard Monte Carlo versus importance sampling}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{L{2.5cm}L{2.5cm}R{2.1cm}R{2.1cm}R{2.3cm}}
+\toprule
+Family & Penalty & MC ES 97.5\% & IS ES 97.5\% & CI-width change \\
+\midrule
+Calls + Puts & L1 & 13.624 & 12.450 & -1.326 \\
+Calls + Puts & Ridge & 8.552 & 9.698 & +0.865 \\
+Calls + Puts & Elastic Net & 10.021 & 10.462 & -0.733 \\
+Full & L1 & 13.446 & 13.688 & +0.097 \\
+Full & Elastic Net & 10.557 & 11.603 & -0.625 \\
+\bottomrule
+\end{tabularx}
+\caption{Two estimators of the same ES for frozen portfolios and fixed alphas. A higher IS estimate does not mean that importance sampling has degraded the hedge.}
+\end{table}
+
+The two approaches give results of the same order of magnitude, which is reassuring, but their differences are not uniformly signed. Importance sampling narrows the interval in three cases and widens it in two. Its proposal distribution therefore requires further tuning before it can be described as systematically more efficient.
+
+\subsection{Decision-oriented summary}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{L{2.2cm}L{2.0cm}R{1.5cm}R{2.0cm}R{2.0cm}R{2.0cm}}
+\toprule
+Family & Penalty & Options & RMSE reduction & ES reduction & Additional capital P95 \\
+\midrule
+Calls + Puts & L1 & 7 & +61.6\% & -210.2\% & 437.0 \\
+Calls + Puts & Ridge & 92 & +24.2\% & -94.7\% & 465.4 \\
+Calls + Puts & Elastic Net & 11 & +66.0\% & -128.2\% & 432.3 \\
+Full & L1 & 6 & +60.7\% & -206.2\% & 448.5 \\
+Full & Elastic Net & 17 & +65.0\% & -140.4\% & 428.4 \\
+\bottomrule
+\end{tabularx}
+\caption{Exploratory decision table. A positive RMSE reduction is favourable; a negative ES reduction means that residual Expected Shortfall is higher than gross Expected Shortfall. Capital figures are expressed for a notional of 100.}
+\end{table}
+
+No candidate dominates on every dimension. Calls + Puts with Elastic Net offers the strongest global-error reduction among the displayed candidates with a modest support, whereas Ridge gives the least severe tail deterioration at the cost of 92 active options. The Full family improves representation power but introduces digital-option liquidity and pricing uncertainty.
+
+\section{Discussion}
+
+\subsection{What has been established}
+
+The project now provides a coherent chain from contract specification to valuation, conditional replication, regularisation, stability control, residual-risk measurement, importance sampling and exploratory execution costs. The main engineering risk identified during development was date alignment between contractual dates and business-day simulation grids. Centralising effective settlement dates removed a class of repeated errors across payoff, cash-flow and semi-static modules.
+
+The conditional policy is materially more appropriate than a single unconditional basket for an autocall. Sparse penalties can generate interpretable portfolios without fixing the number of instruments ex ante. Stability filters and out-of-sample checks prevent alpha selection from being reduced to an in-sample optimisation exercise.
+
+\subsection{Economic interpretation}
+
+The current results show a separation between average replication quality and tail protection. This is not a contradiction. Least-squares objectives allocate modelling capacity to frequently observed states, while Expected Shortfall concentrates on a small subset of severe under-replication paths. A portfolio can therefore track the liability closely on most paths and still be systematically short in rare adverse regimes.
+
+This observation changes the economic role of the replica. It should be viewed as a first layer that finances a large part of the contractual liability and compresses ordinary deviations. The remaining nonlinear and tail-sensitive exposure must then be addressed by a dynamic residual hedge, explicit tail constraints, or both.
+
+\section{Limitations}
+
+\begin{itemize}
+\item \textbf{Exploratory sample size.} Current simulation samples are not sufficiently large for final claims.
+\item \textbf{Model risk.} The baseline uses constant-rate, constant-volatility Black--Scholes dynamics and does not reproduce skew, stochastic volatility, jumps or regime changes.
+\item \textbf{Measure choice.} Pricing is performed under a risk-neutral framework; an economic risk assessment also requires scenarios under the real-world measure.
+\item \textbf{Market data.} Reliable bid-ask spreads, executable option chains and OTC digital quotations have not yet been integrated.
+\item \textbf{Digital implementation.} Theoretical, call-spread and OTC scenarios remain assumptions rather than verified execution costs.
+\item \textbf{Tail objective.} Portfolio weights are not yet calibrated directly against Expected Shortfall or another tail-aware loss.
+\item \textbf{Dynamic hedge.} The third risk layer, including self-financing cash management, rebalancing and liquidation at recall, remains to be implemented.
+\item \textbf{External validation.} The methodology has not yet been benchmarked against a dealer desk, an independent pricing library or an external market practitioner.
+\end{itemize}
+
+\section{Research Roadmap}
+
+\subsection{Phase 1 - Terminal static risk}
+
+The immediate objective is to consolidate gross autocall risk, residual risk for every candidate, risk-reduction ratios and conditional metrics. All results should be reported in currency, percentage and basis points of notional. Production-sized runs must reserve a final untouched test sample and quantify uncertainty around both standard Monte Carlo and importance-sampling estimators.
+
+\subsection{Phase 2 - Mark-to-market monitoring and dynamic residual hedge}
+
+The next layer requires valuation of the autocall at each date, Black--Scholes valuation of outstanding options, a self-financing cash account, maturity management and liquidation when the note is recalled. The autocall continuation value will probably require a conditional surface or regression approximation to avoid prohibitively expensive nested Monte Carlo. This phase will produce hedge profit and loss, drawdown, turnover and rebalancing-cost diagnostics.
+
+\subsection{Phase 3 - Economic risk and realistic costs}
+
+The final phase introduces scenarios under the real-world measure, market bid-ask data, liquidation costs, volatility and liquidity stress, and a comparison of static, dynamic and hybrid strategies. Transaction-cost penalties can then be incorporated directly into optimisation rather than applied only as a post-selection filter.
+
+\section{Conclusion}
+
+This project develops a reproducible framework for studying the replication of an autocallable note rather than presenting a single headline hedge ratio. Its main contribution is the integration of contractual logic, pathwise simulation, conditional policies, sparse regularisation, stability selection, residual-risk diagnostics and implementation scenarios within one consistent workflow.
+
+The exploratory evidence supports two conclusions. First, conditional replication can deliver a strong improvement in average fit with a compact basket. Second, this improvement does not automatically control extreme under-replication: current candidates increase residual Expected Shortfall relative to the gross liability. The correct next step is therefore not to declare the replication complete, but to preserve it as the first layer of a broader hedge and design a dynamic strategy for the remaining exposure.
+
+\appendix
+
+\section{Manual Visual-Integration Plan}
+
+The Overleaf version is intentionally maintained manually. Figures and tables should be updated only after a complete, validated notebook run. The recommended presentation order is:
+
+\begin{enumerate}
+\item contractual timeline and payoff diagram;
+\item validation error and sparsity paths used for alpha selection;
+\item efficient frontiers with dominated candidates clearly identified;
+\item stability diagnostics across ten recalibrations;
+\item gross versus residual RMSE;
+\item residual-to-gross ES multiplier;
+\item standard Monte Carlo versus importance-sampling comparison;
+\item implementation-cost and funding summary;
+\item pathwise examples reserved for interpretation rather than aggregate inference.
+\end{enumerate}
+
+Every visual should state the family, penalty, profile, simulation mode, number of paths, units and whether weights are recalibrated or frozen. Captions should explain the decision supported by the figure, not merely repeat its title.
+
+\section{Minimum Results Dictionary}
+
+The following quantities should accompany every retained portfolio:
+
+\begin{itemize}
+\item family, penalty, alpha and Elastic Net L1 ratio where relevant;
+\item number and identity of active instruments;
+\item signed weights, gross absolute exposure and largest absolute position;
+\item train, validation and untouched-test metrics;
+\item support stability and relative weight stability;
+\item gross and residual RMSE, VaR and Expected Shortfall;
+\item metrics by recalled, maturity and barrier-hit regimes;
+\item initial net cost, gross purchased exposure and execution-cost scenario;
+\item borrowing frequency, additional-capital quantiles and terminal hedge profit and loss;
+\item estimator type, effective sample size and confidence interval for importance sampling.
+\end{itemize}
+
+\section{Recommended Reproducibility Protocol}
+
+\begin{enumerate}
+\item Freeze the contractual parameters, calendar convention and market assumptions.
+\item Record the code revision, random seeds, simulation mode and package versions.
+\item Generate calibration, validation and final-test samples independently.
+\item Select alpha and profiles without consulting the final-test sample.
+\item Freeze portfolio weights before comparing Monte Carlo estimators.
+\item Save machine-readable result tables separately from presentation figures.
+\item Update this report manually only after numerical and visual checks pass.
+\end{enumerate}
+
+\section{References}
+
+\begin{itemize}
+\item Black, F. and Scholes, M. (1973). The Pricing of Options and Corporate Liabilities. \emph{Journal of Political Economy}, 81(3), 637--654.
+\item Glasserman, P. (2004). \emph{Monte Carlo Methods in Financial Engineering}. Springer.
+\item Hastie, T., Tibshirani, R. and Friedman, J. (2009). \emph{The Elements of Statistical Learning}. Springer.
+\item McNeil, A. J., Frey, R. and Embrechts, P. (2015). \emph{Quantitative Risk Management}. Princeton University Press.
+\end{itemize}
+
+\end{document}

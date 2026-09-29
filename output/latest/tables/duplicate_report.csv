@@ -1,0 +1,2 @@
+﻿penalty,duplicate_type,kept_alpha,removed_alpha,kept_n_options_active,removed_n_options_active,kept_validation_rmse,removed_validation_rmse,support_jaccard,relative_weight_distance,reason,family
+l2,quasi_strict_duplicate,2151.919048298958,1210.113009322791,92,97,5.20449898928008,5.194663568465738,0.9509803921568627,0.008093919457220112,"support >= 95 %, poids proches et performance indiscernable",calls_puts

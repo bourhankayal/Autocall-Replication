@@ -1,0 +1,5 @@
+﻿issuer,document_date,structure,issue_price,estimated_value_low,estimated_value_high,source_url,gap_pct_low,gap_pct_high,gap_pct_mid,benchmark_scope
+JPMorgan,2025-04-09,Auto Callable Notes,1000.0,971.6,971.6,https://www.sec.gov/Archives/edgar/data/19617/000121390025028272/ea0236912-01_424b2.htm,2.8399999999999976,2.8399999999999976,2.8399999999999976,issue price minus issuer estimated value; not realized desk P&L
+Barclays,2025-11-24,Auto-Callable Notes,1000.0,940.0,940.0,https://www.sec.gov/Archives/edgar/data/312070/000191870425019389/form424b2.htm,6.0,6.0,6.0,issue price minus issuer estimated value; not realized desk P&L
+Morgan Stanley,2026-05-14,Jump Notes with Auto-Callable Feature,1000.0,895.5,975.5,https://www.sec.gov/Archives/edgar/data/895421/000183988226023540/ms15872_424b2-15430.htm,2.45,10.45,6.449999999999999,issue price minus issuer estimated value; not realized desk P&L
+Goldman Sachs,2025-05-01,Autocallable Contingent Coupon Notes,1000.0,890.0,920.0,https://www.sec.gov/Archives/edgar/data/0000886982/000095017025052435/amznco11_auto_prelim.htm,8.0,11.0,9.5,issue price minus issuer estimated value; not realized desk P&L
