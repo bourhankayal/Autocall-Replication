@@ -1,0 +1,13 @@
+﻿family,penalty,l1_ratio,alpha_reference,reference_type
+calls_puts,l0,,0.44525221573275525,cash-vers-support ; heuristique L0
+calls_puts,l1,,5.831137517624113,seuil RMSE sparse
+calls_puts,l2,,7.208754052749637,croisement RMSE/coût L2 ; pas un seuil de sparsité
+calls_puts,elastic_net,0.1,58.31137517624113,seuil RMSE sparse propre au rho
+calls_puts,elastic_net,0.5,11.662275035248227,seuil RMSE sparse propre au rho
+calls_puts,elastic_net,0.9,6.4790416862490146,seuil RMSE sparse propre au rho
+full,l0,,0.5272853436056308,cash-vers-support ; heuristique L0
+full,l1,,5.831137517624113,seuil RMSE sparse
+full,l2,,0.3186541738109529,croisement RMSE/coût L2 ; pas un seuil de sparsité
+full,elastic_net,0.1,58.31137517624113,seuil RMSE sparse propre au rho
+full,elastic_net,0.5,11.662275035248227,seuil RMSE sparse propre au rho
+full,elastic_net,0.9,6.4790416862490146,seuil RMSE sparse propre au rho

@@ -1,0 +1,13 @@
+﻿Famille,Pénalité,Profil,binary_mode,Trajectoires,P&L moyen,Capital P95
+calls_puts,elastic_net,compromise,no_binaries,250,0.287,4.0791
+calls_puts,l0,compromise,no_binaries,250,0.2463,4.2521
+calls_puts,l1,compromise,no_binaries,250,0.3048,4.2811
+calls_puts,l2,compromise,no_binaries,250,0.5332,4.4366
+full,elastic_net,compromise,theoretical,250,0.2495,4.031
+full,elastic_net,compromise,vertical_spread,250,0.3039,4.0668
+full,l0,compromise,theoretical,250,0.2307,4.0908
+full,l0,compromise,vertical_spread,250,0.3139,4.0166
+full,l1,compromise,theoretical,250,-0.1024,4.6551
+full,l1,compromise,vertical_spread,250,0.2215,4.4183
+full,l2,compromise,theoretical,250,0.2981,3.8163
+full,l2,compromise,vertical_spread,250,0.3458,3.7648

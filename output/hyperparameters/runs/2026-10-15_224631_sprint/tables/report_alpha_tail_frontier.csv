@@ -1,0 +1,28 @@
+﻿Famille,Pénalité,Alpha,RMSE validation,ES validation,Options actives,retained_profiles
+calls_puts,l0,0.0008,9.0251,1.6598,5,"performance, compromise, parsimony"
+calls_puts,l1,0.1025,9.8113,1.4449,6,
+calls_puts,l1,0.0182,9.2286,1.5756,5,"performance, compromise, parsimony"
+calls_puts,l2,3422.2009,11.2976,0.9821,62,
+calls_puts,l2,108.2195,11.1593,1.0442,85,
+calls_puts,l2,3.4222,9.9701,1.7341,85,
+calls_puts,l2,0.1082,9.2828,1.9108,85,"performance, compromise, parsimony"
+calls_puts,l2,0.0034,9.4668,1.8642,85,
+calls_puts,elastic_net,0.1138,9.8534,1.4481,6,
+calls_puts,elastic_net,0.0202,9.1697,1.5783,6,"performance, compromise, parsimony"
+full,l0,0.0004,9.7809,0.7387,14,"performance, compromise, parsimony"
+full,l0,0.0001,9.7809,0.7386,14,
+full,l0,0.0,9.781,0.7386,14,
+full,l0,0.0,9.7811,0.7385,14,
+full,l1,0.1025,10.1591,1.0162,6,
+full,l1,0.0032,9.6984,0.8317,7,"performance, compromise, parsimony"
+full,l1,0.0006,9.8381,0.7029,9,
+full,l2,7307.488,11.2998,0.98,94,
+full,l2,231.0831,11.1989,1.0672,165,
+full,l2,0.0073,9.5355,0.9448,169,"performance, compromise, parsimony"
+full,elastic_net,0.0324,9.6875,1.0338,21,
+full,elastic_net,0.0058,9.694,0.8309,27,"performance, compromise, parsimony"
+full,elastic_net,0.0065,9.7539,0.7593,14,
+full,elastic_net,0.0012,9.8898,0.6243,10,
+full,elastic_net,0.1138,10.1627,1.0379,6,
+full,elastic_net,0.0036,9.7024,0.8248,8,
+full,elastic_net,0.0006,9.8432,0.6935,9,

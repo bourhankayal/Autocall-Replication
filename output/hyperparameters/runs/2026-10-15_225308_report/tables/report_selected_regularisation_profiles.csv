@@ -1,0 +1,25 @@
+﻿Famille,Pénalité,Profil,Ratio L1 (ρ),Alpha relatif,RMSE validation,Options actives
+calls_puts,l0,performance,,0.0237,2.67,8
+calls_puts,l0,compromise,,0.0237,2.67,8
+calls_puts,l0,parsimony,,0.0237,2.67,8
+calls_puts,l1,performance,,0.0032,1.9627,25
+calls_puts,l1,compromise,,0.0075,1.9789,19
+calls_puts,l1,parsimony,,0.0133,2.0298,15
+calls_puts,l2,performance,,0.0001,1.9946,136
+calls_puts,l2,compromise,,0.0001,1.9946,136
+calls_puts,l2,parsimony,,0.0001,1.9946,136
+calls_puts,elastic_net,performance,0.9,0.0032,1.9653,27
+calls_puts,elastic_net,compromise,0.9,0.0075,1.9958,19
+calls_puts,elastic_net,parsimony,0.9,0.0178,2.1402,16
+full,l0,performance,,0.1,3.0195,5
+full,l0,compromise,,0.1,3.0195,5
+full,l0,parsimony,,0.7499,3.2106,2
+full,l1,performance,,0.0075,1.9532,27
+full,l1,compromise,,0.0133,1.9936,24
+full,l1,parsimony,,0.0237,2.2124,23
+full,l2,performance,,0.0001,1.9794,272
+full,l2,compromise,,0.0001,1.9794,272
+full,l2,parsimony,,0.0001,1.9794,272
+full,elastic_net,performance,0.9,0.0075,1.9442,32
+full,elastic_net,compromise,0.9,0.0075,1.9442,32
+full,elastic_net,parsimony,0.9,0.0133,2.0133,26

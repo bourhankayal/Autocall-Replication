@@ -1,0 +1,37 @@
+﻿Famille,Pénalité,Profil,Implémentation,price_type,Prix (% nominal),Marge vs théorique (% nominal)
+calls_puts,l0,compromise,Calls + Puts calibré,theoretical,100.5378,0.0
+calls_puts,l0,compromise,Calls + Puts calibré,minimum_coverage,100.2915,-0.2463
+calls_puts,l0,compromise,Calls + Puts calibré,commercial,101.2915,0.7537
+calls_puts,l1,compromise,Calls + Puts calibré,theoretical,100.5378,0.0
+calls_puts,l1,compromise,Calls + Puts calibré,minimum_coverage,100.233,-0.3048
+calls_puts,l1,compromise,Calls + Puts calibré,commercial,101.233,0.6952
+calls_puts,l2,compromise,Calls + Puts calibré,theoretical,100.5378,0.0
+calls_puts,l2,compromise,Calls + Puts calibré,minimum_coverage,100.0046,-0.5332
+calls_puts,l2,compromise,Calls + Puts calibré,commercial,101.0046,0.4668
+calls_puts,elastic_net,compromise,Calls + Puts calibré,theoretical,100.5378,0.0
+calls_puts,elastic_net,compromise,Calls + Puts calibré,minimum_coverage,100.2508,-0.287
+calls_puts,elastic_net,compromise,Calls + Puts calibré,commercial,101.2508,0.713
+full,l0,compromise,Full — binaires théoriques,theoretical,100.5378,0.0
+full,l0,compromise,Full — binaires théoriques,minimum_coverage,100.3071,-0.2307
+full,l0,compromise,Full — binaires théoriques,commercial,101.3071,0.7693
+full,l0,compromise,Full — binaires remplacées par spreads,theoretical,100.5378,0.0
+full,l0,compromise,Full — binaires remplacées par spreads,minimum_coverage,100.2239,-0.3139
+full,l0,compromise,Full — binaires remplacées par spreads,commercial,101.2239,0.6861
+full,l1,compromise,Full — binaires théoriques,theoretical,100.5378,0.0
+full,l1,compromise,Full — binaires théoriques,minimum_coverage,100.6401,0.1024
+full,l1,compromise,Full — binaires théoriques,commercial,101.6401,1.1024
+full,l1,compromise,Full — binaires remplacées par spreads,theoretical,100.5378,0.0
+full,l1,compromise,Full — binaires remplacées par spreads,minimum_coverage,100.3163,-0.2215
+full,l1,compromise,Full — binaires remplacées par spreads,commercial,101.3163,0.7785
+full,l2,compromise,Full — binaires théoriques,theoretical,100.5378,0.0
+full,l2,compromise,Full — binaires théoriques,minimum_coverage,100.2397,-0.2981
+full,l2,compromise,Full — binaires théoriques,commercial,101.2397,0.7019
+full,l2,compromise,Full — binaires remplacées par spreads,theoretical,100.5378,0.0
+full,l2,compromise,Full — binaires remplacées par spreads,minimum_coverage,100.192,-0.3458
+full,l2,compromise,Full — binaires remplacées par spreads,commercial,101.192,0.6542
+full,elastic_net,compromise,Full — binaires théoriques,theoretical,100.5378,0.0
+full,elastic_net,compromise,Full — binaires théoriques,minimum_coverage,100.2883,-0.2495
+full,elastic_net,compromise,Full — binaires théoriques,commercial,101.2883,0.7505
+full,elastic_net,compromise,Full — binaires remplacées par spreads,theoretical,100.5378,0.0
+full,elastic_net,compromise,Full — binaires remplacées par spreads,minimum_coverage,100.2339,-0.3039
+full,elastic_net,compromise,Full — binaires remplacées par spreads,commercial,101.2339,0.6961

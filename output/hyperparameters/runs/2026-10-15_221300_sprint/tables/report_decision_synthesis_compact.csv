@@ -1,0 +1,24 @@
+﻿Famille,Pénalité,Méthode,Profil,Alpha relatif,Ratio L1 (ρ),Lambda ES,Plafond ES (% nominal),Budget d'optimisation (% nominal),RMSE validation (% nominal),ES validation (% nominal),Options actives,Statut
+calls_puts,elastic_net,RMSE + lambda ES,compromise,0.01,0.1,0.0,,,4.9661,16.5787,127.0,retenu
+calls_puts,elastic_net,RMSE régularisée,compromise,0.0316,0.9,,,,9.4377,,6.0,retenu
+calls_puts,elastic_net,RMSE sous budget ES,compromise,1.0,0.9,,10.0,10.0,9.009,9.6751,10.0,retenu
+calls_puts,l0,RMSE + lambda ES,compromise,0.01,,0.0,,,5.0253,14.1674,15.0,retenu
+calls_puts,l0,RMSE régularisée,compromise,0.1778,,,,,9.3352,,5.0,retenu
+calls_puts,l0,RMSE sous budget ES,compromise,,,,10.0,,,,,aucun candidat sous ce plafond commun en validation
+calls_puts,l1,RMSE + lambda ES,compromise,0.01,,0.25,,,6.5639,24.8446,126.0,retenu
+calls_puts,l1,RMSE régularisée,compromise,0.0316,,,,,9.4734,,5.0,retenu
+calls_puts,l1,RMSE sous budget ES,compromise,1.0,,,10.0,15.0,9.3678,7.5429,122.0,retenu
+calls_puts,l2,RMSE + lambda ES,compromise,0.1,,0.25,,,5.4411,15.4646,109.0,retenu
+calls_puts,l2,RMSE régularisée,compromise,0.0032,,,,,9.5024,,85.0,retenu
+calls_puts,l2,RMSE sous budget ES,compromise,,,,10.0,,,,,aucun candidat sous ce plafond commun en validation
+full,elastic_net,RMSE + lambda ES,compromise,0.1,0.9,0.0,,,7.1077,13.2411,174.0,retenu
+full,elastic_net,RMSE régularisée,compromise,0.001,0.1,,,,9.5721,,27.0,retenu
+full,elastic_net,RMSE sous budget ES,compromise,1.0,0.9,,10.0,15.0,9.0368,9.9513,4.0,retenu
+full,l0,RMSE + lambda ES,compromise,1.0,,0.0,,,6.1107,23.0872,14.0,retenu
+full,l0,RMSE régularisée,compromise,0.1778,,,,,9.6213,,14.0,retenu
+full,l0,RMSE sous budget ES,compromise,,,,10.0,,,,,aucun candidat sous ce plafond commun en validation
+full,l1,RMSE régularisée,compromise,0.0056,,,,,9.5891,,7.0,retenu
+full,l1,RMSE sous budget ES,compromise,1.0,,,10.0,10.0,9.3861,7.5376,193.0,retenu
+full,l2,RMSE + lambda ES,compromise,1.0,,0.25,,,5.4821,18.4489,218.0,retenu
+full,l2,RMSE régularisée,compromise,0.0001,,,,,9.4735,,169.0,retenu
+full,l2,RMSE sous budget ES,compromise,,,,10.0,,,,,aucun candidat sous ce plafond commun en validation

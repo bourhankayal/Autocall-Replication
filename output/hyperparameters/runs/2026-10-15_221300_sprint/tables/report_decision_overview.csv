@@ -1,0 +1,24 @@
+﻿family,penalty,method,validation_rmse_pct_notional,validation_es_pct_notional,n_options_active,selection_status
+calls_puts,elastic_net,RMSE + lambda ES,4.966087239983102,16.5786861836078,127.0,retenu
+calls_puts,elastic_net,RMSE régularisée,9.437652774013033,,6.0,retenu
+calls_puts,elastic_net,RMSE sous budget ES,9.009029291881808,9.675058472845144,10.0,retenu
+calls_puts,l0,RMSE + lambda ES,5.025275593339779,14.167433397550738,15.0,retenu
+calls_puts,l0,RMSE régularisée,9.33520207710044,,5.0,retenu
+calls_puts,l0,RMSE sous budget ES,,,,aucun candidat sous ce plafond commun en validation
+calls_puts,l1,RMSE + lambda ES,6.563929628567973,24.84464054823442,126.0,retenu
+calls_puts,l1,RMSE régularisée,9.473364472638796,,5.0,retenu
+calls_puts,l1,RMSE sous budget ES,9.367828603312187,7.542916674452486,122.0,retenu
+calls_puts,l2,RMSE + lambda ES,5.441145269196011,15.464616852433275,109.0,retenu
+calls_puts,l2,RMSE régularisée,9.502370245189974,,85.0,retenu
+calls_puts,l2,RMSE sous budget ES,,,,aucun candidat sous ce plafond commun en validation
+full,elastic_net,RMSE + lambda ES,7.1076514511781985,13.241056560161649,174.0,retenu
+full,elastic_net,RMSE régularisée,9.572062616765162,,27.0,retenu
+full,elastic_net,RMSE sous budget ES,9.03675513341401,9.95131190039599,4.0,retenu
+full,l0,RMSE + lambda ES,6.110657439353628,23.087187953909666,14.0,retenu
+full,l0,RMSE régularisée,9.621255650920714,,14.0,retenu
+full,l0,RMSE sous budget ES,,,,aucun candidat sous ce plafond commun en validation
+full,l1,RMSE régularisée,9.589103883897929,,7.0,retenu
+full,l1,RMSE sous budget ES,9.386119731184927,7.53764367582013,193.0,retenu
+full,l2,RMSE + lambda ES,5.482099063663403,18.448860899381536,218.0,retenu
+full,l2,RMSE régularisée,9.47351863915895,,169.0,retenu
+full,l2,RMSE sous budget ES,,,,aucun candidat sous ce plafond commun en validation

@@ -1,0 +1,9 @@
+﻿Famille,Ratio L1 (ρ),Alpha relatif,RMSE validation,Options actives,Convergé
+calls_puts,0.1,0.0056,9.4435,17,True
+calls_puts,0.5,0.0316,9.4941,10,True
+calls_puts,0.9,0.0316,9.4377,6,True
+full,0.1,0.0056,9.6061,21,True
+full,0.1,0.001,9.5721,27,True
+full,0.5,0.0056,9.5971,14,True
+full,0.5,0.001,9.6528,10,True
+full,0.9,0.0056,9.5895,8,True

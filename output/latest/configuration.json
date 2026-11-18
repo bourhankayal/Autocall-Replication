@@ -23,36 +23,52 @@
   },
   "execution": {
     "mode": "fast",
-    "pricing_paths": 2000,
-    "surface_paths": 200,
-    "benchmark_paths": 200,
-    "pathwise_paths": 300,
-    "alpha_paths": 300,
-    "stability_paths": 300,
+    "pricing_paths": 2500,
+    "alpha_paths": 375,
+    "stability_paths": 375,
     "stability_calibrations": 10,
-    "risk_paths": 2000,
+    "risk_paths": 2500,
     "importance_bootstrap": 100,
-    "funding_paths": 200,
-    "curve_paths": 500
+    "tail_calibration_paths": 375,
+    "tail_evaluation_paths": 1250,
+    "funding_paths": 250,
+    "curve_paths": 625
   },
   "families": [
     "calls_puts",
     "full"
   ],
   "solver": "legacy",
+  "hyperparameter_selection": {
+    "source_run": "2026-11-16_154918_fast_2",
+    "mode": "fast",
+    "configuration_fingerprint": "dad4b0a8f0d5d9f4c7f8bd20532b87d3b50fb1bcb25dcfd7b8d7f78ca67f77c3"
+  },
   "flags": {
     "importance_sampling": true,
-    "market_costs": false,
-    "market_exploration": false
+    "tail_risk_experiments": true
+  },
+  "delta_benchmark": {
+    "rebalancing_business_days": [
+      1,
+      5
+    ],
+    "spot_nodes": 801,
+    "transaction_costs_included": false
   },
   "seeds": {
     "pricing": 42,
-    "alpha_selection": 42,
+    "temporal_benchmark_evaluation": 1042,
+    "conditional_method_comparison": 31500,
     "stability": 10500,
     "standard_risk": 20500,
     "importance_sampling": 20500,
     "importance_bootstrap_standard_base": 31000,
     "importance_bootstrap_is_base": 41000,
-    "funding": 20500
+    "tail_standard_calibration": 51000,
+    "tail_importance_calibration": 52000,
+    "tail_independent_evaluation": 53000,
+    "funding": 20500,
+    "delta_benchmark": 81500
   }
 }

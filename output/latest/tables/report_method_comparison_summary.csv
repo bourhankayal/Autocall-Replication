@@ -1,0 +1,17 @@
+﻿Famille,Pénalité,Méthode,RMSE paiements (% nominal),Erreur moyenne terminale (% nominal),MAE terminale (% nominal),RMSE terminale (% nominal),Taux de sous-réplication terminale,"ES terminal 97,5 % (% nominal)",Perte maximale terminale (% nominal),Besoin de financement P95 (% nominal)
+calls_puts,l0,Conditionnel par échéance,16.191,-4.2583,26.1496,34.8833,0.5216,58.6266,88.1752,42.8498
+calls_puts,l0,Politique totale pathwise,49.8933,-0.1958,1.2239,4.1817,0.3616,13.5675,28.6898,0.9693
+calls_puts,l2,Conditionnel par échéance,11.0126,-2.661,13.6098,22.6075,0.4784,46.0772,49.3831,38.1828
+calls_puts,l2,Politique totale pathwise,49.8577,-0.2304,2.1349,5.6691,0.5376,6.1959,28.7336,4.0962
+calls_puts,l1,Conditionnel par échéance,10.7086,-2.5182,13.2464,21.819,0.5296,46.3208,51.0967,38.0234
+calls_puts,l1,Politique totale pathwise,49.8835,-0.205,1.2517,3.9806,0.4192,10.3335,28.6896,1.0769
+calls_puts,elastic_net,Conditionnel par échéance,10.7659,-2.4694,13.0872,21.9128,0.5376,46.1334,51.0014,38.1934
+calls_puts,elastic_net,Politique totale pathwise,49.9032,-0.0882,1.1749,3.6675,0.3808,10.7341,29.5442,2.5843
+full,l0,Conditionnel par échéance,0.0161,0.0029,0.008,0.0325,0.5424,0.1087,0.6266,0.015
+full,l0,Politique totale pathwise,49.7792,-0.2699,0.9661,3.7226,0.2592,11.2525,28.6899,0.3771
+full,l2,Conditionnel par échéance,0.0175,0.0018,0.0018,0.035,0.4032,0.0715,0.847,0.0
+full,l2,Politique totale pathwise,49.9365,-0.224,1.1727,3.4673,0.6112,9.1106,31.4538,2.5837
+full,l1,Conditionnel par échéance,0.0757,0.0119,0.0616,0.1493,0.7488,0.3448,0.7699,0.1784
+full,l1,Politique totale pathwise,50.4376,-0.9899,1.9638,6.7091,0.5824,17.9158,50.8681,0.1989
+full,elastic_net,Conditionnel par échéance,0.1773,0.0215,0.0408,0.355,0.432,0.9956,7.145,0.047
+full,elastic_net,Politique totale pathwise,49.8937,-0.2023,1.1199,3.4945,0.3856,9.1528,29.9985,1.8981

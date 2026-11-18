@@ -496,8 +496,13 @@ def evaluate_conditional_policy_funding(
     premium_seed: int = 30500,
     spread_width: float = 5.0,
     levels: Sequence[float] = DEFAULT_RISK_LEVELS,
+    binary_modes: Sequence[str] | None = None,
 ) -> dict[str, object]:
-    """Évalue coût, besoin de financement et P&L sans recalibrer alpha."""
+    """Évalue coût, besoin de financement et P&L sans recalibrer alpha.
+
+    ``binary_modes`` permet de limiter explicitement les implémentations
+    évaluées. Par défaut, le comportement historique est conservé.
+    """
     if n_paths < 10:
         raise ValueError("n_paths doit être supérieur ou égal à 10.")
     if initial_autocall_premium is None:
@@ -535,7 +540,18 @@ def evaluate_conditional_policy_funding(
     )
     visits = pd.DataFrame(design["visits"])
     profiles = pd.DataFrame(base_result["profiles"])
-    modes = _funding_modes_for_family(str(base_result["family"]))
+    available_modes = _funding_modes_for_family(str(base_result["family"]))
+    if binary_modes is None:
+        modes = available_modes
+    else:
+        requested_modes = tuple(dict.fromkeys(str(mode) for mode in binary_modes))
+        for mode in requested_modes:
+            _validate_binary_mode(mode)
+        modes = tuple(mode for mode in available_modes if mode in requested_modes)
+        if not modes:
+            raise ValueError(
+                "Aucun binary_mode demandé n'est compatible avec la famille évaluée."
+            )
     ledger_frames: list[pd.DataFrame] = []
     path_rows: list[dict[str, object]] = []
 
@@ -685,5 +701,9 @@ def evaluate_conditional_policy_funding(
         "evaluation_status": "independent_paths_no_refit_no_alpha_selection",
         "test_status": base_result.get("test_status", "reserved_not_evaluated"),
         "market_spread_status": "deferred",
-        "otc_status": "provisional_payout_floor_scenarios",
+        "otc_status": (
+            "provisional_payout_floor_scenarios"
+            if any(mode.startswith("otc_") for mode in modes)
+            else "not_evaluated"
+        ),
     }

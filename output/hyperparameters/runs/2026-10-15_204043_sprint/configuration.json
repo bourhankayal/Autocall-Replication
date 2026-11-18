@@ -1,0 +1,104 @@
+{
+  "contract_and_model": {
+    "product": {
+      "notional": 100.0,
+      "autocall_strike": 1.0,
+      "coupon_barrier": 0.8,
+      "coupon_rate": 0.02,
+      "down_barrier": 0.7,
+      "observation_months": [
+        3,
+        6,
+        9,
+        12
+      ]
+    },
+    "market": {
+      "spot0": 100.0,
+      "valuation_date": "2026-06-20T00:00:00",
+      "contract_start_date": "2026-06-22T00:00:00",
+      "maturity_date": "2027-06-22T00:00:00",
+      "rate": 0.03,
+      "dividend_yield": 0.01,
+      "volatility": 0.2
+    },
+    "families": [
+      "calls_puts",
+      "full"
+    ],
+    "model": "risk_neutral_black_scholes_gbm",
+    "policy": "conditional_pathwise_one_period_instruments"
+  },
+  "configuration_fingerprint": "dad4b0a8f0d5d9f4c7f8bd20532b87d3b50fb1bcb25dcfd7b8d7f78ca67f77c3",
+  "hyperparameter_grid": {
+    "penalties": [
+      "l0",
+      "l1",
+      "l2",
+      "elastic_net"
+    ],
+    "n_alphas": 5,
+    "exploratory_alpha_sparse": [
+      1e-08,
+      0.0001,
+      1.0,
+      10000.0,
+      100000000.0
+    ],
+    "exploratory_alpha_ridge": [
+      1e-08,
+      0.0001,
+      1.0,
+      10000.0,
+      100000000.0
+    ],
+    "min_alpha_ratio": 0.001,
+    "ridge_min_alpha_ratio": 0.0001,
+    "ridge_max_alpha_ratio": 100.0,
+    "elastic_net_l1_ratios": [
+      0.1,
+      0.5,
+      0.9
+    ],
+    "tail_alpha_ratios": [
+      1.0,
+      0.1,
+      0.01
+    ],
+    "lambda_es_values": [
+      0.0,
+      0.25,
+      1.0,
+      2.0
+    ],
+    "es_budget_pct_notional": [
+      5.0,
+      10.0,
+      15.0
+    ],
+    "importance_candidates": [
+      [
+        [
+          0.0,
+          -1.0
+        ],
+        [
+          0.7,
+          0.3
+        ]
+      ],
+      [
+        [
+          0.0,
+          -1.0,
+          -2.0
+        ],
+        [
+          0.5,
+          0.3,
+          0.2
+        ]
+      ]
+    ]
+  }
+}

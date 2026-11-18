@@ -1,0 +1,12 @@
+﻿Famille,Pénalité,Niveau de plafond,Profil,Ratio L1 (ρ),Alpha relatif (queue),Budget d'optimisation (% nominal),Plafond commun (% nominal),Budget d'optimisation respecté en validation,RMSE validation,ES validation,Options actives,method_status
+calls_puts,l0,souple,rmse_priority,,1.0,15.0,15.0,True,3.3887,14.2406,2,L0 support-refit heuristic; not a global optimum
+calls_puts,l1,intermédiaire,compromise,,0.03,5.0,10.0,False,2.3542,9.2729,23,
+calls_puts,l1,souple,rmse_priority,,0.03,15.0,15.0,True,2.3454,10.254,80,
+calls_puts,elastic_net,intermédiaire,compromise,0.5,0.01,10.0,10.0,True,2.2923,9.6223,33,
+calls_puts,elastic_net,souple,rmse_priority,0.5,0.01,10.0,15.0,True,2.2923,9.6223,33,
+full,l0,souple,rmse_priority,,0.3,15.0,15.0,True,3.3177,14.5592,3,L0 support-refit heuristic; not a global optimum
+full,l1,intermédiaire,compromise,,0.03,10.0,10.0,True,2.3515,9.2564,109,
+full,l1,souple,rmse_priority,,0.03,10.0,15.0,True,2.3515,9.2564,109,
+full,l2,souple,rmse_priority,,1.0,10.0,15.0,False,2.8125,12.2848,250,
+full,elastic_net,intermédiaire,compromise,0.5,0.01,5.0,10.0,False,2.2965,9.1274,37,
+full,elastic_net,souple,rmse_priority,0.5,0.01,5.0,15.0,False,2.2965,9.1274,37,

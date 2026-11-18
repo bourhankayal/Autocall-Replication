@@ -1,0 +1,25 @@
+﻿family,penalty,method,profile,alpha_relative,l1_ratio,lambda_es,es_budget_pct_notional,optimisation_budget_pct_notional,validation_rmse_pct_notional,validation_es_pct_notional,n_options_active,selection_status
+calls_puts,elastic_net,RMSE + lambda ES,compromise,0.01,0.5,0.25,,,2.4711428159029984,10.083981519488578,138.0,retenu
+calls_puts,elastic_net,RMSE régularisée,compromise,0.3162277660168379,0.5,,,,7.190174544098299,,7.0,retenu
+calls_puts,elastic_net,RMSE sous budget ES,compromise,0.01,0.1,,10.0,5.0,2.370274058057681,8.982926523788061,55.0,retenu
+calls_puts,l0,RMSE + lambda ES,compromise,1.0,,0.0,,,5.513804584192271,25.4883041217402,4.0,retenu
+calls_puts,l0,RMSE régularisée,compromise,0.0316227766016838,,,,,68.0197355869548,,4.0,retenu
+calls_puts,l0,RMSE sous budget ES,compromise,,,,10.0,,,,,aucun candidat sous ce plafond commun en validation
+calls_puts,l1,RMSE + lambda ES,compromise,0.01,,0.25,,,2.855635535053902,13.9659764369922,138.0,retenu
+calls_puts,l1,RMSE régularisée,compromise,0.1,,,,,16.350402804881426,,4.0,retenu
+calls_puts,l1,RMSE sous budget ES,compromise,0.10000000000000002,,,10.0,10.0,3.3205165928827047,8.63947971402048,58.0,retenu
+calls_puts,l2,RMSE + lambda ES,compromise,1.0,,0.25,,,5.773103584040731,27.332540661404206,118.0,retenu
+calls_puts,l2,RMSE régularisée,compromise,10.0,,,,,8.178162643401079,,70.0,retenu
+calls_puts,l2,RMSE sous budget ES,compromise,,,,10.0,,,,,aucun candidat sous ce plafond commun en validation
+full,elastic_net,RMSE + lambda ES,compromise,0.009999999999999998,0.9,0.25,,,2.559487628841085,11.69733314548069,294.0,retenu
+full,elastic_net,RMSE régularisée,compromise,0.31622776601683794,0.5,,,,7.046368668464094,,11.0,retenu
+full,elastic_net,RMSE sous budget ES,compromise,0.01,0.1,,10.0,5.0,2.376647377884397,9.027302339607827,64.0,retenu
+full,l0,RMSE + lambda ES,compromise,1.0,,0.25,,,4.230373835042716,15.247860198481373,8.0,retenu
+full,l0,RMSE régularisée,compromise,0.10000000000000002,,,,,28.704337208036506,,8.0,retenu
+full,l0,RMSE sous budget ES,compromise,,,,10.0,,,,,aucun candidat sous ce plafond commun en validation
+full,l1,RMSE + lambda ES,compromise,0.1,,0.25,,,8.353136859822705,23.526099250925714,159.0,retenu
+full,l1,RMSE régularisée,compromise,0.03162277660168379,,,,,7.157003461080997,,7.0,retenu
+full,l1,RMSE sous budget ES,compromise,0.1,,,10.0,10.0,3.3206804550508338,8.639157464320647,91.0,retenu
+full,l2,RMSE + lambda ES,compromise,1.0,,0.25,,,7.82446994558696,35.46408158893935,236.0,retenu
+full,l2,RMSE régularisée,compromise,9.999999999999998,,,,,8.263801232577558,,156.0,retenu
+full,l2,RMSE sous budget ES,compromise,,,,10.0,,,,,aucun candidat sous ce plafond commun en validation

@@ -1,0 +1,5 @@
+﻿Famille,Pénalité,objective,Ratio L1 (ρ),Alpha relatif (queue),Lambda ES,lambda_selection_allowed,Budget d'optimisation (% nominal),Budget d'optimisation respecté en validation,RMSE validation,ES validation,Options actives,method_status
+calls_puts,l1,constrained_es,,1.0,,True,15.0,True,5.871,8.1961,104,
+calls_puts,elastic_net,penalized_es,0.5,1.0,0.0,True,,True,8.0727,7.0198,137,
+full,elastic_net,constrained_es,0.9,1.0,,True,10.0,True,5.887,8.2267,85,
+full,elastic_net,penalized_es,0.1,0.01,0.25,True,,True,2.5854,7.3518,293,

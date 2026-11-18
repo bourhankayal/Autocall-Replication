@@ -1,0 +1,9 @@
+﻿family,penalty,selected_optimisation_budget_pct_notional,selected_validation_rmse_pct_notional,selected_validation_es_pct_notional,selected_n_options_active,status
+calls_puts,l0,,,,,aucun candidat sous ce plafond
+calls_puts,l1,5.0,2.3541862229458346,9.272929842475031,23.0,retenu
+calls_puts,l2,,,,,aucun candidat sous ce plafond
+calls_puts,elastic_net,10.0,2.2923445209841873,9.622298623129703,33.0,retenu
+full,l0,,,,,aucun candidat sous ce plafond
+full,l1,10.0,2.3514981714332652,9.256421436188756,109.0,retenu
+full,l2,,,,,aucun candidat sous ce plafond
+full,elastic_net,5.0,2.296545233448626,9.127439508509422,37.0,retenu

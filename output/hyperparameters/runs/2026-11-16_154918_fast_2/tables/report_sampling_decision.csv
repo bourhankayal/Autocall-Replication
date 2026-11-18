@@ -1,0 +1,3 @@
+﻿Famille,Méthode,Distribution simulée,Pire écart-type IS / MC,Ratio médian IS / MC,ESS minimale (ratio)
+calls_puts,MC standard,MC standard — 0 : 100%,1.0,1.0,1.0
+full,MC standard,MC standard — 0 : 100%,1.0,1.0,1.0

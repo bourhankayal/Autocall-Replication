@@ -1,0 +1,73 @@
+﻿family,penalty,stage,remaining,removed_at_stage
+calls_puts,l0,Grille initiale,25,0
+calls_puts,l0,Convergés,23,2
+calls_puts,l0,≥ 2 options,21,2
+calls_puts,l0,Non dominés,1,20
+calls_puts,l0,Performance statique,1,0
+calls_puts,l0,Sans doublons stricts,1,0
+calls_puts,l0,Sans quasi-doublons,1,0
+calls_puts,l0,Profils distincts,1,0
+calls_puts,l0,Profils stables,1,0
+calls_puts,l1,Grille initiale,25,0
+calls_puts,l1,Convergés,25,0
+calls_puts,l1,≥ 2 options,22,3
+calls_puts,l1,Non dominés,1,21
+calls_puts,l1,Performance statique,1,0
+calls_puts,l1,Sans doublons stricts,1,0
+calls_puts,l1,Sans quasi-doublons,1,0
+calls_puts,l1,Profils distincts,1,0
+calls_puts,l1,Profils stables,0,1
+calls_puts,l2,Grille initiale,25,0
+calls_puts,l2,Convergés,25,0
+calls_puts,l2,≥ 2 options,25,0
+calls_puts,l2,Non dominés,8,17
+calls_puts,l2,Performance statique,8,0
+calls_puts,l2,Sans doublons stricts,8,0
+calls_puts,l2,Sans quasi-doublons,8,0
+calls_puts,l2,Profils distincts,3,5
+calls_puts,l2,Profils stables,3,0
+calls_puts,elastic_net,Grille initiale,25,0
+calls_puts,elastic_net,Convergés,25,0
+calls_puts,elastic_net,≥ 2 options,24,1
+calls_puts,elastic_net,Non dominés,4,20
+calls_puts,elastic_net,Performance statique,4,0
+calls_puts,elastic_net,Sans doublons stricts,4,0
+calls_puts,elastic_net,Sans quasi-doublons,4,0
+calls_puts,elastic_net,Profils distincts,3,1
+calls_puts,elastic_net,Profils stables,3,0
+full,l0,Grille initiale,25,0
+full,l0,Convergés,25,0
+full,l0,≥ 2 options,24,1
+full,l0,Non dominés,1,23
+full,l0,Performance statique,1,0
+full,l0,Sans doublons stricts,1,0
+full,l0,Sans quasi-doublons,1,0
+full,l0,Profils distincts,1,0
+full,l0,Profils stables,0,1
+full,l1,Grille initiale,25,0
+full,l1,Convergés,25,0
+full,l1,≥ 2 options,20,5
+full,l1,Non dominés,4,16
+full,l1,Performance statique,4,0
+full,l1,Sans doublons stricts,4,0
+full,l1,Sans quasi-doublons,4,0
+full,l1,Profils distincts,3,1
+full,l1,Profils stables,3,0
+full,l2,Grille initiale,25,0
+full,l2,Convergés,25,0
+full,l2,≥ 2 options,25,0
+full,l2,Non dominés,9,16
+full,l2,Performance statique,9,0
+full,l2,Sans doublons stricts,9,0
+full,l2,Sans quasi-doublons,9,0
+full,l2,Profils distincts,3,6
+full,l2,Profils stables,3,0
+full,elastic_net,Grille initiale,25,0
+full,elastic_net,Convergés,25,0
+full,elastic_net,≥ 2 options,24,1
+full,elastic_net,Non dominés,6,18
+full,elastic_net,Performance statique,6,0
+full,elastic_net,Sans doublons stricts,6,0
+full,elastic_net,Sans quasi-doublons,6,0
+full,elastic_net,Profils distincts,3,3
+full,elastic_net,Profils stables,3,0

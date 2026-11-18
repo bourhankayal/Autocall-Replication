@@ -1,0 +1,37 @@
+﻿Famille,Pénalité,Profil,Implémentation,Options actives,P&L moyen (% nominal),Capital P95 (% nominal)
+calls_puts,l0,performance,Calls + Puts calibré,2,0.2463,4.2521
+calls_puts,l0,compromise,Calls + Puts calibré,2,0.2463,4.2521
+calls_puts,l0,parsimony,Calls + Puts calibré,2,0.2463,4.2521
+calls_puts,l1,performance,Calls + Puts calibré,2,0.3048,4.2811
+calls_puts,l1,compromise,Calls + Puts calibré,2,0.3048,4.2811
+calls_puts,l1,parsimony,Calls + Puts calibré,2,0.3048,4.2811
+calls_puts,l2,performance,Calls + Puts calibré,118,0.3618,3.9491
+calls_puts,l2,compromise,Calls + Puts calibré,92,0.5332,4.4366
+calls_puts,l2,parsimony,Calls + Puts calibré,54,0.5662,4.4735
+calls_puts,elastic_net,performance,Calls + Puts calibré,31,0.318,4.1146
+calls_puts,elastic_net,compromise,Calls + Puts calibré,16,0.287,4.0791
+calls_puts,elastic_net,parsimony,Calls + Puts calibré,2,0.4104,4.3394
+full,l0,performance,Full — binaires théoriques,5,0.2307,4.0908
+full,l0,performance,Full — binaires remplacées par spreads,5,0.3139,4.0166
+full,l0,compromise,Full — binaires théoriques,5,0.2307,4.0908
+full,l0,compromise,Full — binaires remplacées par spreads,5,0.3139,4.0166
+full,l0,parsimony,Full — binaires théoriques,5,0.2307,4.0908
+full,l0,parsimony,Full — binaires remplacées par spreads,5,0.3139,4.0166
+full,l1,performance,Full — binaires théoriques,13,-0.1024,4.6551
+full,l1,performance,Full — binaires remplacées par spreads,13,0.2215,4.4183
+full,l1,compromise,Full — binaires théoriques,13,-0.1024,4.6551
+full,l1,compromise,Full — binaires remplacées par spreads,13,0.2215,4.4183
+full,l1,parsimony,Full — binaires théoriques,12,-0.043,4.5739
+full,l1,parsimony,Full — binaires remplacées par spreads,12,0.267,4.2705
+full,l2,performance,Full — binaires théoriques,231,0.3228,3.8268
+full,l2,performance,Full — binaires remplacées par spreads,231,0.3597,3.7132
+full,l2,compromise,Full — binaires théoriques,211,0.2981,3.8163
+full,l2,compromise,Full — binaires remplacées par spreads,211,0.3458,3.7648
+full,l2,parsimony,Full — binaires théoriques,99,0.5664,4.4734
+full,l2,parsimony,Full — binaires remplacées par spreads,99,0.5664,4.4736
+full,elastic_net,performance,Full — binaires théoriques,48,0.2818,3.8686
+full,elastic_net,performance,Full — binaires remplacées par spreads,48,0.3261,3.8346
+full,elastic_net,compromise,Full — binaires théoriques,19,0.2495,4.031
+full,elastic_net,compromise,Full — binaires remplacées par spreads,19,0.3039,4.0668
+full,elastic_net,parsimony,Full — binaires théoriques,2,0.4983,4.4304
+full,elastic_net,parsimony,Full — binaires remplacées par spreads,2,0.5149,4.4217

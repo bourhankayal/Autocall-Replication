@@ -7,8 +7,9 @@ from ..products import AutocallProduct, VanillaProduct, Cash, _year_fraction
 from .pathwise_payoff import vanilla_discounted_payoff_from_path
 from ..monte_carlo import simulate_gbm_path
 from .common import benchmark_metrics, build_naive_vanilla_basis, contractual_simulation_end_date
-from .optimization import SolverConfig, solve_replication
+from .optimization import SolverConfig, solve_l0_multistart, solve_replication
 from .portfolio_diagnostics import portfolio_weight_metrics
+from .risk import tail_risk_metrics
 
 
 # ============================================================
@@ -221,7 +222,7 @@ def run_naive_benchmark_curve(
     spot_min_mult: float = 0.70, spot_max_mult: float = 1.30,
     penalty: str = "l2",alpha: float = 1e-6,
     train_frac: float = 0.7,seed: int = 42,
-    solver: str = "legacy") -> dict[str, object]:
+    solver: str = "legacy", l1_ratio: float = 0.5) -> dict[str, object]:
     """Réplique les cashflows d'un autocall avec un panier fixe de vanilles.
     On apprend les poids sur des observations (path, date de cashflow) puis on teste ces mêmes poids sur des trajectoires jamais utilisées."""
     valuation_date = pd.Timestamp(valuation_date)
@@ -276,11 +277,14 @@ def run_naive_benchmark_curve(
 
     X_train_scaled = X_train / column_scale
 
-    optimization_result = solve_replication(
-        X_train_scaled,
-        y_train,
-        SolverConfig(solver=solver, penalty=penalty, alpha=alpha),
-    )
+    config = SolverConfig(solver=solver, penalty=penalty, alpha=alpha, l1_ratio=l1_ratio)
+    if penalty == "l0":
+        optimization_result, l0_audit = solve_l0_multistart(
+            X_train_scaled, y_train, config, seed=seed + 7001,
+        )
+    else:
+        optimization_result = solve_replication(X_train_scaled, y_train, config)
+        l0_audit = []
     scaled_weights = optimization_result.weights
 
     w = scaled_weights / column_scale
@@ -290,6 +294,14 @@ def run_naive_benchmark_curve(
 
     metrics_train = benchmark_metrics(y_train,pred_train)
     metrics_test = (benchmark_metrics(y_test, pred_test) if len(X_test) > 0 else {})
+    # Signed losses are liability minus replica; aggregate within each path first.
+    terminal_risk_test = {}
+    if test_set:
+        target_matrix = np.stack([item["y_curve"] for item in test_set])
+        replica_matrix = np.stack([item["X_curve"] @ w for item in test_set])
+        terminal_risk_test = tail_risk_metrics(
+            (target_matrix - replica_matrix).sum(axis=1), levels=(0.975,),
+        )
     metrics_by_date = []
     if len(test_set) > 0:
         dates = dataset[0]["dates"]
@@ -315,10 +327,12 @@ def run_naive_benchmark_curve(
         "test_set": test_set,
         "metrics_train": metrics_train,
         "metrics_test": metrics_test,
+        "terminal_risk_test": terminal_risk_test,
         "metrics_by_date": metrics_by_date,
         "family": family,
         "split": split,
         "optimization": optimization_result.metadata(),
+        "l0_initialization_audit": pd.DataFrame(l0_audit),
         "portfolio_metrics": portfolio_weight_metrics(vanillas, w)}
     
     

@@ -1,0 +1,57 @@
+﻿stage,remaining,removed_at_stage,family,penalty
+Solutions calculées,91,0,calls_puts,l0
+Convergence numérique,91,0,calls_puts,l0
+Budget respecté en calibration,91,0,calls_puts,l0
+Budget respecté en validation,3,88,calls_puts,l0
+Mesures de validation finies,3,0,calls_puts,l0
+Frontière non dominée,2,1,calls_puts,l0
+Politiques distinctes retenues,1,1,calls_puts,l0
+Solutions calculées,91,0,calls_puts,l1
+Convergence numérique,91,0,calls_puts,l1
+Budget respecté en calibration,91,0,calls_puts,l1
+Budget respecté en validation,27,64,calls_puts,l1
+Mesures de validation finies,27,0,calls_puts,l1
+Frontière non dominée,4,23,calls_puts,l1
+Politiques distinctes retenues,3,1,calls_puts,l1
+Solutions calculées,91,0,calls_puts,l2
+Convergence numérique,91,0,calls_puts,l2
+Budget respecté en calibration,91,0,calls_puts,l2
+Budget respecté en validation,0,91,calls_puts,l2
+Mesures de validation finies,0,0,calls_puts,l2
+Frontière non dominée,0,0,calls_puts,l2
+Politiques distinctes retenues,0,0,calls_puts,l2
+Solutions calculées,546,0,calls_puts,elastic_net
+Convergence numérique,545,1,calls_puts,elastic_net
+Budget respecté en calibration,545,0,calls_puts,elastic_net
+Budget respecté en validation,207,338,calls_puts,elastic_net
+Mesures de validation finies,207,0,calls_puts,elastic_net
+Frontière non dominée,22,185,calls_puts,elastic_net
+Politiques distinctes retenues,3,19,calls_puts,elastic_net
+Solutions calculées,91,0,full,l0
+Convergence numérique,91,0,full,l0
+Budget respecté en calibration,91,0,full,l0
+Budget respecté en validation,11,80,full,l0
+Mesures de validation finies,11,0,full,l0
+Frontière non dominée,6,5,full,l0
+Politiques distinctes retenues,1,5,full,l0
+Solutions calculées,91,0,full,l1
+Convergence numérique,91,0,full,l1
+Budget respecté en calibration,91,0,full,l1
+Budget respecté en validation,41,50,full,l1
+Mesures de validation finies,41,0,full,l1
+Frontière non dominée,9,32,full,l1
+Politiques distinctes retenues,3,6,full,l1
+Solutions calculées,91,0,full,l2
+Convergence numérique,91,0,full,l2
+Budget respecté en calibration,91,0,full,l2
+Budget respecté en validation,5,86,full,l2
+Mesures de validation finies,5,0,full,l2
+Frontière non dominée,4,1,full,l2
+Politiques distinctes retenues,1,3,full,l2
+Solutions calculées,546,0,full,elastic_net
+Convergence numérique,539,7,full,elastic_net
+Budget respecté en calibration,539,0,full,elastic_net
+Budget respecté en validation,277,262,full,elastic_net
+Mesures de validation finies,277,0,full,elastic_net
+Frontière non dominée,57,220,full,elastic_net
+Politiques distinctes retenues,3,54,full,elastic_net

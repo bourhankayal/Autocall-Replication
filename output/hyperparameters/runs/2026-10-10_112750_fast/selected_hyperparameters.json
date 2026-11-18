@@ -1,0 +1,912 @@
+{
+  "source_run": "2026-10-10_112750_fast",
+  "run_mode": "fast",
+  "configuration_fingerprint": "dad4b0a8f0d5d9f4c7f8bd20532b87d3b50fb1bcb25dcfd7b8d7f78ca67f77c3",
+  "configuration": {
+    "product": {
+      "notional": 100.0,
+      "autocall_strike": 1.0,
+      "coupon_barrier": 0.8,
+      "coupon_rate": 0.02,
+      "down_barrier": 0.7,
+      "observation_months": [
+        3,
+        6,
+        9,
+        12
+      ]
+    },
+    "market": {
+      "spot0": 100.0,
+      "valuation_date": "2026-06-20T00:00:00",
+      "contract_start_date": "2026-06-22T00:00:00",
+      "maturity_date": "2027-06-22T00:00:00",
+      "rate": 0.03,
+      "dividend_yield": 0.01,
+      "volatility": 0.2
+    },
+    "families": [
+      "calls_puts",
+      "full"
+    ],
+    "model": "risk_neutral_black_scholes_gbm",
+    "policy": "conditional_pathwise_one_period_instruments"
+  },
+  "grid": {
+    "penalties": [
+      "l0",
+      "l1",
+      "l2",
+      "elastic_net"
+    ],
+    "n_alphas": 25,
+    "exploratory_alpha_sparse": [
+      1e-06,
+      1e-05,
+      0.0001,
+      0.001,
+      0.01,
+      0.1,
+      0.2,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "exploratory_alpha_ridge": [
+      1e-06,
+      0.0001,
+      0.01,
+      1.0,
+      100.0,
+      10000.0
+    ],
+    "min_alpha_ratio": 0.001,
+    "ridge_min_alpha_ratio": 0.0001,
+    "ridge_max_alpha_ratio": 100.0,
+    "elastic_net_l1_ratios": [
+      0.1,
+      0.25,
+      0.5,
+      0.75,
+      0.9
+    ],
+    "lambda_es_values": [
+      0.0,
+      0.05,
+      0.1,
+      0.25,
+      0.5,
+      1.0,
+      2.0
+    ],
+    "es_budget_ratios": [
+      0.15,
+      0.2,
+      0.25,
+      0.35,
+      0.5,
+      0.65,
+      0.75,
+      0.85,
+      1.0,
+      1.15,
+      1.3
+    ],
+    "importance_candidates": [
+      [
+        [
+          0.0,
+          -1.0
+        ],
+        [
+          0.7,
+          0.3
+        ]
+      ],
+      [
+        [
+          0.0,
+          -1.0,
+          -2.0
+        ],
+        [
+          0.5,
+          0.3,
+          0.2
+        ]
+      ],
+      [
+        [
+          0.0,
+          -1.5,
+          -3.0
+        ],
+        [
+          0.55,
+          0.3,
+          0.15
+        ]
+      ],
+      [
+        [
+          0.0,
+          -2.0,
+          -4.0
+        ],
+        [
+          0.6,
+          0.25,
+          0.15
+        ]
+      ]
+    ]
+  },
+  "selected_profiles": {
+    "exploratory_benchmarks": [
+      {
+        "benchmark": "conditional_cashflows",
+        "family": "calls_puts",
+        "penalty": "elastic_net",
+        "alpha": 0.01,
+        "converged": true,
+        "validation_rmse": 9.594995285385561,
+        "n_options_active": 94
+      },
+      {
+        "benchmark": "conditional_cashflows",
+        "family": "calls_puts",
+        "penalty": "l1",
+        "alpha": 0.1,
+        "converged": true,
+        "validation_rmse": 9.606241303132471,
+        "n_options_active": 91
+      },
+      {
+        "benchmark": "conditional_cashflows",
+        "family": "calls_puts",
+        "penalty": "l2",
+        "alpha": 0.01,
+        "converged": true,
+        "validation_rmse": 9.980088941262661,
+        "n_options_active": 89
+      },
+      {
+        "benchmark": "conditional_cashflows",
+        "family": "full",
+        "penalty": "elastic_net",
+        "alpha": 0.001,
+        "converged": true,
+        "validation_rmse": 0.46934504265480237,
+        "n_options_active": 186
+      },
+      {
+        "benchmark": "conditional_cashflows",
+        "family": "full",
+        "penalty": "l1",
+        "alpha": 0.001,
+        "converged": true,
+        "validation_rmse": 0.48357493067419405,
+        "n_options_active": 177
+      },
+      {
+        "benchmark": "conditional_cashflows",
+        "family": "full",
+        "penalty": "l2",
+        "alpha": 1e-06,
+        "converged": true,
+        "validation_rmse": 0.46705446992496713,
+        "n_options_active": 133
+      },
+      {
+        "benchmark": "mean_payoff",
+        "family": "calls_puts",
+        "penalty": "l2",
+        "alpha": 1.0,
+        "converged": true,
+        "validation_rmse": 3.025374835852705,
+        "n_options_active": 306
+      },
+      {
+        "benchmark": "mean_payoff",
+        "family": "full",
+        "penalty": "l2",
+        "alpha": 1e-06,
+        "converged": true,
+        "validation_rmse": 3.2773680221666286,
+        "n_options_active": 612
+      },
+      {
+        "benchmark": "pathwise_payoff",
+        "family": "calls_puts",
+        "penalty": "l2",
+        "alpha": 1.0,
+        "converged": true,
+        "validation_rmse": 7.242808307409658,
+        "n_options_active": 290
+      },
+      {
+        "benchmark": "pathwise_payoff",
+        "family": "full",
+        "penalty": "l2",
+        "alpha": 1.0,
+        "converged": true,
+        "validation_rmse": 7.675092724635893,
+        "n_options_active": 557
+      },
+      {
+        "benchmark": "price_surface",
+        "family": "calls_puts",
+        "penalty": "elastic_net",
+        "alpha": 0.5,
+        "converged": true,
+        "validation_rmse": 3.388198982548117,
+        "n_options_active": 238
+      },
+      {
+        "benchmark": "price_surface",
+        "family": "calls_puts",
+        "penalty": "l1",
+        "alpha": 1.0,
+        "converged": true,
+        "validation_rmse": 2.906361875565846,
+        "n_options_active": 218
+      },
+      {
+        "benchmark": "price_surface",
+        "family": "calls_puts",
+        "penalty": "l1_2",
+        "alpha": 1e-06,
+        "converged": true,
+        "validation_rmse": 15.361859466129967,
+        "n_options_active": 306
+      },
+      {
+        "benchmark": "price_surface",
+        "family": "calls_puts",
+        "penalty": "l2",
+        "alpha": 0.01,
+        "converged": true,
+        "validation_rmse": 3.2632925294535036,
+        "n_options_active": 306
+      },
+      {
+        "benchmark": "price_surface",
+        "family": "full",
+        "penalty": "elastic_net",
+        "alpha": 1.0,
+        "converged": true,
+        "validation_rmse": 3.616223648752883,
+        "n_options_active": 294
+      },
+      {
+        "benchmark": "price_surface",
+        "family": "full",
+        "penalty": "l1",
+        "alpha": 1e-06,
+        "converged": true,
+        "validation_rmse": 3.974752182070624,
+        "n_options_active": 612
+      },
+      {
+        "benchmark": "price_surface",
+        "family": "full",
+        "penalty": "l1_2",
+        "alpha": 0.001,
+        "converged": true,
+        "validation_rmse": 3.9736571951490305,
+        "n_options_active": 611
+      },
+      {
+        "benchmark": "price_surface",
+        "family": "full",
+        "penalty": "l2",
+        "alpha": 1e-06,
+        "converged": true,
+        "validation_rmse": 3.6123957043004657,
+        "n_options_active": 612
+      },
+      {
+        "benchmark": "static_cashflows",
+        "family": "calls_puts",
+        "penalty": "elastic_net",
+        "alpha": 0.5,
+        "converged": true,
+        "validation_rmse": 28.103537783345185,
+        "n_options_active": 104
+      },
+      {
+        "benchmark": "static_cashflows",
+        "family": "calls_puts",
+        "penalty": "l1",
+        "alpha": 0.5,
+        "converged": true,
+        "validation_rmse": 27.42285037214789,
+        "n_options_active": 104
+      },
+      {
+        "benchmark": "static_cashflows",
+        "family": "calls_puts",
+        "penalty": "l2",
+        "alpha": 0.01,
+        "converged": true,
+        "validation_rmse": 28.364689635861467,
+        "n_options_active": 98
+      },
+      {
+        "benchmark": "static_cashflows",
+        "family": "full",
+        "penalty": "elastic_net",
+        "alpha": 1.0,
+        "converged": true,
+        "validation_rmse": 26.326668253186696,
+        "n_options_active": 208
+      },
+      {
+        "benchmark": "static_cashflows",
+        "family": "full",
+        "penalty": "l1",
+        "alpha": 1.0,
+        "converged": true,
+        "validation_rmse": 26.17321028537605,
+        "n_options_active": 208
+      },
+      {
+        "benchmark": "static_cashflows",
+        "family": "full",
+        "penalty": "l2",
+        "alpha": 1.0,
+        "converged": true,
+        "validation_rmse": 26.837149730467253,
+        "n_options_active": 196
+      }
+    ],
+    "exploratory_missing": [
+      {
+        "benchmark": "price_surface",
+        "family": "calls_puts",
+        "penalty": "l0",
+        "reason": "aucun alpha convergé avec au moins deux options actives"
+      },
+      {
+        "benchmark": "price_surface",
+        "family": "full",
+        "penalty": "l0",
+        "reason": "aucun alpha convergé avec au moins deux options actives"
+      }
+    ],
+    "regularisation": [
+      {
+        "family": "calls_puts",
+        "penalty": "l0",
+        "profile": "performance",
+        "alpha": 0.09931140989008719,
+        "alpha_relative": 0.42169650342858234,
+        "l1_ratio": NaN,
+        "validation_rmse": 8.004538811099573,
+        "n_options_active": 2,
+        "compromise_score": 0.0,
+        "profile_reuses_candidate": true,
+        "selection_reason": "RMSE de validation minimale",
+        "solution_index": 3
+      },
+      {
+        "family": "calls_puts",
+        "penalty": "l0",
+        "profile": "compromise",
+        "alpha": 0.09931140989008719,
+        "alpha_relative": 0.42169650342858234,
+        "l1_ratio": NaN,
+        "validation_rmse": 8.004538811099573,
+        "n_options_active": 2,
+        "compromise_score": 0.0,
+        "profile_reuses_candidate": true,
+        "selection_reason": "distance normalisée minimale parmi les candidats non attribués",
+        "solution_index": 3
+      },
+      {
+        "family": "calls_puts",
+        "penalty": "l0",
+        "profile": "parsimony",
+        "alpha": 0.09931140989008719,
+        "alpha_relative": 0.42169650342858234,
+        "l1_ratio": NaN,
+        "validation_rmse": 8.004538811099573,
+        "n_options_active": 2,
+        "compromise_score": 0.0,
+        "profile_reuses_candidate": true,
+        "selection_reason": "nombre d'options minimal parmi les candidats non attribués",
+        "solution_index": 3
+      },
+      {
+        "family": "calls_puts",
+        "penalty": "l2",
+        "profile": "performance",
+        "alpha": 19.744069250371844,
+        "alpha_relative": 0.5623413251903491,
+        "l1_ratio": NaN,
+        "validation_rmse": 6.721544821680503,
+        "n_options_active": 88,
+        "compromise_score": 1.0,
+        "profile_reuses_candidate": false,
+        "selection_reason": "RMSE de validation minimale",
+        "solution_index": 9
+      },
+      {
+        "family": "calls_puts",
+        "penalty": "l2",
+        "profile": "compromise",
+        "alpha": 62.43622911126832,
+        "alpha_relative": 1.7782794100389228,
+        "l1_ratio": NaN,
+        "validation_rmse": 7.502891015705383,
+        "n_options_active": 79,
+        "compromise_score": 0.8500404893356541,
+        "profile_reuses_candidate": false,
+        "selection_reason": "distance normalisée minimale parmi les candidats non attribués",
+        "solution_index": 7
+      },
+      {
+        "family": "calls_puts",
+        "penalty": "l2",
+        "profile": "parsimony",
+        "alpha": 3511.047181831888,
+        "alpha_relative": 100.0,
+        "l1_ratio": NaN,
+        "validation_rmse": 8.341741523375115,
+        "n_options_active": 58,
+        "compromise_score": 1.0,
+        "profile_reuses_candidate": false,
+        "selection_reason": "nombre d'options minimal parmi les candidats non attribués",
+        "solution_index": 0
+      },
+      {
+        "family": "calls_puts",
+        "penalty": "elastic_net",
+        "profile": "performance",
+        "alpha": 5.352979904272591,
+        "alpha_relative": 0.3162277660168379,
+        "l1_ratio": 0.25,
+        "validation_rmse": 6.684043693174578,
+        "n_options_active": 10,
+        "compromise_score": 1.0,
+        "profile_reuses_candidate": false,
+        "selection_reason": "RMSE de validation minimale",
+        "solution_index": 4
+      },
+      {
+        "family": "calls_puts",
+        "penalty": "elastic_net",
+        "profile": "compromise",
+        "alpha": 7.138313428287079,
+        "alpha_relative": 0.42169650342858217,
+        "l1_ratio": 0.25,
+        "validation_rmse": 6.896358441046923,
+        "n_options_active": 9,
+        "compromise_score": 0.8449861743474687,
+        "profile_reuses_candidate": false,
+        "selection_reason": "distance normalisée minimale parmi les candidats non attribués",
+        "solution_index": 3
+      },
+      {
+        "family": "calls_puts",
+        "penalty": "elastic_net",
+        "profile": "parsimony",
+        "alpha": 12.693915791927267,
+        "alpha_relative": 0.7498942093324557,
+        "l1_ratio": 0.25,
+        "validation_rmse": 8.202236503587562,
+        "n_options_active": 4,
+        "compromise_score": 1.0,
+        "profile_reuses_candidate": false,
+        "selection_reason": "nombre d'options minimal parmi les candidats non attribués",
+        "solution_index": 1
+      },
+      {
+        "family": "full",
+        "penalty": "l1",
+        "profile": "performance",
+        "alpha": 0.06120208666444175,
+        "alpha_relative": 0.013335214321633239,
+        "l1_ratio": NaN,
+        "validation_rmse": 7.086533226406289,
+        "n_options_active": 9,
+        "compromise_score": 1.0,
+        "profile_reuses_candidate": false,
+        "selection_reason": "RMSE de validation minimale",
+        "solution_index": 15
+      },
+      {
+        "family": "full",
+        "penalty": "l1",
+        "profile": "compromise",
+        "alpha": 0.145133019047683,
+        "alpha_relative": 0.03162277660168379,
+        "l1_ratio": NaN,
+        "validation_rmse": 7.162035043183462,
+        "n_options_active": 7,
+        "compromise_score": 0.8199683177551901,
+        "profile_reuses_candidate": false,
+        "selection_reason": "distance normalisée minimale parmi les candidats non attribués",
+        "solution_index": 12
+      },
+      {
+        "family": "full",
+        "penalty": "l1",
+        "profile": "parsimony",
+        "alpha": 1.088344105667945,
+        "alpha_relative": 0.23713737056616552,
+        "l1_ratio": NaN,
+        "validation_rmse": 7.274035705268385,
+        "n_options_active": 2,
+        "compromise_score": 1.0,
+        "profile_reuses_candidate": false,
+        "selection_reason": "nombre d'options minimal parmi les candidats non attribués",
+        "solution_index": 5
+      },
+      {
+        "family": "full",
+        "penalty": "l2",
+        "profile": "performance",
+        "alpha": 23.936270759985035,
+        "alpha_relative": 0.3162277660168379,
+        "l1_ratio": NaN,
+        "validation_rmse": 6.848430478904243,
+        "n_options_active": 175,
+        "compromise_score": 1.0,
+        "profile_reuses_candidate": false,
+        "selection_reason": "RMSE de validation minimale",
+        "solution_index": 10
+      },
+      {
+        "family": "full",
+        "penalty": "l2",
+        "profile": "compromise",
+        "alpha": 42.5653774455981,
+        "alpha_relative": 0.5623413251903489,
+        "l1_ratio": NaN,
+        "validation_rmse": 7.179738526336411,
+        "n_options_active": 173,
+        "compromise_score": 0.9976790144959039,
+        "profile_reuses_candidate": false,
+        "selection_reason": "distance normalisée minimale parmi les candidats non attribués",
+        "solution_index": 9
+      },
+      {
+        "family": "full",
+        "penalty": "l2",
+        "profile": "parsimony",
+        "alpha": 7569.313429204229,
+        "alpha_relative": 100.0,
+        "l1_ratio": NaN,
+        "validation_rmse": 8.349930814637528,
+        "n_options_active": 101,
+        "compromise_score": 1.0,
+        "profile_reuses_candidate": false,
+        "selection_reason": "nombre d'options minimal parmi les candidats non attribués",
+        "solution_index": 0
+      },
+      {
+        "family": "full",
+        "penalty": "elastic_net",
+        "profile": "performance",
+        "alpha": 8.161429426015024,
+        "alpha_relative": 0.1778279410038923,
+        "l1_ratio": 0.1,
+        "validation_rmse": 6.699675782305768,
+        "n_options_active": 28,
+        "compromise_score": 1.0,
+        "profile_reuses_candidate": false,
+        "selection_reason": "RMSE de validation minimale",
+        "solution_index": 6
+      },
+      {
+        "family": "full",
+        "penalty": "elastic_net",
+        "profile": "compromise",
+        "alpha": 14.5133019047683,
+        "alpha_relative": 0.3162277660168379,
+        "l1_ratio": 0.1,
+        "validation_rmse": 7.041534177173471,
+        "n_options_active": 16,
+        "compromise_score": 0.5021519316111444,
+        "profile_reuses_candidate": false,
+        "selection_reason": "distance normalisée minimale parmi les candidats non attribués",
+        "solution_index": 4
+      },
+      {
+        "family": "full",
+        "penalty": "elastic_net",
+        "profile": "parsimony",
+        "alpha": 34.416462519296765,
+        "alpha_relative": 0.7498942093324558,
+        "l1_ratio": 0.1,
+        "validation_rmse": 8.301540859405765,
+        "n_options_active": 6,
+        "compromise_score": 1.0,
+        "profile_reuses_candidate": false,
+        "selection_reason": "nombre d'options minimal parmi les candidats non attribués",
+        "solution_index": 1
+      }
+    ],
+    "lambda_es": [
+      {
+        "objective": "penalized_es",
+        "penalty": "elastic_net",
+        "alpha": 3.5691567141435394,
+        "l1_ratio": 0.25,
+        "lambda_es": 0.25,
+        "es_budget": NaN,
+        "converged": true,
+        "feasible_calibration": true,
+        "calibration_rmse": 4.642229798631597,
+        "calibration_es": 7.328614000942622,
+        "validation_rmse": 5.140769891216184,
+        "validation_var": 5.5228282390880565,
+        "validation_es": 9.063100025364232,
+        "validation_budget_respected": true,
+        "n_active_coefficients": 153,
+        "n_iterations": 1,
+        "is_pareto": true,
+        "compromise_score": 1.0,
+        "profile": "rmse_priority",
+        "selection_reason": "minimum validation RMSE on the non-dominated frontier",
+        "family": "calls_puts"
+      },
+      {
+        "objective": "penalized_es",
+        "penalty": "elastic_net",
+        "alpha": 7.138313428287079,
+        "l1_ratio": 0.25,
+        "lambda_es": 2.0,
+        "es_budget": NaN,
+        "converged": true,
+        "feasible_calibration": true,
+        "calibration_rmse": 6.106725865401906,
+        "calibration_es": 6.098378406700942,
+        "validation_rmse": 6.9268241510489625,
+        "validation_var": 5.531308715553763,
+        "validation_es": 8.613998241921601,
+        "validation_budget_respected": true,
+        "n_active_coefficients": 153,
+        "n_iterations": 1,
+        "is_pareto": true,
+        "compromise_score": 0.8837890499565976,
+        "profile": "compromise",
+        "selection_reason": "minimum normalised distance to the RMSE-ES ideal point",
+        "family": "calls_puts"
+      },
+      {
+        "objective": "penalized_es",
+        "penalty": "elastic_net",
+        "alpha": 14.276626856574158,
+        "l1_ratio": 0.25,
+        "lambda_es": 0.0,
+        "es_budget": NaN,
+        "converged": true,
+        "feasible_calibration": true,
+        "calibration_rmse": 7.397921435246168,
+        "calibration_es": 6.1481174012746935,
+        "validation_rmse": 9.137915555425801,
+        "validation_var": 6.169376371631998,
+        "validation_es": 7.172053122019116,
+        "validation_budget_respected": true,
+        "n_active_coefficients": 153,
+        "n_iterations": 1051,
+        "is_pareto": true,
+        "compromise_score": 1.0,
+        "profile": "es_priority",
+        "selection_reason": "minimum validation ES on the non-dominated frontier",
+        "family": "calls_puts"
+      },
+      {
+        "objective": "penalized_es",
+        "penalty": "elastic_net",
+        "alpha": 7.25665095238415,
+        "l1_ratio": 0.1,
+        "lambda_es": 2.0,
+        "es_budget": NaN,
+        "converged": true,
+        "feasible_calibration": true,
+        "calibration_rmse": 29.120532225385585,
+        "calibration_es": 42.45408220063508,
+        "validation_rmse": 28.213417042284128,
+        "validation_var": 42.337644946555365,
+        "validation_es": 42.40506708024273,
+        "validation_budget_respected": true,
+        "n_active_coefficients": 157,
+        "n_iterations": 1,
+        "is_pareto": true,
+        "compromise_score": 0.0,
+        "profile": "rmse_priority",
+        "selection_reason": "minimum validation RMSE on the non-dominated frontier",
+        "family": "full"
+      },
+      {
+        "objective": "penalized_es",
+        "penalty": "elastic_net",
+        "alpha": 7.25665095238415,
+        "l1_ratio": 0.1,
+        "lambda_es": 2.0,
+        "es_budget": NaN,
+        "converged": true,
+        "feasible_calibration": true,
+        "calibration_rmse": 29.120532225385585,
+        "calibration_es": 42.45408220063508,
+        "validation_rmse": 28.213417042284128,
+        "validation_var": 42.337644946555365,
+        "validation_es": 42.40506708024273,
+        "validation_budget_respected": true,
+        "n_active_coefficients": 157,
+        "n_iterations": 1,
+        "is_pareto": true,
+        "compromise_score": 0.0,
+        "profile": "compromise",
+        "selection_reason": "minimum normalised distance to the RMSE-ES ideal point",
+        "family": "full"
+      },
+      {
+        "objective": "penalized_es",
+        "penalty": "elastic_net",
+        "alpha": 7.25665095238415,
+        "l1_ratio": 0.1,
+        "lambda_es": 2.0,
+        "es_budget": NaN,
+        "converged": true,
+        "feasible_calibration": true,
+        "calibration_rmse": 29.120532225385585,
+        "calibration_es": 42.45408220063508,
+        "validation_rmse": 28.213417042284128,
+        "validation_var": 42.337644946555365,
+        "validation_es": 42.40506708024273,
+        "validation_budget_respected": true,
+        "n_active_coefficients": 157,
+        "n_iterations": 1,
+        "is_pareto": true,
+        "compromise_score": 0.0,
+        "profile": "es_priority",
+        "selection_reason": "minimum validation ES on the non-dominated frontier",
+        "family": "full"
+      }
+    ],
+    "es_budget": [
+      {
+        "objective": "constrained_es",
+        "penalty": "elastic_net",
+        "alpha": 7.25665095238415,
+        "l1_ratio": 0.1,
+        "lambda_es": NaN,
+        "es_budget": 18.65481303296202,
+        "converged": true,
+        "feasible_calibration": true,
+        "calibration_rmse": 3.7034175409039065,
+        "calibration_es": 8.00003999160209,
+        "validation_rmse": 5.004953055093179,
+        "validation_var": 5.336241908079046,
+        "validation_es": 11.575766550763491,
+        "validation_budget_respected": true,
+        "n_active_coefficients": 101,
+        "n_iterations": 110,
+        "profile": "rmse_priority",
+        "es_budget_ratio": 0.35,
+        "family": "full",
+        "is_pareto": true,
+        "compromise_score": 1.0,
+        "selection_reason": "minimum validation RMSE on the non-dominated frontier"
+      },
+      {
+        "objective": "constrained_es",
+        "penalty": "elastic_net",
+        "alpha": 7.25665095238415,
+        "l1_ratio": 0.1,
+        "lambda_es": NaN,
+        "es_budget": 61.29438567973235,
+        "converged": true,
+        "feasible_calibration": true,
+        "calibration_rmse": 3.703447774084566,
+        "calibration_es": 8.000060643163442,
+        "validation_rmse": 5.005000161747594,
+        "validation_var": 5.336264829902149,
+        "validation_es": 11.575630914953585,
+        "validation_budget_respected": true,
+        "n_active_coefficients": 101,
+        "n_iterations": 81,
+        "profile": "compromise",
+        "es_budget_ratio": 1.15,
+        "family": "full",
+        "is_pareto": true,
+        "compromise_score": 0.8777052044419117,
+        "selection_reason": "minimum normalised distance to the RMSE-ES ideal point"
+      },
+      {
+        "objective": "constrained_es",
+        "penalty": "elastic_net",
+        "alpha": 29.0266038095366,
+        "l1_ratio": 0.1,
+        "lambda_es": NaN,
+        "es_budget": 53.29946580846292,
+        "converged": true,
+        "feasible_calibration": true,
+        "calibration_rmse": 5.019745715141835,
+        "calibration_es": 6.641692799762087,
+        "validation_rmse": 5.734755350256063,
+        "validation_var": 3.5147864241163376,
+        "validation_es": 11.574657461806312,
+        "validation_budget_respected": true,
+        "n_active_coefficients": 50,
+        "n_iterations": 40,
+        "profile": "es_priority",
+        "es_budget_ratio": 1.0,
+        "family": "full",
+        "is_pareto": true,
+        "compromise_score": 1.0,
+        "selection_reason": "minimum validation ES on the non-dominated frontier"
+      }
+    ],
+    "importance_sampling": [
+      {
+        "candidate_index": 3,
+        "tilts": "(0.0, -2.0, -4.0)",
+        "mixture_probabilities": "(0.6, 0.25, 0.15)",
+        "n_repetitions": 3,
+        "es_mean": 9.773839781259204,
+        "es_std": 0.40907497781762353,
+        "tail_ess_mean": 16.730998298378314,
+        "effective_sample_ratio_mean": 0.7008384226390086,
+        "effective_sample_ratio_min": 0.6960769560204003,
+        "weight_cv_mean": 0.6540136661225932,
+        "maximum_normalized_weight_max": 0.0033581744904629483,
+        "passes_weight_diagnostics": true,
+        "recommended": true,
+        "family": "calls_puts"
+      },
+      {
+        "candidate_index": 3,
+        "tilts": "(0.0, -2.0, -4.0)",
+        "mixture_probabilities": "(0.6, 0.25, 0.15)",
+        "n_repetitions": 3,
+        "es_mean": 7.00743444880085,
+        "es_std": 0.1301328579423485,
+        "tail_ess_mean": 15.321579426614397,
+        "effective_sample_ratio_mean": 0.7008384226390086,
+        "effective_sample_ratio_min": 0.6960769560204003,
+        "weight_cv_mean": 0.6540136661225932,
+        "maximum_normalized_weight_max": 0.0033581744904629483,
+        "passes_weight_diagnostics": true,
+        "recommended": true,
+        "family": "full"
+      }
+    ],
+    "selected_elastic_net_rho": {
+      "calls_puts": 0.25,
+      "full": 0.1
+    },
+    "selected_importance_mixture": {
+      "calls_puts": {
+        "tilts": [
+          0.0,
+          -2.0,
+          -4.0
+        ],
+        "mixture_probabilities": [
+          0.6,
+          0.25,
+          0.15
+        ]
+      },
+      "full": {
+        "tilts": [
+          0.0,
+          -2.0,
+          -4.0
+        ],
+        "mixture_probabilities": [
+          0.6,
+          0.25,
+          0.15
+        ]
+      }
+    }
+  },
+  "selection_status": "awaiting_explicit_promotion",
+  "test_status": "reserved_not_evaluated"
+}

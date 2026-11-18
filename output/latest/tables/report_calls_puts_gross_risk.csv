@@ -1,0 +1,5 @@
+﻿Régime,Observations,Erreur moyenne,MAE,RMSE,Taux de sous-réplication,"ES 97,5 %",Perte maximale
+all,2500.0,0.0,3.5934,7.9404,0.9328,4.4883,4.4883
+recalled,1819.0,1.4322,1.4322,1.7751,1.0,4.4883,4.4883
+maturity,681.0,-3.8255,9.3663,14.9347,0.7533,4.4883,4.4883
+barrier_hit,165.0,-26.9475,27.1074,29.5521,0.097,0.8244,0.8244

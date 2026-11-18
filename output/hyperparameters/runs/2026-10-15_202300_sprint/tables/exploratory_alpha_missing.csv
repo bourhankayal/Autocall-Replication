@@ -1,0 +1,2 @@
+﻿benchmark,family,penalty,reason
+static_cashflows,calls_puts,l0,aucun alpha convergé avec au moins deux options actives

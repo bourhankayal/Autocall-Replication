@@ -1,0 +1,5 @@
+﻿issuer,document_date,structure,issue_price,estimated_value_low,estimated_value_high,gap_pct_mid
+JPMorgan,2025-04-09,Auto Callable Notes,1000.0,971.6,971.6,2.84
+Barclays,2025-11-24,Auto-Callable Notes,1000.0,940.0,940.0,6.0
+Morgan Stanley,2026-05-14,Jump Notes with Auto-Callable Feature,1000.0,895.5,975.5,6.45
+Goldman Sachs,2025-05-01,Autocallable Contingent Coupon Notes,1000.0,890.0,920.0,9.5

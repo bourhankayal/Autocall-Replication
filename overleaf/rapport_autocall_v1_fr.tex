@@ -1,0 +1,1581 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[
+  a4paper,
+  inner=30mm,
+  outer=25mm,
+  top=25mm,
+  bottom=25mm,
+  headheight=15pt,
+  headsep=8mm,
+  footskip=12mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newtxtext,newtxmath}
+\usepackage{microtype}
+\usepackage{amsmath,mathtools}
+\usepackage{booktabs,longtable,tabularx,array,multirow}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{placeins}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{url}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\definecolor{navy}{HTML}{17324D}
+\definecolor{blue}{HTML}{1F6F8B}
+\definecolor{orange}{HTML}{E7903C}
+\definecolor{red}{HTML}{B33A3A}
+\definecolor{green}{HTML}{287A5B}
+\definecolor{pale}{HTML}{EEF4F7}
+\definecolor{muted}{HTML}{667085}
+
+\hypersetup{
+  hidelinks,
+  bookmarksnumbered=true,
+  pdfstartview=FitH
+}
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.18}
+\onehalfspacing
+\setlist[itemize]{topsep=5pt,itemsep=2pt,parsep=0pt}
+\setlist[enumerate]{topsep=5pt,itemsep=2pt,parsep=0pt}
+\captionsetup{
+  font=small,
+  labelfont=bf,
+  labelsep=period,
+  justification=justified,
+  singlelinecheck=false,
+  skip=6pt
+}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{navy}}
+  {\thesection}{0.75em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{navy}}
+  {\thesubsection}{0.75em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries}
+  {\thesubsubsection}{0.75em}{}
+\titlespacing*{\section}{0pt}{2.2ex plus 0.5ex minus 0.2ex}{1.1ex}
+\titlespacing*{\subsection}{0pt}{1.8ex plus 0.4ex minus 0.2ex}{0.8ex}
+\titlespacing*{\subsubsection}{0pt}{1.4ex plus 0.3ex minus 0.2ex}{0.6ex}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape Réplication parcimonieuse de payoffs complexes}
+\fancyhead[R]{}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\newcommand{\HRule}{\color{navy}\rule{\linewidth}{0.8pt}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\VaR}{\operatorname{VaR}}
+\newcommand{\ES}{\operatorname{ES}}
+\newcommand{\RMSE}{\operatorname{RMSE}}
+\newcommand{\1}{\mathbf{1}}
+
+\newcommand{\academicbox}[2]{%
+  \par\vspace{0.8\baselineskip}
+  \noindent\fcolorbox{muted!55}{muted!4}{%
+    \parbox{\dimexpr0.96\linewidth-2\fboxsep-2\fboxrule\relax}{%
+      \textbf{#1}\enspace #2}}
+  \par\vspace{0.8\baselineskip}}
+\newcommand{\infobox}[1]{\academicbox{Question de recherche.}{#1}}
+\newcommand{\warningbox}[1]{\academicbox{Statut des résultats.}{#1}}
+\newcommand{\resultbox}[1]{\academicbox{Résultat principal.}{#1}}
+\providecommand{\reportlanguage}{fr}
+\newcommand{\reportfigurefile}[1]{figures/\reportlanguage/#1}
+\renewcommand{\abstractname}{Résumé}
+\renewcommand{\contentsname}{Table des matières}
+\renewcommand{\listfigurename}{Liste des figures}
+\renewcommand{\listtablename}{Liste des tableaux}
+\renewcommand{\figurename}{Figure}
+\renewcommand{\tablename}{Tableau}
+\renewcommand{\refname}{Références}
+\newcommand{\reportfigure}[4][0.92\linewidth]{%
+  \begin{figure}[htbp]
+  \centering
+  \IfFileExists{#2}{%
+    \includegraphics[width=#1]{#2}%
+  }{%
+    \fcolorbox{muted!55}{muted!4}{\parbox[c][48mm][c]{0.86\linewidth}{%
+      \centering\textbf{Fichier de figure à téléverser}\par
+      \vspace{2mm}\ttfamily\footnotesize\detokenize{#2}}}
+  }
+  \caption{#3}
+  \label{#4}
+  \end{figure}}
+
+\begin{document}
+
+\begin{titlepage}
+\thispagestyle{empty}
+\vspace*{12mm}
+\begin{center}
+{\Large\bfseries CentraleSupélec\par}
+\vspace{3mm}
+{\large Cycle ingénieur\par}
+\vspace{8mm}
+{\normalsize\scshape Projet de recherche\par}
+\vspace{10mm}
+\HRule
+\vspace{10mm}
+{\fontsize{24}{30}\selectfont\bfseries\color{navy}
+Réplication parcimonieuse et conditionnelle de payoffs complexes}
+
+\vspace{7mm}
+{\large
+Une méthode fondée sur un nombre limité d'options, testée sur un autocall}
+\vspace{10mm}
+\HRule
+\end{center}
+
+\vspace{12mm}
+\infobox{Dans quelle mesure un portefeuille limité et interprétable d'options standard peut-il reproduire un payoff complexe, et quels risques subsistent après cette réplication ?}
+
+\vfill
+\begin{center}
+{\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}rl@{}}
+\textbf{Auteur :} & Bourhan Kayal \\
+\textbf{Formation :} & Cycle ingénieur (Diplôme d'Ingénieur) \\
+\textbf{Rattachement scientifique :} & Laboratoire des Signaux et Systèmes (L2S) \\
+\textbf{Encadrant :} & Joseph Gabet \\
+\textbf{Année universitaire :} & 2026--2027 \\
+\end{tabular}\par}
+\vspace{7mm}
+{\small Recherche menée au L2S en parallèle du cursus ingénieur de CentraleSupélec.}\par
+\end{center}
+\end{titlepage}
+
+\begin{abstract}
+Ce rapport étudie dans quelle mesure un portefeuille limité d'options standard peut reproduire le payoff d'un produit financier complexe. Un autocall mono-sous-jacent sert d'étude de cas parce qu'il combine des discontinuités, une dépendance à la trajectoire, plusieurs dates de paiement et une maturité aléatoire. Sous un modèle de Black--Scholes risque-neutre, les calls et les puts forment l'ensemble d'instruments de référence ; les options digitales l'étendent pour la comparaison théorique. Nous comparons un panier statique à des portefeuilles conditionnels choisis à partir de l'information disponible à chaque date de décision. Ridge, Lasso, Elastic Net et une approche $L^0$, résolue de manière heuristique, sont évalués sur des échantillons séparés de calibration et de validation. Pour un nominal de 100, la valeur actualisée moyenne de l'autocall est estimée à 100,538. {Sur 2 500 trajectoires d’évaluation indépendantes, la RMSE du passif avant couverture est de 7,94 points autour de la moyenne des flux sur cet échantillon. Les quatre compromis initiaux Lasso et Elastic Net ramènent la RMSE résiduelle à 3,56--6,22 points, soit une réduction de 21,7 à 55,2\%. Leur Expected Shortfall (ES) à 97,5\% atteint 10,05--15,64 points, contre 4,49 pour le passif centré.} La RMSE tient compte des écarts dans les deux directions, tandis que l'ES ne retient que les 2,5\% de pertes les plus défavorables ; leurs niveaux ne sont donc pas directement ordonnés. {\textbf{Les quatre compromis réduisent l’erreur globale, avec un ES compris entre 2,2 et 3,5 fois celui du passif centré.}} Les options digitales et le conditionnement sur l'état observable améliorent l'ajustement, mais une faible erreur moyenne ne suffit pas à établir une bonne couverture. La méthode peut être appliquée à d'autres produits après adaptation du payoff, des variables d'état et des instruments disponibles ; elle évalue alors une réplication approchée sous des hypothèses explicites.
+\end{abstract}
+
+\newpage
+\section*{Résumé détaillé}
+\addcontentsline{toc}{section}{Résumé détaillé}
+
+\subsection*{Objectif et périmètre}
+
+La question générale est simple : un nombre limité d'options peut-il reproduire assez fidèlement un payoff complexe pour être utile ? Sous des conditions de régularité, la formule de Carr--Madan montre qu'un payoff européen terminal peut être décomposé en une position en cash, une position dans le sous-jacent et un continuum de calls et de puts européens de même maturité \cite{carrmadan1998}. En pratique, seuls certains strikes et certaines maturités sont disponibles, les portefeuilles doivent rester gérables et les produits dépendant de la trajectoire exigent de connaître leur historique. Dans ce rapport, le terme « réplication » désigne donc une approximation mesurée sous des contraintes explicites d'information et d'instruments, et non la représentation exacte de tout payoff.
+
+L'autocall sert d'étude de cas exigeante. Ses coupons dépendent du spot aux dates d'observation, il peut être remboursé par anticipation et son paiement final dépend à la fois du spot final et des barrières franchies auparavant. Le passif est donc discontinu, dépendant de la trajectoire et de maturité incertaine. Ces caractéristiques montrent clairement ce qu'un nombre limité d'options peut reproduire et ce qui subsiste sous forme de risque résiduel.
+
+Le projet fournit une procédure reproductible qui sépare la définition du produit, la simulation, la valorisation des instruments, la construction des portefeuilles et l'évaluation du risque. La dimension universelle du projet réside dans cette procédure générale : le payoff, la représentation de l'état, le modèle, le plan de simulation, les instruments et le critère de perte peuvent être adaptés au besoin. L'autocall peut ainsi être remplacé par un autre payoff dès que ses flux et son état observable sont définis, et Black--Scholes par un modèle de volatilité locale, stochastique ou rugueuse. Cette modularité ne garantit toutefois pas la réplication exacte de toute créance.
+
+Ces décompositions peuvent servir à l'interprétation, à l'analyse de scénarios, à la recherche en couverture, à l'analyse de valeur relative et à la validation de modèles. Comme la précision moyenne, le risque extrême, les coûts de transaction et le financement ne conduisent pas nécessairement au même portefeuille, l'approximation est évaluée selon plusieurs critères.
+
+\subsection*{Méthode}
+
+Avant l'optimisation, la méthode fixe le payoff, l'état observable, le modèle, les instruments disponibles et le critère d'évaluation. L'étude de cas porte sur un autocall mono-sous-jacent sans mémoire, de maturité un an, avec quatre observations trimestrielles (les paramètres du contrat sont détaillés dans la section dédiée). Sous le modèle de Black--Scholes risque-neutre, le spot suit un mouvement brownien géométrique à taux, rendement de dividende et volatilité constants.
+
+Deux univers d'instruments sont étudiés : \emph{Calls + Puts}, composé d'options vanilles, et \emph{Full}, qui ajoute des options digitales pour mesurer leur apport près des discontinuités. La version statique utilise un seul panier initial. À chaque date d'observation, la version conditionnelle peut choisir un panier différent à partir de l'état alors observé, sans utiliser d'information future. Les comparaisons incluent aussi l'autocall non couvert et une couverture delta de Black--Scholes. Cette dernière associe le sous-jacent à un compte de trésorerie autofinancé ; la quantité de sous-jacent est calculée à partir de la dérivée d'une surface de valeur conditionnelle et rééquilibrée quotidiennement ou tous les cinq jours ouvrés.
+
+Les poids des portefeuilles sont estimés avec quatre méthodes de régularisation. Ridge favorise des solutions stables mais denses, Lasso fixe certains poids à zéro, Elastic Net combine ces deux comportements et l'approche $L^0$ est une heuristique non convexe qui favorise directement de petits portefeuilles. Les hyperparamètres sont sélectionnés avec des échantillons séparés de calibration et de validation, des grilles de paramètres, un filtrage de Pareto et des contrôles de stabilité sur plusieurs graines aléatoires. Un échantillon de test indépendant est conservé à part jusqu'à la fin de la sélection du modèle.
+
+\subsection*{Résultats numériques}
+
+La valeur Monte Carlo sous Black--Scholes est de 100,538 pour un nominal de 100, avec un intervalle de confiance à 95\% égal à $[100{,}245,100{,}830]$.
+
+{Sur les 2 500 trajectoires indépendantes, la RMSE du passif centré est de 7,94 points de nominal. La RMSE résiduelle des quatre compromis initiaux Lasso et Elastic Net est comprise entre 3,56 et 6,22 points, tandis que leur ES à 97,5\% se situe entre 10,05 et 15,64 points, contre 4,49 pour le passif centré.}
+
+En ajoutant de nombreuses options, notamment des digitales, le modèle conditionnel peut presque reproduire les flux simulés. Toutefois, une faible RMSE terminale peut masquer de fortes erreurs aux dates de paiement lorsque les écarts temporels se compensent.
+
+\resultbox{Un nombre limité d'options peut reproduire une grande partie d'un payoff complexe, mais une faible RMSE globale ne suffit pas à établir une bonne couverture. Le calendrier des paiements et le risque de queue résiduel doivent aussi être évalués.}
+
+\newpage
+\begin{singlespace}
+\tableofcontents
+\end{singlespace}
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{Liste des figures}
+\begin{singlespace}
+\listoffigures
+\end{singlespace}
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{Liste des tableaux}
+\begin{singlespace}
+\listoftables
+\end{singlespace}
+
+\clearpage
+
+\section{Introduction}
+
+\subsection{Motivation}
+
+Les produits dérivés complexes sont souvent compris et couverts à l'aide de portefeuilles d'instruments plus simples. La formule de Carr--Madan fonde la décomposition des payoffs terminaux par strike, tandis que Derman, Ergener et Kani étendent l'intuition à des réplications statiques utilisant plusieurs strikes et maturités \cite{carrmadan1998,derman1995}. En pratique, seuls certains strikes et certaines maturités sont disponibles, les instruments corrélés peuvent créer des positions instables et les contraintes opérationnelles favorisent des portefeuilles plus petits. La question est donc de savoir dans quelle mesure un ensemble limité et interprétable d'options reproduit le payoff sur de nouveaux scénarios.
+
+Un autocall constitue une étude de cas exigeante. Son apparente simplicité pour l'investisseur masque un passif comportant des coupons déclenchés par des barrières, un possible remboursement anticipé, une protection conditionnelle du capital et une maturité aléatoire. À proximité d'une barrière d'observation, une faible variation du spot peut modifier un flux de manière discontinue ; deux trajectoires ayant le même spot courant ou terminal peuvent aussi différer en raison de leur historique. Ces caractéristiques rendent la valorisation dépendante du modèle et la couverture sensible à l'état courant et aux événements passés \cite{guillaume2015}. Au cours des années 2010, les autocalls ont pris une place importante sur certains marchés de produits structurés, notamment sur le marché sud-coréen. Leur diffusion, mais aussi les difficultés de valorisation et de couverture révélées lors de fortes variations de marché, ont motivé des méthodes adaptées au remboursement anticipé et aux barrières. Kim et Lim proposent ainsi l'un des premiers travaux directement consacrés à leur réplication statique, au moyen d'une construction récursive reliant les différentes dates d'observation \cite{kimlim2019}.
+
+L'autocall n'est pas présenté comme l'unique application possible de la méthodologie. Il est retenu parce que des modes d'échec peu visibles pour un payoff européen régulier---discontinuités absentes du dictionnaire, décalage temporel, insuffisance de l'état et concentration dans la queue---apparaissent clairement au sein d'un même contrat. Un succès sur ce cas démontrerait une capacité d'approximation utile sous les hypothèses retenues ; il ne prouverait pas la réplication exacte de toute créance contingente.
+
+\subsection{Question de recherche et hypothèses}
+
+Le rapport traite la question suivante :
+
+\begin{quote}
+Dans quelle mesure un portefeuille limité et interprétable d'options standard peut-il reproduire un payoff complexe, et quels risques subsistent après cette réplication ?
+\end{quote}
+
+Quatre hypothèses structurent les expériences :
+
+\begin{enumerate}
+\item le conditionnement sur l'état observable devrait accroître la capacité d'approximation des créances dépendantes de la trajectoire par rapport à un panier statique unique et non conditionnel
+\item des fonctions de base alignées sur les discontinuités du payoff, telles que les options digitales, devraient améliorer l'approximation, malgré une disponibilité pratique limitée
+\item la régularisation devrait échanger une faible perte d'ajustement contre davantage de parcimonie et de stabilité dans des dictionnaires finis d'options
+\item un objectif fondé uniquement sur l'erreur quadratique peut améliorer l'approximation moyenne tout en laissant inchangée, voire en aggravant, la sous-réplication dans la queue
+\end{enumerate}
+
+\subsection{Contributions et limites de l'originalité}
+
+La contribution est un protocole empirique transférable plutôt qu'un nouveau théorème de représentation ou d'absence d'arbitrage. Il combine :
+
+\begin{itemize}
+\item une mise en œuvre centrée d'abord sur la créance, avec des conventions explicites de flux, de dates, d'états et de frontières
+\item des références de réplication statique, datée et conditionnelle
+\item une régularisation parcimonieuse et une sélection fondée sur la stabilité
+\item une chronologie stricte de calibration, validation et test
+\item une mesure séparée du passif brut et du risque résiduel de réplication
+\item une estimation des événements rares sur des portefeuilles gelés
+\item des diagnostics explicites montrant quand l'ajustement terminal masque un décalage des flux datés
+\end{itemize}
+
+Le travail prolonge les références présentées dans la motivation au moyen d'un cadre empirique fini. Il se rapproche de la couverture semi-statique parcimonieuse optimale en variance de Di Tella, Haubold et Keller-Ressel \cite{ditella2019}, et utilise la distinction usuelle entre Ridge, Lasso et Elastic Net \cite{hastie2009}. Contrairement aux constructions analytiques citées plus haut, il estime des portefeuilles régularisés sur des trajectoires simulées, puis évalue leur parcimonie, leur stabilité et leur risque résiduel. Son positionnement se situe donc entre réplication structurelle et sélection de portefeuilles guidée par les données, sans revendiquer la généralité d'un théorème de représentation.
+
+\section{Étude de cas de l'autocall : contrat, modèle et valorisation}
+
+\subsection{Définition préalable du contrat de l'étude de cas}
+
+Un autocall ne peut être défini par sa seule appellation commerciale : les
+conventions de coupon, de rappel, de protection et de remboursement déterminent
+ses flux et donc sa réplication. Le contrat est ainsi figé dans un term sheet
+fonctionnel avant toute calibration. Cette étape rend les cas limites
+reproductibles et permet de distinguer une erreur contractuelle d'une erreur de
+modèle ou d'optimisation.
+
+\subsection{Spécification contractuelle}
+
+Soient $N$ le nominal, $S_0$ le spot initial contractuel, $t_1<\cdots<t_m=T$ les dates d'observation, $B_A$ la barrière de rappel, $B_C$ la barrière de coupon, $B_P$ la barrière de protection et $c$ le taux de coupon. Tant que le produit est vivant, le coupon à $t_i$ vaut
+\begin{equation}
+ C_i=cN\1_{\{S_{t_i}\geq B_CS_0\}}.
+\label{eq:coupon}
+\end{equation}
+La première date de rappel est
+\begin{equation}
+ \tau_A=\inf\{t_i:S_{t_i}\geq B_AS_0\}.
+\label{eq:first-call}
+\end{equation}
+À $\tau_A$, l'investisseur reçoit $N+C_i$ et le contrat prend fin. Pour toute
+date $t_i$, l'indicateur historique de protection est
+\begin{equation}
+ J_i=\1_{\{\min_{u\in\mathcal G_{t_i}}S_u\leq B_PS_0\}},
+\label{eq:barrier-state}
+\end{equation}
+où $\mathcal G_{t_i}$ est la grille simulée de jours de cotation jusqu'à $t_i$.
+En l'absence de rappel anticipé, le remboursement terminal est
+\begin{equation}
+ R_T=N(1-J_m)+N\frac{S_T}{S_0}J_m,
+\label{eq:terminal-redemption}
+\end{equation}
+auquel s'ajoute le dernier coupon conditionnel. Le suivi est discret sur la grille quotidienne disponible ; il ne doit pas être qualifié de mathématiquement continu.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lr}
+\toprule
+Paramètre & Valeur de référence \\
+\midrule
+Nominal et spot initial & 100 et 100 \\
+Barrière de rappel & 100\% de $S_0$ \\
+Barrière de coupon et coupon & 80\% de $S_0$ et 2\% \\
+Barrière de protection & 70\% de $S_0$ \\
+Observations & 3, 6, 9 et 12 mois \\
+Taux sans risque / rendement du dividende & 3\% / 1\% \\
+Volatilité Black--Scholes & 20\% \\
+Valorisation / fixing effectif & 20 juin / 22 juin 2026 \\
+Maturité & 22 juin 2027 \\
+\bottomrule
+\end{tabular}
+\caption{Contrat de référence et configuration de marché.}
+\label{tab:contract}
+\end{table}
+
+Les dates suivent un calendrier simplifié du lundi au vendredi, avec report au
+jour ouvré suivant et actualisation continue ACT/365. Cette convention suffit
+pour ordonner les flux et calculer les besoins de financement ; une émission
+réelle nécessiterait toutefois un calendrier de marché intégrant les jours
+fériés et les conventions de règlement.
+
+\subsection{Le contrat comme mécanisme à états finis}
+
+À chaque date d'observation, l'état du contrat est décrit par son statut de
+survie, le spot courant $S_{t_i}$ et l'indicateur historique $J_i$. Si le produit
+est rappelé, son état devient absorbant et tout flux ultérieur est nul. Sinon,
+$(S_{t_i},J_i)$ est transmis à l'observation suivante. À maturité, $J_m$
+détermine si le nominal est protégé.
+
+Cette représentation explique pourquoi le spot seul n'est pas une variable
+d'état suffisante. Deux trajectoires peuvent avoir le même spot courant mais des
+remboursements terminaux différents si une seule a précédemment franchi la
+barrière de protection. Elle explique aussi pourquoi des options européennes
+dépendant uniquement du spot à leur échéance ne suffisent pas automatiquement à
+reproduire le produit : le passif dépend également de l'historique.
+
+\subsection{Difficultés de couverture du payoff}
+
+Trois mécanismes créent des difficultés de couverture distinctes :
+
+\begin{itemize}
+\item \textbf{Discontinuités digitales.} À une barrière de coupon ou de rappel,
+une variation arbitrairement faible du spot peut activer ou désactiver un paiement discret.
+\item \textbf{Maturité aléatoire.} Un rappel supprime toute exposition ultérieure.
+Une option destinée à une observation plus tardive peut donc devoir être dénouée
+si le produit prend fin par anticipation.
+\item \textbf{Dépendance à la trajectoire.} L'événement de protection dépend du
+minimum de la trajectoire et non du seul spot terminal.
+\end{itemize}
+
+La méthode de réplication doit donc répondre à deux questions distinctes. Elle
+doit approcher le montant finalement dû et rendre les fonds disponibles aux
+bonnes dates. Une comparaison des payoffs terminaux traite la première question,
+mais peut masquer un échec sur la seconde.
+
+\subsection{Modèle risque-neutre et simulation}
+
+\subsubsection*{Black--Scholes comme modèle de référence}
+
+Black--Scholes est retenu comme laboratoire contrôlé. Ses paramètres ont une
+interprétation claire, les trajectoires peuvent être simulées exactement entre
+deux dates et les prix des options vanilles sont disponibles sous forme fermée.
+Ces propriétés permettent d'isoler les erreurs de payoff, de chronologie et
+d'optimisation sans introduire simultanément un problème complexe de calibration.
+
+Ce choix est méthodologique plutôt qu'empirique. Les autocalls sur indices actions
+sont exposés au skew de volatilité, à la structure par terme, à la volatilité
+stochastique et aux sauts. Black--Scholes ne représente pas ces effets. Une
+couverture réussie dans ce modèle montre donc que le mécanisme de réplication
+fonctionne sous ses hypothèses ; elle ne prouve pas que les mêmes poids sont
+robustes aux dynamiques de marché.
+
+\subsubsection*{Modularité et extensions du modèle}
+
+La méthode sépare le contrat et son état observable, la simulation des
+trajectoires, la valorisation des instruments disponibles, la sélection des
+portefeuilles et l'évaluation du risque. Le contrat d'autocall peut être remplacé
+par un autre produit dès que ses flux, ses règles d'exercice et les variables
+d'état nécessaires sont définis. Cela couvre les payoffs terminaux réguliers,
+les payoffs discontinus et les produits dépendant de la trajectoire avec
+plusieurs dates de paiement. La méthode ne suppose pas que chacun de ces payoffs
+sera reproduit avec précision : la qualité du résultat dépend toujours de
+l'information accessible à la politique et des instruments disponibles pour la
+réplication.
+
+Le générateur de trajectoires et les formules de Black--Scholes peuvent être
+remplacés par un modèle de volatilité locale, stochastique ou rugueuse sans
+modifier la procédure générale de sélection et d'évaluation. Chaque extension
+exige toutefois une calibration, une simulation et une valorisation cohérentes ;
+un modèle non markovien peut également nécessiter des variables d'état
+supplémentaires.
+
+Sous $\Q$, le sous-jacent suit la dynamique de Black--Scholes
+\cite{blackscholes1973}
+\begin{equation}
+ \frac{dS_t}{S_t}=(r-q)dt+\sigma dW_t,
+\label{eq:bs-dynamics}
+\end{equation}
+avec la transition exacte
+\begin{equation}
+ S_{t+\Delta}=S_t\exp\left((r-q-\tfrac12\sigma^2)\Delta
+ +\sigma\sqrt{\Delta}Z\right),\qquad Z\sim\mathcal N(0,1).
+\label{eq:gbm-transition}
+\end{equation}
+Pour le flux actualisé par trajectoire $Y^{(j)}$, le prix Monte Carlo et l'erreur standard sont
+\cite{glasserman2004}
+\begin{equation}
+ \widehat V_0=\frac1n\sum_{j=1}^nY^{(j)},\qquad
+ \widehat{\operatorname{SE}}(\widehat V_0)=\frac{s_Y}{\sqrt n}.
+\label{eq:mc-estimator}
+\end{equation}
+\subsubsection*{Plan de simulation}
+
+Les trajectoires sont simulées à partir de la transition exacte de
+l'équation~\eqref{eq:gbm-transition}, avec des paires antithétiques $Z$ et $-Z$
+afin de réduire la variance Monte Carlo. La dynamique du spot ne comporte donc
+pas d'erreur de discrétisation d'Euler. La barrière de protection reste toutefois
+observée sur une grille quotidienne discrète : augmenter le nombre de trajectoires
+améliore la précision statistique, mais ne supprime ni cette erreur de suivi ni
+l'erreur liée aux hypothèses de Black--Scholes. Avant la réplication, le moteur
+de valorisation est vérifié par des tests du payoff, de la chronologie des flux
+et de la convergence Monte Carlo, afin de s'assurer que l'optimiseur ajuste bien
+le contrat défini et non une erreur d'implémentation.
+
+\subsection{Résultat de valorisation et interprétation}
+
+La valorisation Monte Carlo donne, au moyen de l'équation~\eqref{eq:mc-estimator},
+\begin{equation}
+ \widehat V_0=100{,}5378,\qquad
+ \widehat{\operatorname{SE}}(\widehat V_0)=0{,}1492,
+ \qquad IC_{95\%}=[100{,}2453\,;\,100{,}8302].
+\label{eq:model-price}
+\end{equation}
+
+\subsubsection*{Signification du prix de modèle}
+
+Le prix de modèle est l'espérance risque-neutre des flux contractuels actualisés
+sous la dynamique retenue. Utilisé pour comparer les méthodes, il est indépendant
+de la stratégie de réplication et exclut les marges commerciales, le spread de
+crédit de l'émetteur, les coûts de structuration, les réserves de couverture et
+les ajustements bid--ask. Il ne doit être confondu ni avec le capital initial
+d'une stratégie particulière ni avec un prix commercial.
+
+\section{Cadre de réplication et références}
+
+\subsection{La réplication comme problème de projection}
+
+Le projet ne suppose pas que le passif appartienne exactement à l'espace engendré
+par les instruments disponibles. Il recherche plutôt le profil de flux atteignable
+le plus proche selon une fonction de perte choisie. Si $X$ est la matrice des
+payoffs de couverture simulés et $y$ le vecteur des flux simulés du passif, un
+portefeuille linéaire produit $Xw$. La réplication est alors une projection de
+$y$ sur l'espace de dimension finie engendré par les colonnes de $X$.
+
+Ce point de vue explicite les sources de l'erreur résiduelle. Une erreur peut
+subsister parce qu'une forme de payoff manque au dictionnaire, parce que les
+strikes ou les maturités sont trop grossiers, parce qu'un même ensemble de poids
+est partagé entre plusieurs états, ou parce que la régularisation éloigne
+volontairement la solution des moindres carrés sans contrainte. Le résidu ne
+traduit pas nécessairement un échec d'optimisation ; il peut signaler des
+instruments de représentation manquants ou une contrainte d'information.
+
+\subsection{Dictionnaires d'instruments}
+
+Pour une maturité $u$ et un strike $K$, le payoff du call $C_{u,K}$ et celui
+du put $P_{u,K}$ sont
+\begin{equation}
+ C_{u,K}=(S_u-K)^+,\qquad P_{u,K}=(K-S_u)^+.
+\label{eq:vanilla-payoffs}
+\end{equation}
+Ces payoffs constituent les fonctions de base du dictionnaire de réplication.
+Évalués sur les trajectoires simulées, ils forment les vecteurs, ou colonnes de
+la matrice $X$, sur lesquels le payoff cible est projeté. Les calls et puts
+européens sont retenus comme univers de référence car leurs payoffs sont
+transparents et leur valorisation standard. Une grille de strikes représente
+les pentes et la convexité dans différentes zones de spot, tandis que plusieurs
+maturités alignent ces formes sur les dates d'observation de l'autocall.
+
+Le terme \emph{vanille} décrit ici la forme du payoff et non sa liquidité :
+celle-ci dépend du sous-jacent, de la maturité, du strike et de la taille de la
+position. À titre de comparaison théorique, le dictionnaire Full ajoute les
+digitales
+\begin{equation}
+ D^+_{u,K}=\1_{\{S_u\geq K\}},\qquad
+ D^-_{u,K}=\1_{\{S_u<K\}}.
+\label{eq:digital-payoffs}
+\end{equation}
+Elles représentent directement les discontinuités de barrière et peuvent être
+structurées de gré à gré. Elles peuvent aussi être approchées par un call spread
+de largeur $\delta K$ :
+\begin{equation}
+ \frac{(S_u-K)^+-(S_u-K-\delta K)^+}{\delta K}
+ \longrightarrow \1_{\{S_u>K\}}
+\label{eq:digital-call-spread}
+\end{equation}
+lorsque $\delta K\downarrow0$ hors du strike. Un spread étroit exige toutefois
+d'importantes quantités opposées et devient sensible à la granularité des
+cotations et à l'exécution. Les digitales sont donc exclues de l'univers de
+réplication pratique retenu dans cette étude. L'univers Full n'est conservé que
+comme référence théorique pour mesurer l'effet de fonctions de base
+discontinues.
+
+\subsubsection*{Rôle de la position de trésorerie}
+
+L'ordonnée à l'origine $b$ est la constante du modèle. Elle représente une
+position de trésorerie sans risque et n'est pas pénalisée. Son montant initial
+et sa capitalisation ultérieure entrent dans le compte de financement.
+
+\subsection{Réplication statique des flux}
+
+Soient $y_j$ un flux cible actualisé et $x_j\in\R^p$ le vecteur correspondant de payoffs d'options. Un ajustement statique résout
+\begin{equation}
+ \min_{b,w}\frac1n\sum_{j=1}^n(y_j-b-x_j^\top w)^2+\mathcal P(w),
+\label{eq:static-objective}
+\end{equation}
+où $b$ est une position de trésorerie non pénalisée. Cette formulation constitue
+une référence volontairement restrictive : un même vecteur de poids doit couvrir
+des dates de rappel et des historiques de barrière différents. Elle permet ainsi
+de mesurer le gain apporté ensuite par le conditionnement.
+
+\subsubsection*{Ajustement des flux contre ajustement de la valeur}
+
+Ajuster la valeur totale actualisée exige que la somme des flux de couverture
+ressemble à celle des flux du passif. Ajuster les flux datés exige une concordance
+à chaque date de paiement. Cette seconde exigence est plus forte :
+\begin{equation}
+ \sum_i \bigl(H_i-G_i\bigr)\approx0
+ \quad\not\Rightarrow\quad
+ H_i-G_i\approx0\ \text{pour tout }i.
+\label{eq:timing-cancellation}
+\end{equation}
+Les erreurs temporelles positives et négatives peuvent se compenser en valeur
+actuelle. Cette distinction motive des diagnostics séparés par date de paiement
+et le compte de financement.
+
+\subsection{Politique conditionnelle}
+
+À la date d'observation $t_i$, on définit un état observable $Z_i$ contenant le spot courant, le statut de survie, l'historique de la barrière de protection et la date. La politique conditionnelle associe à cet état un panier admissible :
+\begin{equation}
+ \pi_i:Z_i\longmapsto (b_i(Z_i),w_i(Z_i)).
+\label{eq:conditional-policy}
+\end{equation}
+Seule l'information mesurable à $t_i$ peut entrer dans $Z_i$. Toutes les lignes postérieures à un rappel anticipé sont exclues des décisions suivantes.
+
+Après une observation, le hedger sait si le produit a pris fin, si la barrière
+de protection a déjà été touchée et où se situe le spot courant par rapport aux
+barrières contractuelles. Imposer la même position future à tous ces états écarte
+une information économiquement pertinente. Le conditionnement autorise des
+portefeuilles différents selon l'état observable et élargit ainsi l'espace des
+payoffs atteignables sans utiliser de données futures.
+
+\subsubsection*{Information admissible et absence d'anticipation}
+
+Pour une décision à $t_i$, le vecteur de caractéristiques peut contenir $S_{t_i}$,
+l'indice d'observation, la survie et l'historique de barrière jusqu'à $t_i$. Il ne
+peut contenir la future date de rappel, le spot terminal, le minimum futur ou le
+payoff terminal réalisé. Les cibles d'apprentissage dépendent naturellement des
+flux futurs, contrairement aux entrées de la politique, qui n'utilisent que
+l'information courante.
+
+L'audit chronologique vérifie l'absence des lignes postérieures au remboursement
+anticipé et la construction des variables d'état à partir de l'information
+disponible à la date de décision. Sans ce contrôle, un ajustement conditionnel
+apparemment excellent pourrait n'être qu'un artefact d'anticipation.
+
+\subsection{Objectifs régularisés}
+
+Les pénalisations insérées dans l'objectif générique~\eqref{eq:static-objective} sont
+\begin{align}
+ \mathcal P_{L2}(w)&=\alpha\lVert w\rVert_2^2,
+ &&\label{eq:ridge-penalty}\\
+ \mathcal P_{L1}(w)&=\alpha\lVert w\rVert_1,
+ &&\label{eq:lasso-penalty}\\
+ \mathcal P_{EN}(w)&=\alpha\left(\rho\lVert w\rVert_1+\frac{1-\rho}{2}\lVert w\rVert_2^2\right),
+ &&\label{eq:elastic-net-penalty}\\
+ \mathcal P_{L0}(w)&=\alpha\lVert w\rVert_0.
+ &&\label{eq:l0-penalty}
+\end{align}
+Ridge stabilise les colonnes d'options corrélées mais reste dense. Lasso crée des supports parcimonieux. Elastic Net est utile lorsque des strikes voisins sont corrélés. $L^0$ compte directement les positions actives mais produit un problème non convexe ; sa solution est traitée comme heuristique et auditée sur plusieurs initialisations.
+
+Les moindres carrés ordinaires (\emph{Ordinary Least Squares}, OLS), obtenus pour
+$\alpha=0$, servent de référence dense sans régularisation. Ils fournissent le
+meilleur ajustement quadratique offert par le dictionnaire avant d'imposer une
+contrainte de parcimonie. Cette référence est calculée en statique et en conditionnel pour les
+deux univers d'instruments ; elle n'est pas retenue comme politique parcimonieuse.
+
+\subsubsection*{Effets des différentes pénalisations}
+
+Chaque pénalisation répond à une question différente :
+
+\begin{itemize}
+\item Ridge teste si la réduction de l'amplitude des poids stabilise le portefeuille lorsque plusieurs options ont des payoffs proches.
+\item Lasso teste si un petit sous-ensemble d'options préserve l'essentiel de l'ajustement.
+\item Elastic Net teste si la parcimonie peut être combinée au regroupement et à la stabilisation des strikes voisins.
+\item $L^0$ teste directement le comportement d'une pénalisation du nombre de lignes, au prix d'une recherche non convexe.
+\end{itemize}
+
+Cette comparaison distingue l'effet de la stabilisation des poids de celui de
+la sélection d'un petit nombre d'options. Les valeurs d'alpha se situent sur des
+échelles différentes et ne
+peuvent être comparées numériquement entre pénalisations.
+
+Les options n'ont pas toutes des payoffs du même ordre de grandeur. Sans correction,
+la pénalisation pourrait favoriser une option uniquement parce que son coefficient
+est numériquement plus petit. Les colonnes de la matrice de payoffs sont donc
+standardisées avant l'optimisation afin de placer les instruments sur une échelle
+comparable. Les coefficients sont ensuite reconvertis en quantités financières,
+puis les positions actives sont comptées après application de la tolérance numérique
+retenue.
+
+\subsection{Couverture delta dynamique de référence}
+
+La couverture delta sert de référence pour comparer notre réplication par options
+à une méthode dynamique classique. Elle est construite en quatre étapes.
+
+\begin{enumerate}
+\item \textbf{Surface de valorisation.} Sous Black--Scholes, la valeur
+$V(t,S,h)$ de l'autocall est calculée à rebours pour chaque jour ouvré et pour
+les deux états $h$ de la barrière de protection. Le calcul utilise une grille
+logarithmique de 801 spots entre $20\%$ et $300\%$ de $S_0$. Les espérances
+conditionnelles entre deux dates sont évaluées par une quadrature gaussienne à
+40 points. Les coupons, le rappel anticipé et le remboursement sont appliqués
+aux dates contractuelles.
+
+\item \textbf{Calcul du delta.} Le delta mesure la variation de la valeur de
+l'autocall provoquée par une petite variation du spot :
+\begin{equation}
+  \Delta(t,S,h)=\frac{\partial V}{\partial S}(t,S,h).
+\label{eq:delta-benchmark}
+\end{equation}
+À chaque rééquilibrage, la date, le spot observé et l'état $h$ sélectionnent le
+delta correspondant sur la surface, avec interpolation entre les points de la
+grille.
+
+\item \textbf{Stratégie autofinancée.} Le capital initial est égal à la valeur
+de modèle de l'autocall. La stratégie détient $\Delta_0$ unités du sous-jacent et
+place le solde en trésorerie. Le delta est ensuite réajusté chaque jour ouvré ou
+tous les cinq jours ouvrés. La trésorerie finance les transactions, capitalise au
+taux sans risque, reçoit les dividendes et paie les flux de l'autocall. Les
+positions sont fermées au rappel ou à maturité.
+
+\item \textbf{Évaluation.} La surface est gelée avant d'être appliquée aux
+trajectoires Monte Carlo indépendantes. La performance et la rotation de la
+couverture sont alors mesurées sans recalibration.
+\end{enumerate}
+
+\subsection{Échelle des références}
+
+La comparaison finale est structurée selon l'échelle suivante :
+
+\begin{enumerate}
+\item passif d'autocall non couvert
+\item couverture delta Black--Scholes rebalancée quotidiennement et tous les cinq jours
+\item panier statique unique constitué à l'origine
+\item politiques conditionnelles denses obtenues par moindres carrés ordinaires et par Ridge
+\item politiques conditionnelles parcimonieuses sous $L^0$, Lasso et Elastic Net.
+\end{enumerate}
+
+\noindent La comparaison homogène sera construite en sept étapes :
+
+\begin{enumerate}
+\item utiliser les mêmes trajectoires et le même passif pour toutes les méthodes
+\item attribuer à chaque stratégie le même capital initial
+\item appliquer les mêmes flux contractuels aux mêmes dates
+\item utiliser le même compte autofinancé, y compris le dénouement des positions après rappel
+\item effectuer d'abord la comparaison sans coûts, puis avec des coûts cohérents pour le sous-jacent et les options
+\item calculer les mêmes mesures de P\&L, RMSE, MAE, VaR, ES et perte maximale, ainsi que le déficit maximal de trésorerie sur chaque trajectoire, le montant couvrant 95\% de ces déficits, la rotation et le coût
+\item construire une frontière de Pareto entre risque, financement, coût et complexité avant d'ouvrir l'échantillon de test réservé.
+\end{enumerate}
+
+Pour chaque trajectoire, le déficit maximal de trésorerie est le montant nécessaire
+pour ramener à zéro le solde de trésorerie le plus bas. Le montant couvrant 95\% de
+ces déficits indique le financement qui aurait permis d'éviter un solde négatif dans
+95\% des trajectoires.
+
+\section{Plan expérimental et sélection de modèle}
+
+Les comparaisons utilisent le même contrat et le même modèle. Lorsqu'elles opposent plusieurs portefeuilles sous un même plan de simulation, elles les évaluent sur les mêmes trajectoires. Les graines aléatoires sont enregistrées et la
+robustesse est contrôlée sur plusieurs recalibrations indépendantes.
+
+\subsection{Chronologie des données}
+
+Dans l'étude de sélection, 60\% des trajectoires servent à calibrer les positions, 20\% à choisir les hyperparamètres et les profils, et 20\% au test réservé.
+
+L'évaluation principale du risque utilise un échantillon distinct de 2 500 trajectoires simulées après avoir fixé les politiques évaluées. Les résultats dépendent du contrat et du modèle retenus.
+
+\subsection{La recherche d'hyperparamètres, partie intégrante de la méthode}
+
+La sélection des hyperparamètres est centrale, car elle détermine le support, l'exposition de queue et la stabilité de la politique. Elle est donc présentée dans le corps du rapport, tandis que les grilles exhaustives et les candidats rejetés figurent à l'annexe~\ref{app:hyperparameters}.
+
+Pour chaque famille et chaque pénalisation, la procédure est la suivante :
+
+\begin{enumerate}
+\item construire un chemin d'alpha sur les données de calibration
+\item éliminer les solutions non convergées, dégénérées et dupliquées
+\item évaluer les candidats restants sur les trajectoires de validation
+\item identifier les candidats non dominés en précision--parcimonie
+\item attribuer les profils performance, compromis et parcimonie
+\item répéter la calibration sur plusieurs graines et auditer les métriques ainsi que la stabilité du support.
+\end{enumerate}
+
+Elastic Net effectue une recherche conjointe sur $\alpha$ et $\rho$. $L^0$ utilise des démarrages chauds, froids et multiples, car un unique indicateur de convergence ne garantit pas un optimum global.
+
+Le meilleur alpha n'est pas nécessairement celui qui minimise la RMSE d'entraînement,
+généralement proche de la solution non régularisée. La validation vise à déterminer
+si une solution légèrement plus contrainte généralise mieux ou atteint presque la
+même erreur avec nettement moins de positions.
+
+\subsubsection*{Filtrage des candidats}
+
+Chaque filtre élimine un mode d'échec distinct :
+
+\begin{itemize}
+\item un filtre de convergence retire les solutions pour lesquelles le solveur numérique n'a pas satisfait son critère d'arrêt
+\item un filtre de support minimal retire les solutions dégénérées composées uniquement de trésorerie ou d'une ligne lorsqu'elles ne permettent pas la comparaison visée
+\item un filtre de support maximal impose la portée d'un candidat parcimonieux
+\item un filtre de dominance retire une solution à la fois moins précise et moins parcimonieuse qu'une autre sous la même pénalisation
+\item un filtre de doublons empêche de présenter des portefeuilles numériquement identiques comme des choix distincts
+\item un filtre de stabilité rejette les candidats dont la performance ou le support sont trop sensibles à la recalibration.
+\end{itemize}
+
+Le nombre de candidats conservés après chaque filtre est enregistré. Si aucun
+candidat ne satisfait les critères d'un profil, ce profil est déclaré
+indisponible.
+
+\subsubsection*{\texorpdfstring{{Sélection initiale selon la RMSE et la parcimonie}}{Sélection initiale selon la RMSE et la parcimonie}}
+
+Il n'existe pas de taux d'échange universel entre un point de RMSE et une ligne
+d'option supplémentaire. La sélection est donc effectuée séparément dans chaque
+famille et chaque pénalisation, après les filtres précédents. Le profil performance
+minimise la RMSE de validation. Le profil parcimonie retient, parmi les candidats
+restants, le plus petit nombre total d'options actives dans toute la politique.
+
+Pour le profil compromis, on ramène la RMSE de validation et le nombre total d'options actives sur $[0,1]$ au sein du groupe de candidats admissibles. Pour le candidat $i$, on définit
+\begin{equation}
+ r_i=\frac{\RMSE_i-\RMSE_{\min}}{\RMSE_{\max}-\RMSE_{\min}},\qquad
+ c_i=\frac{N_i-N_{\min}}{N_{\max}-N_{\min}},\qquad
+ d_i=\sqrt{r_i^2+c_i^2}.
+\label{eq:compromise-score}
+\end{equation}
+Si tous les candidats ont la même valeur sur un axe, sa coordonnée normalisée vaut zéro. Après l'attribution des profils performance puis parcimonie, le profil compromis retient le candidat encore disponible qui minimise $d_i$. Si tous les candidats ont déjà été attribués, on réutilise celui qui minimise ce score. Les deux axes ont le même poids dans le calcul de la distance. {La section 5.3 ajoute trois règles fondées sur l’ES à 97,5\%, estimée à poids fixés sur un échantillon distinct.}
+
+\reportfigure[0.88\linewidth]{\reportfigurefile{decision_dashboard.pdf}}{Synthèse des huit profils compromis retenus après la sélection des hyperparamètres. Le nombre d'options correspond au nombre total de coefficients actifs dans l'ensemble de la politique conditionnelle.}{fig:decision-dashboard}
+\FloatBarrier
+
+La Figure~\ref{fig:decision-dashboard} situe les huit profils compromis selon leur RMSE de validation et leur nombre de positions actives. Lasso et Elastic Net comptent de 2 à 19 positions, contre 92 à 211 pour Ridge. Dans l'univers Full, le Lasso atteint une RMSE de 1,91 point de nominal avec 13 positions, tandis que $L^0$ en retient 5 pour une RMSE de 3,82 points.
+
+\subsubsection*{Stabilité sur plusieurs recalibrations}
+
+Deux notions de stabilité sont pertinentes. La stabilité des métriques demande
+si la RMSE et l'ES de validation restent proches après recalibration. La stabilité
+du support demande si les mêmes strikes et maturités demeurent actifs. Un portefeuille
+peut avoir une performance stable mais un support instable lorsque des options
+corrélées se substituent. Cette distinction importe opérationnellement : un support
+instable affaiblit l'interprétation des positions individuelles même si le payoff
+global reste stable.
+
+Pour $L^0$, la stabilité à l'initialisation est également requise. Le problème
+étant non convexe, les démarrages chauds et multiples explorent différentes
+solutions locales. La convergence numérique ne garantit pas l'optimalité globale.
+
+\reportfigure{\reportfigurefile{multi_seed_stability.pdf}}{RMSE de validation sur 10 tentatives de recalibration par profil. Les boîtes résument les résultats convergés. Les croix grises indiquent les résultats provisoires des tentatives non convergées.}{fig:stability}
+\FloatBarrier
+
+Dans l'univers Full, le Lasso compromis converge lors des dix tentatives, avec une RMSE de validation dispersée. Le profil $L^0$ compromis converge lors de six tentatives sur dix (Figure~\ref{fig:stability}).
+
+\subsection{Conventions de risque}
+
+Soient $H$ le passif actualisé de l'autocall, c'est-à-dire la somme des flux dus au porteur sur une trajectoire, et $G(w)$ le flux actualisé de la couverture. Le résidu est
+\begin{equation}
+ \varepsilon(w)=H-G(w).
+\label{eq:residual}
+\end{equation}
+Un résidu positif correspond à une sous-réplication et représente une perte pour l'émetteur. Un résidu négatif correspond à une sur-réplication. La RMSE mesure l'ajustement global.
+\begin{equation}
+ \RMSE(w)=\sqrt{\E[\varepsilon(w)^2]},
+\label{eq:rmse}
+\end{equation}
+L'Expected Shortfall complète cette mesure en décrivant la gravité moyenne de la
+queue défavorable \cite{mcneil2015,rockafellar2000}. Son estimateur empirique est
+défini ci-dessous.
+Sur un échantillon Monte Carlo standard de $n$ trajectoires, notons $H_j$ le flux actualisé de l'autocall sur la trajectoire $j$ et
+\begin{equation}
+ \bar H_n=\frac{1}{n}\sum_{j=1}^{n}H_j.
+\label{eq:empirical-liability-mean}
+\end{equation}
+La variable de risque avant couverture est le flux centré
+\begin{equation}
+ L_j^{\rm brut}=H_j-\bar H_n,
+\label{eq:empirical-gross-loss}
+\end{equation}
+et sa RMSE empirique est
+\begin{equation}
+ \widehat{\RMSE}_{\rm brut}
+ =\sqrt{\frac{1}{n}\sum_{j=1}^{n}(H_j-\bar H_n)^2}.
+\label{eq:empirical-gross-rmse}
+\end{equation}
+Après réplication, la perte résiduelle sur la trajectoire $j$ est
+\begin{equation}
+ L_j^{\rm res}=H_j-G_j(w),
+\label{eq:empirical-residual-loss}
+\end{equation}
+et
+\begin{equation}
+ \widehat{\RMSE}_{\rm res}(w)
+ =\sqrt{\frac{1}{n}\sum_{j=1}^{n}\bigl(H_j-G_j(w)\bigr)^2}.
+\label{eq:empirical-residual-rmse}
+\end{equation}
+Pour préciser l'ES empirique, ordonnons les pertes $L_{(1)}\leq\cdots\leq L_{(n)}$. Lorsque $m=n(1-q)$ est entier,
+\begin{equation}
+ \widehat{\ES}_{q}(L)
+ =\frac{1}{m}\sum_{k=n-m+1}^{n}L_{(k)}.
+\label{eq:empirical-es}
+\end{equation}
+Pour 2 500 trajectoires équipondérées, la queue à 97,5\% représente une masse de 62,5 équivalents-trajectoires. On prend toutes les pertes au-dessus du seuil, puis on répartit entre les pertes ex æquo au seuil la masse nécessaire pour atteindre exactement 2,5\%. Le même calcul s'applique au passif centré $L^{\rm brut}$ et au résidu de couverture $L^{\rm res}$.
+
+La RMSE et l'ES à 97,5\% sont les deux mesures principales. L'erreur moyenne signée, l'erreur absolue moyenne (MAE), la fréquence des pertes positives et la perte maximale observée complètent la comparaison. Pour le résidu d'une couverture, la fréquence des pertes positives correspond au taux de sous-réplication.
+
+\subsubsection*{Risque du passif avant couverture}
+
+Sur les 2 500 trajectoires d'évaluation du risque, on soustrait à chaque flux actualisé la moyenne des flux de ce même échantillon. Le passif ainsi centré présente une RMSE de 7,94 points de nominal et une ES à 97,5\% de 4,49 points.
+
+\subsubsection*{Interprétation de chaque métrique}
+
+\begin{itemize}
+\item L'erreur moyenne mesure la sous- ou sur-réplication systématique. Des erreurs opposées peuvent se compenser.
+\item La MAE mesure l'écart absolu typique et dépend moins des observations extrêmes que la RMSE.
+\item La RMSE pénalise quadratiquement les grandes erreurs et s'aligne le plus directement sur la calibration par moindres carrés.
+\item La fréquence des pertes positives est la part des trajectoires pour lesquelles $L>0$. Pour le passif centré, ce sont les trajectoires dont le flux actualisé dépasse la moyenne de l'échantillon.
+\item L'ES moyenne la pire queue et sert donc à mesurer sa sévérité.
+\item La perte maximale observée est un diagnostic d'échantillon, non une estimation du pire cas dans la population.
+\end{itemize}
+
+\subsubsection*{Opposition possible entre la RMSE et l'ES}
+
+Les moindres carrés répartissent l'effort d'optimisation selon la fréquence des
+erreurs quadratiques sous la distribution de calibration. Une région rare contribue
+peu si elle est peu échantillonnée, même si sa perte conditionnelle est élevée.
+L'optimiseur peut améliorer des milliers de trajectoires ordinaires en acceptant
+un moins bon ajustement sur quelques scénarios de barrière. La RMSE peut alors
+diminuer tandis que l'ES augmente.
+
+La régularisation peut renforcer ce mécanisme si les instruments utiles seulement
+dans les états rares sont éliminés parce qu'ils contribuent peu à l'ajustement moyen.
+Il ne s'agit pas d'une contradiction entre métriques : elles répondent à des
+questions différentes. Si la protection de la queue est requise, elle doit entrer
+dans l'objectif, dans une contrainte ou dans une règle d'acceptation séparée.
+
+\subsection{Importance sampling}
+
+Le Monte Carlo standard peut produire trop peu de trajectoires défavorables pour estimer précisément le risque de queue. L'importance sampling consiste à simuler plus souvent ces trajectoires, puis à corriger leur contribution par une pondération afin de mesurer le risque sous le modèle initial \cite{glasserman2004}.
+
+On note $p$ la densité des trajectoires sous le modèle initial et $q$ celle utilisée pour la simulation. À chaque trajectoire simulée $X_j$, on attribue le poids
+\begin{equation}
+ \omega_j=\frac{p(X_j)}{q(X_j)}.
+\label{eq:likelihood-ratio}
+\end{equation}
+Une trajectoire surreprésentée par la simulation reçoit ainsi un poids plus faible. Ici, $q$ est un mélange de distributions gaussiennes comprenant des composantes décalées pour favoriser les baisses du sous-jacent.
+
+Les estimateurs de risque utilisent les poids normalisés $\widetilde{\omega}_j=\omega_j/\sum_k\omega_k$. Le traitement de la masse de probabilité au seuil de VaR est détaillé dans l'Annexe~\ref{app:is}.
+
+Le plan expérimental prévoit deux usages de l’importance sampling. Ses trajectoires pondérées peuvent servir à estimer le risque à poids fixés ou à recalibrer les poids. L’expérience antérieure de la section 5.5 illustre le premier usage. Dans l’exécution présentée en 5.6, le pilote a retenu le Monte Carlo standard pour le recalibrage.
+
+La précision de l'importance sampling dépend de la répartition des poids entre les trajectoires. Si quelques trajectoires concentrent presque tout le poids, l'estimation repose en pratique sur peu d'observations. La taille effective de l'échantillon (\emph{Effective Sample Size}, ESS) mesure cette concentration~:
+\begin{equation}
+ \operatorname{ESS}=\frac{(\sum_j\omega_j)^2}{\sum_j\omega_j^2}.
+\label{eq:ess}
+\end{equation}
+Pour $n$ trajectoires de poids égaux, l'ESS vaut $n$. Plus les poids sont concentrés, plus elle diminue. Cette mesure est globale : elle ne garantit pas à elle seule une estimation précise du risque de queue.
+
+Les diagnostics complémentaires examinent le poids normalisé maximal et l'entropie, qui décrivent la concentration des poids, ainsi que la contribution de chaque composante du mélange. Les intervalles de confiance bootstrap mesurent l'incertitude des estimations.
+
+La distribution de simulation est choisie pour améliorer la précision de l'estimation du risque sur les différentes politiques évaluées, et non pour obtenir une ES plus faible.
+
+\subsubsection*{Précision du Monte Carlo ordinaire dans la queue}
+
+Au niveau de confiance de 97,5\%, seules 2,5\% des trajectoires standard contribuent
+directement à l'ES. Avec 2 500 trajectoires, cela représente environ 63 observations
+avant prise en compte de contributions inégales aux pertes. À 99\%, il en reste
+25. De faibles changements sur quelques trajectoires peuvent donc
+modifier sensiblement l'estimation.
+
+Augmenter le nombre de trajectoires standard reste possible, mais peut être
+inefficace lorsque les régimes pertinents sont rares. L'importance sampling
+tire volontairement davantage de trajectoires dans les régions défavorables et
+corrige le changement de mesure par les rapports de vraisemblance. Si la proposition
+est bien choisie, il améliore la précision à budget de calcul fixé sans modifier
+la distribution cible.
+
+\subsubsection*{Mélange standard et composantes décalées}
+
+La composante standard continue de tirer des trajectoires selon le modèle de référence. Les composantes à décalage négatif, modéré ou marqué, rendent plus fréquentes les trajectoires qui se terminent à un niveau bas du sous-jacent. Un décalage marqué utilisé seul pourrait rendre les scénarios ordinaires trop rares et concentrer le poids sur quelques trajectoires.
+
+Ce mélange favorise les trajectoires qui se terminent à un niveau bas du sous-jacent. Une perte de réplication peut aussi dépendre du parcours, par exemple après un rappel manqué de peu suivi d'un rebond. La section sur le risque résiduel examine comment les pertes de queue se répartissent selon l’issue du contrat, les coupons manqués et le franchissement de la barrière de protection.
+
+\subsubsection*{Limites de l'importance sampling}
+
+Un même mélange peut estimer le risque de queue avec une précision différente d'un portefeuille à l'autre, selon les scénarios qui génèrent les pertes les plus fortes.
+
+{À positions fixées, les deux méthodes estiment le risque du même portefeuille. Pour le recalibrage, le plan $2\times 2$ compare deux échantillons, chacun avec et sans contrainte d’ES, en conservant la pénalisation Elastic Net. Le second échantillon utilise l’importance sampling si le pilote retient un mélange. Dans l’expérience présentée en section 5.6, le pilote retient Monte Carlo standard pour les deux univers et le second échantillon est une répétition indépendante.}
+
+\section{Résultats}
+
+Les références OLS permettent d'abord d'examiner l'effet du dictionnaire et du conditionnement, avec une pénalisation fixée à zéro. On compare ensuite deux objectifs de calibration. La méthode A ajuste les paiements date par date. La méthode B ajuste directement leur total actualisé sur chaque trajectoire. Après la comparaison OLS, les portefeuilles d'options étudiés sont conditionnels, sauf mention contraire. On présente leurs profils, leur risque hors échantillon et les expériences consacrées au risque de queue.
+
+Les montants sont exprimés en points de nominal, sauf indication contraire. Le nominal de référence vaut 100. Chaque comparaison indique son échantillon.
+
+\subsection{Capacité du dictionnaire dans les références OLS}
+
+Le tableau~\ref{tab:ols-capacity} croise deux dictionnaires et deux formulations. Les quatre références estiment les positions par moindres carrés ordinaires, avec $\alpha=0$ fixé dès le départ. Les deux formulations sont calibrées sur les paiements datés (objectif A). La formulation statique ajuste un panier unique pour toutes les dates. La formulation conditionnelle adapte le panier à la date et à l'état observé. Pour calculer la RMSE et l'ES du tableau, on additionne les écarts de flux actualisés sur chaque trajectoire, puis on calcule les deux mesures sur ces écarts totaux. L'évaluation utilise les mêmes 1 250 trajectoires que le tableau~\ref{tab:unified-comparison}.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llrr}
+\toprule
+Formulation & Univers & RMSE & ES à 97,5\% \\
+\midrule
+Statique & Calls + Puts & 48,596 & 93,464 \\
+Conditionnelle & Calls + Puts & 21,010 & 47,824 \\
+Statique & Full & 53,092 & 97,423 \\
+Conditionnelle & Full & 1,035 & 0,944 \\
+\bottomrule
+\end{tabular}
+\caption{Références OLS statiques et conditionnelles calibrées sur les paiements datés (A). Les métriques portent sur le déficit total actualisé par trajectoire. Positions estimées par moindres carrés ordinaires, avec $\alpha=0$ fixé d'emblée et sans recherche d'hyperparamètres. La RMSE et l'ES sont mesurées sur les mêmes trajectoires d'évaluation indépendantes, en points de nominal.}
+\label{tab:ols-capacity}
+\end{table}
+
+Dans cette comparaison, l'apport des digitales dépend de la construction du portefeuille. Dans un panier statique, elles apportent des payoffs discontinus, mais les positions restent fixées dès le départ. La formulation conditionnelle permet d'adapter le panier à l'état observé de l'autocall. La combinaison des deux donne le meilleur ajustement dans cette expérience.
+
+\subsection{Ajustement par échéance et ajustement du total actualisé}
+
+La Figure~\ref{fig:conditional-objective-tradeoff} compare deux calibrations conditionnelles pénalisées sur les mêmes 625 trajectoires d'évaluation. Le tableau~\ref{tab:capacity}, en annexe, présente les ajustements pénalisés avec leurs hyperparamètres propres.
+
+\reportfigure{\reportfigurefile{method_objective_tradeoff.pdf}}{Comparaison des calibrations conditionnelles A et B sur 625 trajectoires communes d'évaluation. Les barres A correspondent aux portefeuilles calibrés sur les paiements datés et les barres B aux portefeuilles calibrés sur leur total actualisé. Une fois les poids fixés, chaque portefeuille est évalué selon les deux critères~: la RMSE des paiements datés en haut et celle du total actualisé en bas.}{fig:conditional-objective-tradeoff}
+
+Dans Calls + Puts, le classement s’inverse selon la métrique, comme le suggèrent les objectifs de calibration. Pour Elastic Net, A ramène la RMSE des paiements de 49,90 à 10,77 points du nominal par rapport à B, tandis que B ramène la RMSE du total actualisé de 21,91 à 3,67 points par rapport à A. Des écarts de signes opposés à des dates différentes peuvent se compenser dans le total.
+
+Sur ces mêmes trajectoires, le besoin de financement au 95e percentile des portefeuilles Elastic Net Calls + Puts atteint 38,19 points du nominal avec A et 2,58 avec B. Le classement selon les erreurs par paiement diffère donc de celui selon le financement.
+
+Le résultat Full est plus inattendu~: A reste meilleur selon les deux RMSE, y compris celle du total que B cherche directement à minimiser en calibration. Les digitales permettent ici à A de représenter les discontinuités à chaque date et de réduire aussi l'erreur agrégée. La régularisation, la construction des paniers et le découpage des états diffèrent également, et les scores sont mesurés hors calibration. La figure montre ainsi que cibler le total en calibration ne garantit pas la meilleure RMSE totale sur de nouvelles trajectoires.
+
+\subsection{Hyperparamètres et profils compromis retenus}
+
+La section 4.2 décrit la sélection des profils. Les profils présentés ici sont conditionnels et calibrés selon la méthode B, dont l'objectif porte sur le total actualisé des paiements. Ce choix permet d'étudier la parcimonie pour cet objectif global ; les écarts aux dates de paiement restent un diagnostic complémentaire. Le tableau~\ref{tab:selected} présente les hyperparamètres des compromis RMSE--parcimonie issus de la sélection initiale. Pour chaque compromis, il indique l'intensité $\alpha$ de la pénalisation et, pour Elastic Net, le ratio $\rho$. La RMSE de validation et la taille des paniers décrivent le résultat de cette sélection. Les Figures~\ref{fig:decision-dashboard} et~\ref{fig:stability} illustrent le diagnostic de sélection et de stabilité.
+
+Un nœud correspond à une date de paiement et à l'état de l'autocall connu au moment de choisir le panier. À une même date, les paniers peuvent différer selon que la barrière de protection a été franchie ou non. Après un rappel, aucun panier ultérieur n'est utilisé. Dans le tableau, la moyenne par nœud tient compte de la fréquence d'utilisation de chaque panier ; le maximum donne le nombre d'options du plus grand panier.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llrrrr}
+\toprule
+Univers & Pénalisation & $\alpha$ relatif & RMSE & Moy./nœud & Max/nœud \\
+\midrule
+Calls + Puts & $L^0$ & 0.74989 & 3.651 & 0.230 & 2 \\
+Calls + Puts & Lasso & 0.17783 & 3.576 & 0.230 & 2 \\
+Calls + Puts & Ridge & 1.77828 & 3.389 & 21.792 & 24 \\
+Calls + Puts & Elastic Net ($\rho=0.25$) & 0.05623 & 2.954 & 2.909 & 9 \\
+Full & $L^0$ & 0.31623 & 3.817 & 0.617 & 4 \\
+Full & Lasso & 0.00237 & 1.907 & 2.416 & 5 \\
+Full & Ridge & 0.03162 & 2.786 & 45.242 & 48 \\
+Full & Elastic Net ($\rho=0.25$) & 0.07499 & 3.020 & 3.124 & 12 \\
+\bottomrule
+\end{tabular}
+\caption{Profils compromis conditionnels calibrés sur le total actualisé des paiements (méthode B). La RMSE de validation mesure l'erreur sur ce total par trajectoire. La moyenne d'options par nœud est pondérée par la fréquence de visite. L’alpha relatif situe la pénalisation sur l’échelle propre à chaque méthode.}
+\label{tab:selected}
+\end{table}
+
+\subsubsection*{Lecture des profils sélectionnés}
+
+Dans Calls + Puts, Elastic Net améliore la RMSE de validation par rapport à Lasso et Ridge. Dans Full, Lasso obtient la RMSE de validation la plus basse des compromis et utilise moins d'options par nœud qu'Elastic Net. L'ordre des pénalisations dépend donc du dictionnaire.
+
+Dans Calls + Puts, $L^0$ et Lasso retiennent chacun deux coefficients actifs, avec des RMSE de validation proches. Dans Full, $L^0$ réduit davantage le nombre de positions que Lasso, au prix d’une erreur plus élevée. Son intérêt dépend donc de l’univers et du compromis recherché. Les diagnostics d’initialisation et de stabilité complètent cette comparaison pour l’optimisation non convexe.
+
+\noindent\begin{minipage}{\linewidth}
+\setlength{\intextsep}{5pt}
+\begin{figure}[H]
+  \centering
+  \vspace*{-3mm}
+  \caption{Profils retenus pour les politiques conditionnelles B de l’univers Calls + Puts. La RMSE et l’ES sont calculés sur le résidu total actualisé, sur des trajectoires distinctes de celles du tableau~\ref{tab:selected}.}
+  \vspace{2mm}
+  \includegraphics[width=\linewidth]{\reportfigurefile{alpha_tail_frontier_calls_puts_zoom.pdf}}
+  \label{fig:alpha-tail-frontier-cp}
+\end{figure}
+\vspace{-6mm}
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{0.92}
+\begin{tabular}{llrrrrr}
+\toprule
+Profil & Pénalisation & $\alpha$ relatif & $\rho$ & Options & \shortstack{RMSE\\(\% du nominal)} & \shortstack{ES à 97,5\%\\(\% du nominal)} \\
+\midrule
+P & $L^0$ & 0.74989 & --- & 2 & 4.817 & 14.830 \\
+ & Lasso & 0.17783 & --- & 2 & 4.671 & 11.470 \\
+ & Ridge & 0.10000 & --- & 118 & 4.421 & 9.486 \\
+ & Elastic Net & 0.02371 & 0.05 & 31 & 4.370 & 11.514 \\
+\addlinespace[2pt]
+C & $L^0$ & 0.74989 & --- & 2 & 4.817 & 14.830 \\
+ & Lasso & 0.17783 & --- & 2 & 4.671 & 11.470 \\
+ & Ridge & 1.77828 & --- & 92 & 6.719 & 8.680 \\
+ & Elastic Net & 0.05623 & 0.25 & 16 & 4.453 & 13.597 \\
+\addlinespace[2pt]
+S & $L^0$ & 0.74989 & --- & 2 & 4.817 & 14.830 \\
+ & Lasso & 0.17783 & --- & 2 & 4.671 & 11.470 \\
+ & Ridge & 100.00000 & --- & 54 & 7.218 & 8.649 \\
+ & Elastic Net & 0.42170 & 0.90 & 2 & 5.078 & 8.444 \\
+\addlinespace[2pt]
+E & $L^0$ & 0.07499 & --- & 2 & 4.817 & 14.829 \\
+ & Lasso & 0.17783 & --- & 2 & 4.671 & 11.470 \\
+ & Ridge & 100.00000 & --- & 54 & 7.218 & 8.649 \\
+ & Elastic Net & 0.56234 & 0.80 & 2 & 5.734 & 7.992 \\
+\addlinespace[2pt]
+RE & $L^0$ & 0.07499 & --- & 2 & 4.817 & 14.829 \\
+ & Lasso & 0.17783 & --- & 2 & 4.671 & 11.470 \\
+ & Ridge & 0.17783 & --- & 118 & 4.808 & 8.945 \\
+ & Elastic Net & 0.17783 & 0.25 & 10 & 4.824 & 8.500 \\
+\addlinespace[2pt]
+REP & $L^0$ & 0.07499 & --- & 2 & 4.817 & 14.829 \\
+ & Lasso & 0.17783 & --- & 2 & 4.671 & 11.470 \\
+ & Ridge & 100.00000 & --- & 54 & 7.218 & 8.649 \\
+ & Elastic Net & 0.42170 & 0.88 & 2 & 5.121 & 8.371 \\
+\bottomrule
+\end{tabular}
+\caption{Profils retenus pour Calls + Puts. La RMSE et l’ES sont calculés sur le résidu total actualisé, sur le même échantillon de validation de queue que la figure~\ref{fig:alpha-tail-frontier-cp}.}
+\label{tab:tail-profiles-cp}
+\end{table}
+\end{minipage}\par
+
+
+Pour Calls + Puts, les quatre portefeuilles du tableau~\ref{tab:selected} correspondent aux profils C du tableau~\ref{tab:tail-profiles-cp}. Lorsqu'on les réévalue à poids fixés sur les nouvelles trajectoires du tableau~\ref{tab:tail-profiles-cp}, leur RMSE augmente dans les quatre cas. L'écart est le plus marqué pour Ridge, dont la RMSE passe de 3,39 à 6,72\% du nominal. Ridge devance Lasso dans le tableau~\ref{tab:selected}, puis Lasso devance Ridge dans le tableau~\ref{tab:tail-profiles-cp}.
+
+\noindent\begin{minipage}{\linewidth}
+\setlength{\intextsep}{5pt}
+\begin{figure}[H]
+  \centering
+  \caption{Profils retenus pour les politiques conditionnelles B de l’univers Full. La RMSE et l’ES sont calculés sur le résidu total actualisé, sur des trajectoires distinctes de celles du tableau~\ref{tab:selected}.}
+  \vspace{2mm}
+  \includegraphics[width=\linewidth]{\reportfigurefile{alpha_tail_frontier_full_zoom.pdf}}
+  \label{fig:alpha-tail-frontier-full}
+\end{figure}
+\vspace{-6mm}
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{0.92}
+\begin{tabular}{llrrrrr}
+\toprule
+Profil & Pénalisation & $\alpha$ relatif & $\rho$ & Options & \shortstack{RMSE\\(\% du nominal)} & \shortstack{ES à 97,5\%\\(\% du nominal)} \\
+\midrule
+P & $L^0$ & 0.31623 & --- & 5 & 4.307 & 11.231 \\
+ & Lasso & 0.00237 & --- & 13 & 7.760 & 26.594 \\
+ & Ridge & 0.05623 & --- & 231 & 4.369 & 9.466 \\
+ & Elastic Net & 0.03162 & 0.05 & 48 & 4.263 & 9.798 \\
+\addlinespace[2pt]
+C & $L^0$ & 0.31623 & --- & 5 & 4.307 & 11.231 \\
+ & Lasso & 0.00237 & --- & 13 & 7.760 & 26.594 \\
+ & Ridge & 0.03162 & --- & 211 & 4.311 & 10.368 \\
+ & Elastic Net & 0.07499 & 0.25 & 19 & 4.282 & 10.634 \\
+\addlinespace[2pt]
+S & $L^0$ & 0.31623 & --- & 5 & 4.307 & 11.231 \\
+ & Lasso & 0.00422 & --- & 12 & 7.810 & 24.920 \\
+ & Ridge & 100.00000 & --- & 99 & 7.222 & 8.646 \\
+ & Elastic Net & 0.74989 & 0.99 & 2 & 6.181 & 8.356 \\
+\addlinespace[2pt]
+E & $L^0$ & 0.31623 & --- & 5 & 4.307 & 11.231 \\
+ & Lasso & 0.74989 & --- & 2 & 6.174 & 8.371 \\
+ & Ridge & 100.00000 & --- & 99 & 7.222 & 8.646 \\
+ & Elastic Net & 0.31623 & 0.25 & 13 & 5.538 & 8.201 \\
+\addlinespace[2pt]
+RE & $L^0$ & 0.31623 & --- & 5 & 4.307 & 11.231 \\
+ & Lasso & 0.31623 & --- & 3 & 4.831 & 9.268 \\
+ & Ridge & 0.10000 & --- & 236 & 4.722 & 9.080 \\
+ & Elastic Net & 0.10000 & 0.10 & 31 & 4.665 & 8.665 \\
+\addlinespace[2pt]
+REP & $L^0$ & 0.31623 & --- & 5 & 4.307 & 11.231 \\
+ & Lasso & 0.31623 & --- & 3 & 4.831 & 9.268 \\
+ & Ridge & 100.00000 & --- & 99 & 7.222 & 8.646 \\
+ & Elastic Net & 0.31623 & 0.90 & 3 & 4.881 & 9.127 \\
+\bottomrule
+\end{tabular}
+\caption{Profils retenus pour Full. La RMSE et l’ES sont calculés sur le résidu total actualisé, sur le même échantillon de validation de queue que la figure~\ref{fig:alpha-tail-frontier-full}.}
+\label{tab:tail-profiles-full}
+\end{table}
+\end{minipage}\par
+
+Dans les tableaux~\ref{tab:tail-profiles-cp} et~\ref{tab:tail-profiles-full}, les profils Elastic Net P donnent les RMSE les plus faibles parmi les profils présentés, tandis que les profils Elastic Net E donnent les ES les plus faibles. Dans Calls + Puts, le profil REP conserve le même nombre d’options actives que le profil E, soit deux, et ramène la RMSE de 5,73 à 5,12\% du nominal, avec une hausse de l’ES de 7,99 à 8,37\%. Dans Full, le profil REP ramène le nombre d’options actives de 31 à 3 par rapport au profil RE, avec une RMSE et un ES légèrement plus élevés. La parcimonie est donc déjà acquise avec E dans le premier univers, alors qu’elle distingue nettement RE et REP dans le second.
+
+La comparaison avec Ridge illustre ce que ce choix peut changer en pratique. Dans Calls + Puts, les profils RE de Ridge et d’Elastic Net ont des RMSE proches de 4,8\% du nominal. Elastic Net obtient un ES un peu plus faible avec 10 options actives, contre 118 pour Ridge. Dans Full, $L^0$ donne une autre solution parcimonieuse. Avec cinq options actives, il atteint une RMSE proche de celle des meilleurs profils du tableau~\ref{tab:tail-profiles-full}, mais conserve un ES plus élevé. Un panier très court peut donc bien reproduire le total actualisé en moyenne tout en laissant davantage de pertes dans les scénarios les plus défavorables.
+
+Le cas de Lasso dans Full montre enfin l’intérêt de comparer plusieurs règles de sélection. Sur les trajectoires du tableau~\ref{tab:tail-profiles-full}, le profil RE améliore à la fois la RMSE et l’ES du compromis initial C, avec 3 options actives au lieu de 13. La section~\ref{sec:out-of-sample-risk} compare les huit profils C au passif centré sans couverture sur un même échantillon indépendant.
+
+
+\FloatBarrier
+
+\subsection{Risque résiduel hors échantillon}\label{sec:out-of-sample-risk}
+
+Pour les huit profils C, retenus selon un compromis entre RMSE et nombre d’options actives, on mesure de combien la RMSE baisse et de combien l’ES à 97,5\% augmente par rapport au passif centré sans couverture, sur les mêmes trajectoires d’évaluation. Le tableau~\ref{tab:risk} présente les résultats à poids fixés sur 2 500 trajectoires indépendantes, distinctes de celles des figures~\ref{fig:alpha-tail-frontier-cp} et~\ref{fig:alpha-tail-frontier-full}.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrrrrr}
+\toprule
+Univers & Pénalisation & Options & RMSE & \shortstack[r]{Réduction\\RMSE} & ES à 97,5\% & \shortstack[r]{Perte\\maximale} & \shortstack[r]{Gain RMSE /\\hausse ES} \\
+\midrule
+Calls + Puts & $L^0$ & 2 & 4.210 & 47.0\% & 15.218 & 35.146 & 0,35 \\
+ & Lasso & 2 & 3.911 & 50.7\% & 11.207 & 24.289 & 0,60 \\
+ & Ridge & 92 & 5.886 & 25.9\% & 5.855 & 24.353 & 1,50 \\
+ & Elastic Net & 16 & 3.874 & 51.2\% & 13.076 & 45.806 & 0,47 \\
+\addlinespace[2pt]
+Full & $L^0$ & 5 & 3.737 & 52.9\% & 12.263 & 24.289 & 0,54 \\
+ & Lasso & 13 & 6.221 & 21.7\% & 15.645 & 47.180 & 0,15 \\
+ & Ridge & 211 & 3.581 & 54.9\% & 9.588 & 27.700 & 0,85 \\
+ & Elastic Net & 19 & 3.561 & 55.2\% & 10.052 & 25.770 & 0,79 \\
+\midrule
+\multicolumn{2}{l}{Passif centré sans couverture} & --- & 7.940 & --- & 4.488 & 4.488 & --- \\
+\bottomrule
+\end{tabular}
+\caption{Risque des huit profils C de la méthode conditionnelle B et du passif centré sans couverture sur 2 500 trajectoires indépendantes.}
+\label{tab:risk}
+\end{table}
+
+Par rapport au passif centré sans couverture, Ridge dans Calls + Puts obtient le meilleur ratio du tableau~\ref{tab:risk}, avec 1,50 point de RMSE gagné par point d’ES à 97,5\% supplémentaire. Elastic Net dans Full obtient la plus forte baisse de RMSE, avec un ratio de 0,79 et 19 coefficients d’options actifs contre 92 pour Ridge. Le profil le plus efficace par point de risque de queue ajouté mobilise donc près de cinq fois plus de coefficients que celui qui réduit le plus la RMSE.
+
+
+
+
+\subsubsection*{États à l'origine de la perte résiduelle de queue}
+
+Les deux profils C Elastic Net conditionnels B du tableau~\ref{tab:risk} sont réévalués à poids fixés sur un échantillon indépendant de 25 000 trajectoires par univers, simulées en Monte Carlo standard. Cet échantillon est commun à Calls + Puts et Full et distinct des 2 500 trajectoires du tableau~\ref{tab:risk}. Les trois critères de comparaison sont le rappel ou l’arrivée à maturité, la présence d’au moins un coupon manqué avant la fin du contrat et le franchissement de la barrière de protection du capital.
+
+La barrière de coupon est examinée aux dates d’observation où le contrat est en vie. La barrière de protection est surveillée sur la trajectoire jusqu’à la fin effective du contrat et intervient dans le remboursement à maturité. Un franchissement entre deux observations peut donc être suivi du paiement de tous les coupons.
+
+Les tableaux présentent les groupes comparables en gardant deux critères fixes. La RMSE et l’ES à 97,5\% sont calculées à l’intérieur de chaque groupe, sur le résidu total actualisé, en points de nominal. Elles mesurent le risque propre au groupe. Sa contribution à l’ES globale sera examinée ensuite sur la queue du portefeuille entier.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrr}
+\toprule
+ & & \multicolumn{2}{c}{Calls + Puts} & \multicolumn{2}{c}{Full} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Issue & Trajectoires & RMSE & ES & RMSE & ES \\
+\midrule
+\multicolumn{6}{l}{\textit{Barrière non franchie · Aucun coupon manqué}} \\
+\addlinespace[2pt]
+Rappel & 18 389 & 0,10 & 0,43 & 0,19 & 0,76 \\
+Maturité & 3 185 & 1,14 & 2,94 & 1,02 & 2,06 \\
+\addlinespace[4pt]
+\multicolumn{6}{l}{\textit{Barrière non franchie · Coupon manqué}} \\
+\addlinespace[2pt]
+Rappel & 80 & 2,12 & -1,38 & 2,01 & -1,22 \\
+Maturité & 1 756 & 4,56 & 16,26 & 4,51 & 15,29 \\
+\bottomrule
+\end{tabular}
+
+\caption{Rappel et maturité à critères fixés.}
+\label{tab:tail-contract-counts}
+\end{table}
+
+Sans franchissement de la barrière de protection, les contrats arrivés à maturité présentent davantage de risque résiduel que les contrats rappelés, avec ou sans coupon manqué. Lorsque tous les coupons sont payés, les deux groupes ont des effectifs importants et le contraste apparaît dans la RMSE comme dans l’ES, pour les deux portefeuilles. Avec coupon manqué, la comparaison repose sur 80 rappels, dont la queue à 2,5\% représente seulement deux trajectoires équivalentes. Aucun rappel avec barrière franchie n’est observé sur ces 25 000 trajectoires ; les comparaisons correspondantes restent indisponibles.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrr}
+\toprule
+ & & \multicolumn{2}{c}{Calls + Puts} & \multicolumn{2}{c}{Full} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Coupon manqué & Trajectoires & RMSE & ES & RMSE & ES \\
+\midrule
+\multicolumn{6}{l}{\textit{Maturité · Barrière non franchie}} \\
+\addlinespace[2pt]
+Non & 3 185 & 1,14 & 2,94 & 1,02 & 2,06 \\
+Oui & 1 756 & 4,56 & 16,26 & 4,51 & 15,29 \\
+\addlinespace[4pt]
+\multicolumn{6}{l}{\textit{Maturité · Barrière franchie}} \\
+\addlinespace[2pt]
+Non & 10 & 15,23 & -15,23 & 15,77 & -15,77 \\
+Oui & 1 580 & 13,50 & 28,86 & 12,47 & 18,96 \\
+\addlinespace[4pt]
+\multicolumn{6}{l}{\textit{Rappel · Barrière non franchie}} \\
+\addlinespace[2pt]
+Non & 18 389 & 0,10 & 0,43 & 0,19 & 0,76 \\
+Oui & 80 & 2,12 & -1,38 & 2,01 & -1,22 \\
+\bottomrule
+\end{tabular}
+
+\caption{Coupons manqués à critères fixés.}
+\label{tab:tail-group-risk}
+\end{table}
+
+À maturité sans franchissement de la barrière, les coupons manqués s’accompagnent d’une forte hausse de la RMSE et de l’ES. Cet écart se retrouve dans les deux univers. Le franchissement de la barrière de protection ne suffit donc pas à caractériser les situations difficiles à répliquer.
+
+Les deux autres comparaisons appellent une lecture différente. Parmi les rappels, un coupon manqué s’accompagne d’une RMSE plus élevée, mais toutes les pertes du groupe restent négatives : les erreurs correspondent ici à des excédents de réplication. À maturité avec franchissement, le groupe sans coupon manqué compte seulement dix trajectoires. Son ES est égale à son maximum observé et reste négative. Ces trajectoires montrent qu’un franchissement et des coupons intégralement payés peuvent coexister.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrr}
+\toprule
+ & & \multicolumn{2}{c}{Calls + Puts} & \multicolumn{2}{c}{Full} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Barrière de protection & Trajectoires & RMSE & ES & RMSE & ES \\
+\midrule
+\multicolumn{6}{l}{\textit{Maturité · Aucun coupon manqué}} \\
+\addlinespace[2pt]
+Non franchie & 3 185 & 1,14 & 2,94 & 1,02 & 2,06 \\
+Franchie & 10 & 15,23 & -15,23 & 15,77 & -15,77 \\
+\addlinespace[4pt]
+\multicolumn{6}{l}{\textit{Maturité · Coupon manqué}} \\
+\addlinespace[2pt]
+Non franchie & 1 756 & 4,56 & 16,26 & 4,51 & 15,29 \\
+Franchie & 1 580 & 13,50 & 28,86 & 12,47 & 18,96 \\
+\bottomrule
+\end{tabular}
+
+\caption{Franchissement de la barrière de protection à critères fixés.}
+\label{tab:tail-barrier-comparison}
+\end{table}
+
+À maturité avec au moins un coupon manqué, le franchissement de la barrière de protection accroît la RMSE et l’ES dans les deux univers. Cette comparaison repose sur deux groupes de tailles proches. Full réduit surtout l’ES sur les trajectoires avec franchissement, alors que l’écart entre les portefeuilles est plus limité sans franchissement.
+
+Sans coupon manqué, les dix trajectoires avec franchissement ont une RMSE élevée et une ES négative. La RMSE traduit alors des excédents importants plutôt qu’un déficit de couverture. Cette ligne illustre l’intérêt de lire conjointement les deux métriques.
+
+L’ES globale vaut 10,00 points pour Calls + Puts et 7,95 pour Full sur ce nouvel échantillon. Pour la décomposer, on retient la queue globale de chaque portefeuille et on répartit ses pertes entre les catégories. Une part de 100\% désigne la totalité de cette perte de queue, sans signifier que toutes les trajectoires du groupe appartiennent à la queue.
+
+Les trajectoires arrivées à maturité avec au moins un coupon manqué portent toute l’ES globale des deux profils. Elles sont 3 336, soit 13,34\% de l’échantillon. Les autres catégories ont une contribution nulle, y compris celles dont l’ES propre est positive : leurs pertes restent sous le seuil de la queue globale.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Barrière de protection & Trajectoires & Calls + Puts & Full \\
+\midrule
+Non franchie & 1 756 & 52,7\% & 66,6\% \\
+Franchie & 1 580 & 47,3\% & 33,4\% \\
+\bottomrule
+\end{tabular}
+\caption{Parts de l’ES globale parmi les contrats arrivés à maturité avec au moins un coupon manqué.}
+\label{tab:tail-global-shares}
+\end{table}
+
+Dans Calls + Puts, les trajectoires sans franchissement fournissent désormais un peu plus de la moitié de l’ES globale. Dans Full, leur contribution atteint les deux tiers. La comparaison des risques propres aux groupes montre que ce déplacement relatif vient surtout de la réduction des pertes sur les trajectoires avec franchissement. Le diagnostic porte donc à la fois sur les contrats dont la protection a été activée et sur ceux dont le capital reste protégé mais où des coupons ont été manqués.
+
+Les parts obtenues sur 25 000 trajectoires diffèrent de celles du premier diagnostic à 2 500 trajectoires. Le poids relatif des régimes dans l’ES dépend des scénarios extrêmes observés. Les comparaisons décrivent les groupes simulés et ne permettent pas d’attribuer un effet causal à un événement, les trajectoires différant aussi par leur histoire de marché.
+
+\subsubsection*{Comparaison descriptive avec les principales références}
+
+Le tableau~\ref{tab:unified-comparison} place les politiques retenues à côté des
+principales références avec les six métriques conservées. Les lignes delta utilisent
+un P\&L terminal autofinancé, tandis que les politiques d'options utilisent des
+déficits de flux actualisés. La comparaison est donc descriptive : les colonnes ont
+la même définition statistique, mais ne suffisent pas à aligner le capital initial,
+les instruments ni les coûts. Pour le passif centré, la fréquence $L>0$ désigne la
+part des flux supérieurs à leur moyenne, non un taux de sous-réplication.
+
+\begin{table}[H]
+\centering
+\small
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lllrrrrrr}
+\toprule
+Univers & Méthode & Ajustement & Erreur moy. & MAE & RMSE & Fréq. $L>0$ & ES$_{97.5}$ & Perte max. \\
+\midrule
+\multicolumn{3}{l}{Passif centré} & 0.000 & 4.193 & 8.646 & 92.4\% & 4.833 & 4.833 \\
+\multicolumn{3}{l}{Delta quotidien} & 0.032 & 0.605 & 1.222 & 51.6\% & 3.976 & 21.682 \\
+\multicolumn{3}{l}{Delta cinq jours} & -0.023 & 1.103 & 2.175 & 49.2\% & 6.517 & 29.796 \\
+\addlinespace[2pt]
+Calls + Puts & Conditionnel A & Elastic Net & -0.263 & 12.712 & 20.828 & 55.3\% & 47.297 & 54.780 \\
+ &  & $L^0$ & -1.258 & 24.636 & 31.660 & 53.4\% & 57.607 & 91.206 \\
+ &  & Lasso & -0.288 & 12.886 & 20.787 & 54.6\% & 47.593 & 55.784 \\
+ &  & OLS & -0.387 & 13.335 & 21.010 & 51.8\% & 47.824 & 64.279 \\
+ &  & Ridge & -0.426 & 13.079 & 21.327 & 48.7\% & 47.200 & 53.020 \\
+\addlinespace[2pt]
+ & Conditionnel B & Elastic Net & -0.117 & 1.289 & 4.213 & 37.5\% & 13.065 & 45.570 \\
+ &  & $L^0$ & -0.228 & 1.324 & 4.645 & 36.2\% & 15.649 & 35.585 \\
+ &  & Lasso & -0.253 & 1.355 & 4.431 & 40.8\% & 12.240 & 34.512 \\
+ &  & Ridge & -0.329 & 2.176 & 5.928 & 52.6\% & 6.952 & 34.566 \\
+\addlinespace[2pt]
+ & Statique A & Elastic Net & 1.807 & 36.553 & 43.225 & 51.2\% & 83.614 & 92.920 \\
+ &  & $L^0$ & 16.651 & 37.493 & 45.615 & 67.4\% & 96.040 & 99.348 \\
+ &  & Lasso & 1.306 & 36.793 & 43.485 & 50.6\% & 84.080 & 93.508 \\
+ &  & OLS & 0.223 & 40.210 & 48.596 & 48.6\% & 93.464 & 106.107 \\
+ &  & Ridge & 0.271 & 39.857 & 47.975 & 48.5\% & 90.900 & 104.630 \\
+\addlinespace[2pt]
+Full & Conditionnel A & Elastic Net & 0.019 & 0.037 & 0.427 & 45.9\% & 0.837 & 12.663 \\
+ &  & $L^0$ & 0.003 & 0.008 & 0.030 & 54.7\% & 0.102 & 0.629 \\
+ &  & Lasso & 0.014 & 0.065 & 0.203 & 76.2\% & 0.479 & 1.047 \\
+ &  & OLS & -0.037 & 0.084 & 1.035 & 23.8\% & 0.944 & 12.657 \\
+ &  & Ridge & 0.001 & 0.001 & 0.029 & 43.5\% & 0.045 & 0.844 \\
+\addlinespace[2pt]
+ & Conditionnel B & Elastic Net & -0.229 & 1.243 & 4.003 & 39.0\% & 10.813 & 35.820 \\
+ &  & $L^0$ & -0.284 & 1.081 & 4.232 & 24.9\% & 13.471 & 34.512 \\
+ &  & Lasso & -0.750 & 2.033 & 7.121 & 60.3\% & 22.360 & 56.523 \\
+ &  & Ridge & -0.235 & 1.318 & 3.998 & 62.2\% & 10.754 & 37.355 \\
+\addlinespace[2pt]
+ & Statique A & Elastic Net & 2.885 & 41.777 & 46.775 & 45.3\% & 84.118 & 90.746 \\
+ &  & Lasso & 3.700 & 44.216 & 49.398 & 45.3\% & 87.559 & 91.980 \\
+ &  & OLS & -0.381 & 44.425 & 53.092 & 47.5\% & 97.423 & 107.708 \\
+ &  & Ridge & 1.513 & 36.742 & 43.535 & 49.2\% & 82.591 & 94.093 \\
+\bottomrule
+\end{tabular}}
+\caption{A et B désignent les objectifs de calibration. Pour les paniers d’options, la RMSE porte sur l’écart entre les totaux actualisés de tous les paiements (coupons et remboursement). Les 30 lignes sont évaluées sur les mêmes 1 250 trajectoires indépendantes.}
+\label{tab:unified-comparison}
+\end{table}
+
+Le tableau~\ref{tab:unified-comparison} montre que les politiques conditionnelles A dans Full obtiennent à la fois une RMSE et un ES à 97,5\% inférieurs à ceux des deux couvertures delta. La référence OLS dans Full devance déjà le delta sur les deux mesures, et les quatre politiques régularisées améliorent encore ces résultats. Cet avantage numérique est obtenu avec un univers qui inclut des options digitales théoriques et avec des conventions de financement différentes de celles du delta.
+
+Pour les politiques conditionnelles B, le classement s’inverse. Toutes réduisent la RMSE par rapport au passif centré, mais au prix d’un ES plus élevé. Face aux couvertures delta, elles sont moins performantes sur les deux mesures. Même Ridge dans Calls + Puts, dont l’ES est le plus proche de celui du delta à cinq jours, présente une RMSE nettement plus élevée. À risque de queue voisin, cette politique n’apporte donc pas de gain de précision sur cet échantillon.
+
+\subsection{Précision de l’estimation de l’ES à positions fixées}
+
+Pour chaque portefeuille étudié, Monte Carlo standard et importance sampling estiment l’ES à 97,5\% avec 2 500 trajectoires chacun. Cette comparaison porte sur des portefeuilles issus d’une sélection antérieure à celle des tableaux précédents.
+
+En Monte Carlo standard, les trajectoires sont simulées sous le modèle de référence et ont toutes le même poids. On classe les pertes et on moyenne les plus fortes jusqu’à atteindre 2,5\% de la masse totale, soit l’équivalent de 62,5 trajectoires. En importance sampling, le mélange de simulation rend certains scénarios défavorables plus fréquents. Les poids de vraisemblance corrigent cette surreprésentation dans le calcul de l’ES.
+
+Pour comparer la précision des deux estimations, on rééchantillonne les trajectoires avec remise et on recalcule l’ES à chaque tirage. Avec l’importance sampling, chaque perte est rééchantillonnée avec son poids. Les coefficients de la politique restent identiques pendant le rééchantillonnage. Les bornes de l’intervalle bootstrap à 95\% sont les quantiles à 2,5\% et 97,5\% des ES ainsi obtenues. La dispersion obtenue par bootstrap renseigne sur la sensibilité de l’ES estimée au tirage des trajectoires.
+
+\begin{figure}[htbp]
+  \centering
+  \makebox[\linewidth][c]{\includegraphics[width=1.12\linewidth]{\reportfigurefile{importance_sampling_es.pdf}}}
+  \caption{Estimations de l’ES à 97,5\% et intervalles bootstrap à 95\% des politiques conditionnelles B à positions fixées.}
+  \label{fig:is-es-comparison}
+\end{figure}
+
+Sur les 24 portefeuilles de la figure~\ref{fig:is-es-comparison}, l’importance sampling réduit la largeur de l’intervalle bootstrap dans 22 cas, avec des gains compris entre 1,5\% et 46,9\%, à nombre de trajectoires égal. L’amélioration dépend toutefois du portefeuille. Pour les profils compromis Ridge dans Calls + Puts et Lasso dans Full, l’intervalle s’élargit respectivement de 10,0\% et de 3,9\%. Le mélange améliore donc généralement la précision dans cette expérience, avec deux exceptions. Les intervalles des deux méthodes se chevauchent dans tous les cas.
+
+\subsection{Calibration avec contrainte d'ES}
+
+Le pilote a retenu Monte Carlo standard pour les deux univers. L’expérience compare donc deux échantillons de calibration standard, chacun avec et sans contrainte d’ES. Dans Full, la procédure contrainte obtient une ES d’évaluation de 8,65 points contre 9,68 sans contrainte sur le premier échantillon, et de 6,92 contre 10,28 sur le second, au prix d’une légère hausse de RMSE dans ce dernier cas. Dans Calls + Puts, le second échantillon donne des ES proches, autour de 10,4 points avec ou sans contrainte.
+
+Les politiques conditionnelles B sont recalibrées sur 375 trajectoires par échantillon, avec une pénalisation Elastic Net. Le budget d’ES à 97,5\% est fixé à 10 points de nominal pour Calls + Puts et à 5 points pour Full. Les RMSE et ES portent sur le résidu total actualisé, évalué sur les mêmes 1 250 trajectoires indépendantes.
+
+\reportfigure{\reportfigurefile{tail_risk_four_experiments.pdf}}{Politiques conditionnelles B recalibrées sur deux échantillons Monte Carlo standard, avec et sans contrainte d'ES.}{fig:tail-four}
+
+\subsubsection*{Portée exploratoire de l'expérience}
+
+Dans trois des quatre calibrations, la solution sans contrainte respecte déjà le budget d’ES. Les deux procédures utilisent aussi des solveurs différents : L-BFGS-B sans contrainte d’ES et SLSQP avec contrainte. Les écarts obtenus dans ces cas peuvent donc dépendre de l’optimisation, même lorsque le budget ne limite pas la solution initiale.
+
+Sur le second échantillon Full, la solution sans contrainte dépasse le budget en calibration. La procédure contrainte ramène son ES de calibration à 5 points et réduit l’ES d’évaluation de 10,28 à 6,92 points. Le risque diminue sur les trajectoires indépendantes, mais reste supérieur au budget imposé en calibration.
+
+\subsection{Enseignements de l'étude de cas}
+
+La capacité de réplication dépend conjointement de l’univers d’instruments et de la politique utilisée. Dans l’univers Full, les politiques conditionnelles A obtiennent une RMSE et un ES inférieurs à ceux des références delta dans la comparaison présentée. Les politiques conditionnelles B retenues réduisent la RMSE par rapport au passif centré, mais restent derrière les couvertures delta sur les deux mesures. L’enrichissement du dictionnaire et le choix de l’objectif de calibration modifient donc fortement les résultats. L’avantage numérique observé avec A repose notamment sur des digitales théoriques et sur des conventions de financement différentes de celles des références delta.
+
+Les profils C montrent les limites d’une sélection fondée sur la RMSE et la parcimonie. Le gain d’ajustement global s’accompagne d’une hausse de l’ES par rapport au passif centré. Intégrer l’ES à la sélection fait apparaître d’autres arbitrages entre erreur, risque de queue et nombre de positions. La comparaison A/B de la section 5.2 montre que des erreurs importantes aux dates de paiement peuvent se compenser dans le total actualisé. L’évaluation du risque doit donc aussi tenir compte des besoins de financement au cours de la vie du contrat.
+
+L’importance sampling et la contrainte d’ES répondent à deux besoins distincts. À politique fixée, le premier réduit l’incertitude bootstrap sur l’ES dans la plupart des cas étudiés. La seconde modifie les poids pour limiter la perte de queue en calibration, avec des gains observés qui varient selon l’univers et l’échantillon. L’expérience de recalibrage présentée utilise deux échantillons Monte Carlo standard, le pilote ayant retenu cette méthode. Elle permet d’examiner la contrainte d’ES et sa sensibilité au tirage, tandis que l’apport d’un recalibrage sous importance sampling reste à mesurer.
+
+Ces résultats conduisent à évaluer ensemble l’erreur globale, la queue des pertes, la taille des portefeuilles et le calendrier des flux. La procédure se transpose à d’autres payoffs, modèles, variables d’état et instruments, en reprenant la calibration, la sélection et l’évaluation indépendante pour chaque configuration.
+
+\section{Interprétation et limites}
+
+\subsection{De la réplication numérique à une décision de couverture}
+
+L’étude compare les portefeuilles selon leur précision, leur parcimonie et le risque résiduel sur de nouvelles trajectoires. Passer de ces résultats à une décision de couverture demande aussi de caractériser les conditions de négociation et de financement.
+
+\subsection{Apports du cadre}
+
+Sur l’autocall, la procédure permet de comparer l’apport du conditionnement et des digitales, puis de mesurer les arbitrages entre erreur de réplication, pertes de queue et nombre de positions. Elle permet aussi d’examiner la composition des portefeuilles retenus par maturité et par strike.
+
+Pour étudier un autre produit, on adapte le payoff, le modèle, les variables d’état et le dictionnaire d’instruments. La calibration et l’évaluation sur des trajectoires indépendantes permettent alors de mesurer la qualité de l’approximation dans cette nouvelle configuration.
+
+\subsection{Risque de modèle}
+
+La valorisation et l’évaluation reposent sur Black--Scholes à volatilité constante sous la mesure risque-neutre. Une extension à un modèle de volatilité locale ou stochastique permettrait d’étudier la sensibilité des résultats au choix du modèle. Une évaluation sous la mesure physique compléterait l’analyse du risque de couverture. On pourrait également mesurer la sensibilité des poids et des pertes résiduelles à la volatilité, au taux et au rendement du dividende.
+
+La barrière de protection est surveillée sur une grille de jours de semaine simulés. Une grille plus fine ou une correction par pont brownien pourrait modifier la fréquence des franchissements. Modifier l’espacement des strikes ou les maturités du dictionnaire peut changer l’erreur et les positions retenues.
+
+\subsection{Liquidité et coûts de transaction}
+
+Le coût d’exécution dépend notamment de la taille des positions, des écarts entre prix acheteur et vendeur et des conditions de dénouement après rappel. Une position concentrée peut coûter davantage que plusieurs petites positions.
+
+Pour les digitales théoriques, l’approximation par spreads introduit un choix de largeur et de quantités. Des cotations exécutables permettraient de comparer le coût de cette approximation au gain de réplication qu’elle procure.
+
+\subsection{Besoins de financement}
+
+Une bonne réplication du total actualisé peut laisser des déficits aux dates de paiement. Sur un échantillon distinct de 250 trajectoires, le besoin de financement au 95e percentile du profil C Elastic Net atteint 4,08 points de nominal pour Calls + Puts et 4,03 pour Full. Dans Full, remplacer les digitales théoriques par des spreads porte ce besoin à 4,07 points.
+
+Ces montants reposent sur des prix théoriques et un calendrier de règlement simplifié. Ils renseignent sur les décalages de trésorerie, mais leur comparaison avec les références delta demanderait d’aligner les conventions de capital initial et de financement.
+
+\subsection{Limites statistiques}
+
+Les intervalles bootstrap de la section 5.5 quantifient la variabilité de l’ES liée aux trajectoires d’évaluation, à politique fixée. Les recalibrages sur plusieurs graines renseignent sur la stabilité des résultats lorsque l’échantillon de calibration change. La recherche sur une grille peut néanmoins favoriser un candidat dont le score de validation bénéficie du hasard du tirage.
+
+L’échantillon de test réservé permettra d’évaluer la procédure une fois les règles de calibration et de sélection, la convention de perte et les métriques fixées.
+
+L’audit chronologique vérifie que chaque décision utilise uniquement l’information disponible à sa date. Les diagnostics de convergence et les essais à partir de plusieurs initialisations renseignent sur la sensibilité de l’optimisation, notamment pour $L^0$.
+
+\section{Conclusion et programme de recherche}
+
+Ce projet pose une question générale : dans quelle mesure un ensemble limité et interprétable d'options peut-il reproduire un payoff complexe ? L'autocall sert d'étude de cas exigeante, mais il n'est pas la seule application possible. Ses discontinuités, ses multiples dates de paiement, sa dépendance à la trajectoire et sa maturité aléatoire révèlent les principales limites que la méthode doit traiter.
+
+Dans cette étude, un portefeuille d'options vanilles datées capte une part substantielle de la variation ordinaire du passif, surtout lorsque la politique conditionne sur l'état observable du produit. La régularisation parcimonieuse réduit le dictionnaire à un support plus interprétable avec peu de perte de RMSE de validation, tandis que les fonctions digitales montrent l'importance d'aligner le dictionnaire sur les discontinuités du payoff. Ces résultats démontrent une capacité d'approximation utile sous le contrat, le modèle et le plan de simulation retenus. Ils ne prouvent pas que les mêmes instruments, poids ou politiques répliquent exactement un payoff arbitraire.
+
+Les profils C, sélectionnés selon la RMSE et la parcimonie, réduisent la RMSE et augmentent l’ES à 97,5\% par rapport au passif centré. Pour Elastic Net, le profil RE, sélectionné selon la RMSE et l’ES, réduit l’ES par rapport au profil C dans les deux univers, avec une hausse de RMSE sur le même échantillon d’évaluation. Ce choix réduit le nombre de coefficients actifs dans Calls + Puts et l’augmente dans Full.
+
+Les principales références ont été comparées sur des trajectoires communes. L’analyse de l’ES résiduelle a également identifié les groupes de trajectoires qui concentrent les pertes, selon l’issue du contrat, les coupons manqués et le franchissement de la barrière de protection. Un prolongement de cette comparaison consisterait à aligner les conventions de capital initial et de financement entre les stratégies.
+
+Plusieurs extensions permettraient d’explorer des questions différentes. Une fois la procédure de calibration et de sélection figée, une évaluation sur l’échantillon de test réservé permettrait de mesurer sa performance sur des trajectoires restées à l’écart de l’étude. Une couverture dynamique appliquée au résidu permettrait de mesurer le gain supplémentaire après la réplication par options. Des modèles intégrant le skew ou une volatilité stochastique permettraient d’évaluer la sensibilité des résultats au modèle. Avec des données de marché adaptées, l’intégration des coûts de transaction et de la liquidité permettrait d’étudier leur effet sur les portefeuilles retenus.
+
+Une revue indépendante de la chronologie des décisions et de la traduction des clauses contractuelles compléterait les vérifications existantes. Des essais avec d’autres solveurs ou tolérances permettraient d’examiner la sensibilité des portefeuilles retenus aux choix numériques.
+
+Enfin, appliquer la même procédure à d’autres produits permettrait d’évaluer sa transférabilité et de déterminer quelles adaptations du payoff, de l’état observable et du dictionnaire d’instruments sont nécessaires.
+
+\appendix
+
+\section{Logique détaillée du payoff}\label{app:payoff}
+
+À chaque date d’observation, si le contrat est encore en vie, le coupon est versé lorsque le spot atteint ou dépasse le seuil de coupon. Si le spot atteint ou dépasse le seuil de rappel, le nominal est remboursé et le contrat prend fin. À la dernière observation, en l’absence de rappel, le remboursement dépend du franchissement de la barrière de protection. Cette barrière est considérée comme franchie dès que le spot l’atteint ou passe en dessous sur la grille de surveillance. Le dernier coupon suit la même règle que les précédents.
+
+\section{Audit des hyperparamètres}\label{app:hyperparameters}
+
+Les Figures~\ref{fig:alpha-grid} et~\ref{fig:rho-grid} permettent de repérer les zones de la grille où modifier la pénalisation change peu l'ajustement ou la taille du portefeuille. La Figure~\ref{fig:filter-map} suit les candidats conservés à chaque étape. Pour $L^0$, lire la Figure~\ref{fig:l0-audit} en gardant à l'esprit que des initialisations différentes peuvent donner des supports différents.
+
+\reportfigure{\reportfigurefile{alpha_grid.pdf}}{Vue d'ensemble des chemins de régularisation par famille et pénalisation.}{fig:alpha-grid}
+
+\reportfigure{\reportfigurefile{elastic_net_rho_grid.pdf}}{Recherche Elastic Net conjointe sur le ratio de mélange et l'intensité de régularisation.}{fig:rho-grid}
+
+\reportfigure{\reportfigurefile{regularization_filter_map.pdf}}{Nombre de candidats restant après chaque filtre de convergence, performance, dominance et duplication.}{fig:filter-map}
+
+\reportfigure{\reportfigurefile{l0_initialization_audit.pdf}}{Audit des démarrages chauds, froids et multiples de $L^0$.}{fig:l0-audit}
+
+\reportfigure[0.97\linewidth]{\reportfigurefile{tail_frontiers_calls_puts_elastic_net.pdf}}{Sélection Elastic Net tenant compte de la queue dans l'univers Calls + Puts. Le panneau gauche étudie une pénalisation d'Expected Shortfall et le panneau droit des budgets explicites d'Expected Shortfall sur un échantillon de validation indépendant.}{fig:tail-frontier-cp-elastic-net}
+
+\reportfigure[0.97\linewidth]{\reportfigurefile{tail_frontiers_full_elastic_net.pdf}}{Sélection Elastic Net tenant compte de la queue dans l'univers Full. Les formulations d'Expected Shortfall pénalisée et contrainte sont comparées sur le même échantillon de validation indépendant.}{fig:tail-frontier-full-elastic-net}
+
+Les figures~\ref{fig:tail-frontier-cp-elastic-net} et~\ref{fig:tail-frontier-full-elastic-net} comparent les formulations Elastic Net avec pénalisation de l’ES et avec budget d’ES sur un échantillon de validation indépendant. Certains candidats sous contrainte atteignent la plus petite valeur d’alpha explorée. Leur classement vaut pour la grille testée. Une extension de cette grille permettrait de vérifier sa stabilité.
+
+\section{Ajustements pénalisés des flux et essais complémentaires}\label{app:capacity-supplement}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llrr}
+\toprule
+Méthode & Univers / pénalisation & RMSE d’évaluation & Options actives \\
+\midrule
+Flux statiques & Calls + Puts, $L^0$ & 30.541 & 2 \\
+Flux statiques & Calls + Puts, Lasso & 26.966 & 102 \\
+Flux statiques & Full, Ridge & 25.568 & 206 \\
+Flux conditionnels & Calls + Puts, Elastic Net & 10.895 & --- \\
+Flux conditionnels & Full, Ridge & $<0.001$ & --- \\
+Flux conditionnels & Full, $L^0$ & 0.010 & --- \\
+\bottomrule
+\end{tabular}
+\caption{Ajustements statiques et conditionnels des paiements datés (A), avec les hyperparamètres sélectionnés pour chaque benchmark. La RMSE regroupe les erreurs par date de paiement sur l’échantillon d’évaluation propre à cet exercice. Le nombre d'options actives est renseigné pour les paniers statiques.}
+\label{tab:capacity}
+\end{table}
+
+La RMSE statique Calls~+~Puts reste supérieure à 26 même avec plus de cent options actives : un panier non conditionnel unique peine à reproduire un passif dont la date de paiement et l'état de survie varient selon la trajectoire. La solution $L^0$ à deux positions est plus simple mais encore moins précise, ce qui illustre le coût d'une parcimonie extrême.
+
+Avec Ridge, l’enrichissement du dictionnaire en digitales réduit légèrement la RMSE des paiements en statique. Dans l’univers Full, la politique conditionnelle Ridge obtient une erreur par paiement presque nulle sur cet échantillon. L’écart montre l’apport du conditionnement dans cette expérience.
+
+L'erreur presque nulle, obtenue avec un vaste dictionnaire théorique et potentiellement sensible à la grille simulée, constitue un diagnostic de capacité. Le problème restant consiste à obtenir une approximation parcimonieuse, stable et maîtrisée dans la queue.
+
+Le notebook exploratoire étudie aussi l'ajustement de la surface de prix date--spot, du payoff moyen et un contrôle du total actualisé par trajectoire avec un seul panier. Ces exercices utilisent d'autres cibles ou d'autres formulations que celles du corps du rapport. Les scénarios OTC pour les digitales et l'examen des coûts de marché sont exploratoires. Les résultats numériques correspondants seront rapprochés de leur propre protocole et de leurs exports avant d'être cités.
+
+
+
+\section{Détails de l'importance sampling}\label{app:is}
+
+Pour la comparaison à positions fixées de la figure~\ref{fig:is-es-comparison}, l’ESS globale représente 71,5\% des 2 500 trajectoires dans Calls + Puts et 77,2\% dans Full, soit environ 1 788 et 1 931 trajectoires effectives. Le poids normalisé maximal est inférieur à 0,08\% dans les deux univers. L’ESS globale décrit la concentration des poids sur l’ensemble de l’échantillon. L’ESS de queue décrit leur concentration dans les pertes les plus fortes.
+
+La densité de simulation est un mélange gaussien $q=\sum_k\eta_kq_k$. Chaque trajectoire reçoit un poids de vraisemblance calculé avec la densité du mélange complet. Pour un niveau de confiance $\beta$, le calcul de l’ES retient exactement une masse pondérée $1-\beta$. Si plusieurs pertes sont égales au seuil, seule la fraction de leur masse nécessaire pour compléter la queue est retenue.
+
+Les figures~\ref{fig:is-grid}, \ref{fig:is-cp} et~\ref{fig:is-full} documentent le choix du mélange dans l’étude d’hyperparamètres. La section 5.5 compare ensuite la précision des estimateurs pour des politiques déjà calibrées.
+
+\reportfigure{\reportfigurefile{importance_sampling_grid.pdf}}{Mélanges candidats d'importance sampling et diagnostics de précision dans l'étude d'hyperparamètres.}{fig:is-grid}
+
+\reportfigure{\reportfigurefile{importance_policy_precision_calls_puts.pdf}}{Comparaison de précision entre les politiques Calls + Puts.}{fig:is-cp}
+
+\reportfigure{\reportfigurefile{importance_policy_precision_full.pdf}}{Comparaison de précision entre les politiques Full.}{fig:is-full}
+
+\section{Reproductibilité}\label{app:reproducibility}
+
+Les manifestes d’exécution enregistrent la configuration du contrat et du modèle, les graines, les effectifs et la sélection d’hyperparamètres utilisée par le notebook d’évaluation. Le suivi de production associe les tableaux et les figures à leurs exports, notamment le diagnostic des événements contractuels et la comparaison d’importance sampling à politique fixée.
+
+\section{Prolongement prévu tenant compte des coûts}\label{app:costs}
+
+Pour l’instrument $j$, on note $a_j$ le prix d’achat exécutable, $b_j$ le prix de vente exécutable et $m_j$ le prix de référence du modèle. Le coût initial mesure l’écart entre le prix d’exécution et ce prix de référence, selon le sens et la taille de la position.
+\begin{equation}
+ \mathcal C_{0}(w)=\sum_j\left[w_j^+(a_j-m_j)+w_j^-(m_j-b_j)\right],
+\label{eq:inception-cost}
+\end{equation}
+avec $w_j^+=\max(w_j,0)$ et $w_j^-=\max(-w_j,0)$. Un objectif tenant compte de ces coûts pourrait minimiser
+\begin{equation}
+ \widehat{\RMSE}(w)+\lambda_{\rm ES}\widehat{\ES}_{97.5\%}(L(w))
+ +\lambda_1\lVert w\rVert_1+\lambda_C\mathcal C(w)
+\label{eq:cost-aware-objective}
+\end{equation}
+sous contraintes d'exposition brute, de nombre de lignes et de financement. L’évaluation de cet objectif demanderait des cotations exécutables et des hypothèses sur l’impact de marché, le dénouement des positions et les ajustements propres aux instruments de gré à gré.
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{Références}
+\begin{singlespace}
+\begin{thebibliography}{99}
+
+\bibitem{blackscholes1973}
+F. Black and M. Scholes (1973).
+The pricing of options and corporate liabilities.
+\emph{Journal of Political Economy}, 81(3), 637--654.
+\url{https://doi.org/10.1086/260062}.
+
+\bibitem{carrmadan1998}
+P. Carr and D. Madan (1998).
+Towards a theory of volatility trading.
+In R. A. Jarrow (ed.),
+\emph{Volatility: New Estimation Techniques for Pricing Derivatives},
+417--427. Risk Books.
+
+\bibitem{derman1995}
+E. Derman, D. Ergener and I. Kani (1995).
+Static options replication.
+\emph{The Journal of Derivatives}, 2, 78--95.
+
+\bibitem{ditella2019}
+P. Di Tella, M. Haubold and M. Keller-Ressel (2019).
+Semi-static and sparse variance-optimal hedging.
+\emph{arXiv:1709.05519}.
+\url{https://arxiv.org/abs/1709.05519}.
+
+\bibitem{glasserman2004}
+P. Glasserman (2004).
+\emph{Monte Carlo Methods in Financial Engineering}.
+Springer.
+
+\bibitem{guillaume2015}
+T. Guillaume (2015).
+Autocallable structured products.
+\emph{The Journal of Derivatives}, 22(3), 73--94.
+\url{https://doi.org/10.3905/jod.2015.22.3.073}.
+
+\bibitem{hastie2009}
+T. Hastie, R. Tibshirani and J. Friedman (2009).
+\emph{The Elements of Statistical Learning}, 2nd ed.
+Springer.
+
+\bibitem{kimlim2019}
+K.-K. Kim and D.-Y. Lim (2019).
+A recursive method for static replication of autocallable structured products.
+\emph{Quantitative Finance}, 19(4), 647--661.
+\url{https://doi.org/10.1080/14697688.2018.1523546}.
+
+\bibitem{mcneil2015}
+A. J. McNeil, R. Frey and P. Embrechts (2015).
+\emph{Quantitative Risk Management}, revised ed.
+Princeton University Press.
+
+\bibitem{rockafellar2000}
+R. T. Rockafellar and S. Uryasev (2000).
+Optimization of conditional value-at-risk.
+\emph{Journal of Risk}, 2, 21--41.
+
+\end{thebibliography}
+\end{singlespace}
+
+\end{document}

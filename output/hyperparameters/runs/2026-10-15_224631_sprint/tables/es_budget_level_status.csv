@@ -1,0 +1,25 @@
+﻿family,penalty,level,risk_limit_pct_notional,n_admissible,selected_validation_rmse_pct_notional,selected_validation_es_pct_notional,selected_optimisation_budget_pct_notional,selected_n_options_active,selected_own_budget_respected,status
+calls_puts,l0,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,l0,intermédiaire,10.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,l0,souple,15.0,3,5.025275593339779,14.167433397550738,10.0,15.0,False,retenu
+calls_puts,l1,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,l1,intermédiaire,10.0,3,9.367828603312187,7.542916674452486,15.0,122.0,True,retenu
+calls_puts,l1,souple,15.0,3,9.367828603312187,7.542916674452486,15.0,122.0,True,retenu
+calls_puts,l2,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,l2,intermédiaire,10.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,l2,souple,15.0,3,4.932189806539122,14.2932093589184,15.0,112.0,True,retenu
+calls_puts,elastic_net,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,elastic_net,intermédiaire,10.0,9,9.009029291881808,9.675058472845144,10.0,10.0,True,retenu
+calls_puts,elastic_net,souple,15.0,16,4.830117001874982,14.538693511236888,15.0,78.0,True,retenu
+full,l0,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+full,l0,intermédiaire,10.0,0,,,,,,aucun candidat sous ce plafond
+full,l0,souple,15.0,0,,,,,,aucun candidat sous ce plafond
+full,l1,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+full,l1,intermédiaire,10.0,3,9.386119731184927,7.53764367582013,10.0,193.0,True,retenu
+full,l1,souple,15.0,3,9.386119731184927,7.53764367582013,10.0,193.0,True,retenu
+full,l2,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+full,l2,intermédiaire,10.0,0,,,,,,aucun candidat sous ce plafond
+full,l2,souple,15.0,0,,,,,,aucun candidat sous ce plafond
+full,elastic_net,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+full,elastic_net,intermédiaire,10.0,9,9.03675513341401,9.95131190039599,15.0,4.0,True,retenu
+full,elastic_net,souple,15.0,18,5.2719361544381345,13.251554500511734,15.0,50.0,True,retenu

@@ -114,6 +114,45 @@ class RegularizationPathTests(unittest.TestCase):
         self.assertEqual(result["alpha_scale_kind"], "l0_hard_threshold_reference")
         self.assertFalse(any(column.startswith("test_") for column in result["table"]))
         self.assertEqual(result["table"].iloc[0]["n_options_active"], 0)
+        audit = result["initialization_audit"]
+        self.assertEqual(len(audit), 6)
+        self.assertFalse(bool(audit.iloc[0]["warm_start_used"]))
+        self.assertFalse(bool(audit.iloc[0]["cold_start_checked"]))
+        self.assertTrue(audit.iloc[1:]["warm_start_used"].all())
+        self.assertTrue(audit.iloc[1:]["cold_start_checked"].all())
+        self.assertEqual(
+            result["initialization_protocol"]["selection_rule"],
+            "minimum_training_objective_among_converged_runs",
+        )
+        self.assertFalse(
+            result["initialization_protocol"]["validation_selects_initialization"]
+        )
+        self.assertEqual(
+            result["initialization_protocol"]["test_status"],
+            "reserved_not_evaluated",
+        )
+
+    def test_l0_initialization_controls_are_reproducible(self):
+        arguments = dict(
+            A=self.A,
+            b=self.b,
+            vanillas=self.vanillas,
+            penalty="l0",
+            n_alphas=5,
+            min_alpha_ratio=1e-3,
+            tolerance=1e-8,
+            l0_multistart_seed=123,
+        )
+        first = solve_regularization_path(**arguments)
+        second = solve_regularization_path(**arguments)
+
+        pd.testing.assert_frame_equal(
+            first["initialization_audit"], second["initialization_audit"]
+        )
+        np.testing.assert_allclose(
+            first["table"]["validation_rmse"],
+            second["table"]["validation_rmse"],
+        )
 
     def test_path_reserves_test_and_builds_pareto_frontier(self):
         result = solve_regularization_path(
@@ -312,6 +351,22 @@ class RegularizationPathTests(unittest.TestCase):
             "rejected_dominated_within_penalty",
         )
         self.assertTrue(selected.loc[2, "is_candidate"])
+
+    def test_stability_precedes_pareto_and_can_rescue_candidate(self):
+        table = pd.DataFrame({
+            "penalty": ["l1", "l1", "l1"],
+            "converged": [True, True, True],
+            "validation_rmse": [2.0, 2.4, 3.0],
+            "n_options_active": [4, 5, 3],
+            "passes_stability_filter": [False, True, True],
+        })
+        selected = select_regularization_candidates(
+            table, stability_column="passes_stability_filter",
+        )
+        self.assertEqual(selected.loc[0, "selection_status"], "rejected_unstable_across_seeds")
+        self.assertTrue(selected.loc[1, "is_candidate"])
+        self.assertTrue(selected.loc[2, "is_candidate"])
+        self.assertFalse(select_regularization_candidates(table).loc[1, "is_candidate"])
 
     def test_pathwise_adapter_is_reproducible(self):
         kwargs = dict(

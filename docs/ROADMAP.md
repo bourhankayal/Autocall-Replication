@@ -23,6 +23,10 @@ Question de recherche proposée :
       payoff pathwise.
 - [x] Premières métriques : MAE, RMSE, biais et erreur maximale.
 - [x] Première exploration d'une base spectrale.
+- [x] Séparer la recherche d'hyperparamètres du notebook principal : grilles
+      propres à chaque pénalité, rho Elastic Net, lambda ES, budgets ES,
+      mélanges d'importance sampling, stabilité multi-graines, exports datés et
+      promotion explicite avec test final fermé.
 
 ---
 
@@ -139,6 +143,12 @@ installer les dépendances et reproduire une figure/table principale sans aide.
 - [ ] Comparer rigoureusement L0 à L1 et Elastic Net : plusieurs initialisations,
       stabilité des supports, minima locaux, coût et performance hors
       échantillon. Ne jamais présenter la solution L0 comme un optimum global.
+- [ ] Sortir du notebook principal l'étude de tous les hyperparamètres numériques
+      des solveurs (`tolerance`, `objective_tolerance`, `support_patience`,
+      `active_threshold`, `max_iter`, initialisation et paramètres futurs).
+      Construire une expérience technique reproductible séparée, sélectionner
+      ces valeurs uniquement sur train/validation, documenter les zones de
+      stabilité, puis figer les valeurs retenues dans le pipeline principal.
 - [x] Construire le chemin de régularisation en `alpha` et conserver toute la
       frontière erreur / nombre d'instruments avant sélection économique.
 - [x] Implémenter ce chemin avec un split 60/20/20 sur le benchmark payoff
@@ -183,10 +193,15 @@ installer les dépendances et reproduire une figure/table principale sans aide.
 ### 7. Évaluer autre chose que l'erreur moyenne
 
 - [ ] Conserver MAE, RMSE, biais et erreur maximale.
-- [ ] Ajouter quantiles de perte, VaR et Expected Shortfall/CVaR de l'erreur.
+- [x] Ajouter quantiles de perte, VaR et Expected Shortfall/CVaR de l'erreur,
+      avec une masse de queue exactement égale à `1-q`, y compris en présence
+      d'atomes à la VaR et de poids d'importance sampling.
+- [x] Mesurer la profondeur et la concentration de la queue avec ES 95/97,5/99,
+      ratio ES 99 / ES 97,5, ESS de queue, parts top 1/5/10 %, HHI, nombre
+      effectif de contributeurs et régimes contractuels terminaux exclusifs.
 - [ ] Mesurer séparément les erreurs près des barrières.
 - [ ] Mesurer séparément les erreurs près des dates d'observation.
-- [ ] Conditionner les résultats au rappel précoce, à l'absence de rappel et à
+- [x] Conditionner les résultats au rappel précoce, à l'absence de rappel et à
       l'activation de la protection.
 - [x] Mesurer le nombre d'instruments, les positions longues/courtes et la
       concentration des poids, en séparant explicitement le cash des options.
@@ -195,14 +210,21 @@ installer les dépendances et reproduire une figure/table principale sans aide.
 - [x] Mesurer la stabilité des poids entre graines, échantillons et calibrations.
 - [ ] Mesurer coût initial, turnover et coûts de transaction. Le coût attendu
       conditionnel est disponible ; financement et turnover restent à faire.
-- [ ] Présenter distributions complètes et intervalles de confiance.
-- [ ] Normaliser les erreurs par le nominal pour faciliter l'interprétation.
+- [ ] Présenter distributions complètes ; les intervalles bootstrap MC/IS sont
+      disponibles, mais leur stabilité doit encore être confirmée en mode REPORT.
+- [x] Normaliser les erreurs par le nominal pour faciliter l'interprétation.
 - [ ] Refaire une étude distincte et complète des fonctions de perte, au lieu de
       mélanger robustification de l'erreur et pénalisation des poids : moindres
       carrés, MAE, Huber, quantile et pertes asymétriques, avec protocole commun.
-- [ ] Tester une optimisation explicitement orientée risque de queue :
-      `MSE + gamma * CVaR_97.5% + pénalité`, puis comparer au calibrage MSE sur
-      RMSE, biais, VaR, Expected Shortfall et régimes contractuels critiques.
+- [x] Implémenter une optimisation explicitement orientée risque de queue :
+      RMSE seule, `RMSE + lambda_ES * ES_97.5% + pénalité` et RMSE sous
+      contrainte `ES_97.5% <= budget`, avec poids uniformes ou rapports de
+      vraisemblance IS. Le notebook compare quatre expériences sur un même
+      échantillon indépendant ; les grilles de `lambda_ES` et de budgets restent
+      volontairement hors du notebook principal.
+- [ ] Exécuter les frontières `lambda_ES` et budget ES sur plusieurs graines en
+      mode REPORT, choisir les hyperparamètres uniquement sur calibration et
+      validation, puis conserver le test final fermé jusqu'au gel du protocole.
 
 ### 8. Justifier et valider l'approche spectrale
 

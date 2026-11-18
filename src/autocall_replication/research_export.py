@@ -101,19 +101,28 @@ def export_research_run(
     figures: Mapping[str, Any] | None = None,
     metadata: Mapping[str, Any] | None = None,
     timestamp: datetime | None = None,
+    run_started_at: datetime | None = None,
     update_latest: bool = True,
 ) -> dict[str, Any]:
-    """Save a dated run and optionally refresh ``output/latest``.
+    """Save a completed notebook run and optionally refresh ``output/latest``.
 
-    Dated runs are immutable: a numeric suffix is added if a directory already
-    exists. ``latest`` is a convenience copy and may be replaced.
+    The immutable directory name is based on ``run_started_at`` so a long run
+    remains identified by the time at which the notebook was launched, not by
+    the time at which its final export cell happened to finish. ``timestamp``
+    is retained as a backward-compatible alias. A numeric suffix is added if a
+    directory already exists. ``latest`` is a convenience copy and may be
+    replaced.
     """
 
-    created_at = timestamp or datetime.now().astimezone()
+    if timestamp is not None and run_started_at is not None:
+        raise ValueError("Utiliser soit timestamp, soit run_started_at, pas les deux.")
+
+    started_at = run_started_at or timestamp or datetime.now().astimezone()
+    exported_at = datetime.now().astimezone()
     root = Path(output_root)
     runs_root = root / "runs"
     runs_root.mkdir(parents=True, exist_ok=True)
-    base_run_id = f"{created_at:%Y-%m-%d_%H%M%S}_{_safe_name(run_mode)}"
+    base_run_id = f"{started_at:%Y-%m-%d_%H%M%S}_{_safe_name(run_mode)}"
     run_id = base_run_id
     suffix = 1
     while (runs_root / run_id).exists() or (runs_root / f".{run_id}.tmp").exists():
@@ -151,8 +160,18 @@ def export_research_run(
         safe_name = _safe_name(name)
         pdf_path = figure_dir / f"{safe_name}.pdf"
         png_path = figure_dir / f"{safe_name}.png"
-        figure.savefig(pdf_path, bbox_inches="tight")
-        figure.savefig(png_path, dpi=180, bbox_inches="tight")
+        if isinstance(figure, (str, Path)):
+            source = Path(figure)
+            source_pdf, source_png = source.with_suffix(".pdf"), source.with_suffix(".png")
+            if not source_pdf.is_file() or not source_png.is_file():
+                raise FileNotFoundError(
+                    f"Figure importée incomplète : {source_pdf} et {source_png} sont requis."
+                )
+            shutil.copy2(source_pdf, pdf_path)
+            shutil.copy2(source_png, png_path)
+        else:
+            figure.savefig(pdf_path, bbox_inches="tight")
+            figure.savefig(png_path, dpi=180, bbox_inches="tight")
         figure_manifest.append(
             {
                 "name": str(name),
@@ -163,7 +182,10 @@ def export_research_run(
 
     manifest = {
         "run_id": run_id,
-        "created_at": created_at.isoformat(),
+        "started_at": started_at.isoformat(),
+        "exported_at": exported_at.isoformat(),
+        # Conservé pour la compatibilité avec les lecteurs des anciens exports.
+        "created_at": exported_at.isoformat(),
         "run_mode": str(run_mode),
         "completed": True,
         "configuration": _json_value(configuration),
@@ -199,6 +221,8 @@ def export_research_run(
 
     return {
         "run_id": run_id,
+        "started_at": started_at,
+        "exported_at": exported_at,
         "run_dir": run_dir,
         "latest_dir": latest_dir if update_latest else None,
         "manifest_path": manifest_path,

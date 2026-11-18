@@ -1,0 +1,15 @@
+﻿benchmark,family,penalty,alpha,l1_ratio,converged,validation_rmse,n_options_active
+conditional_cashflows,calls_puts,elastic_net,1.0,0.5,True,18.411280040038736,84
+conditional_cashflows,calls_puts,l0,1e-08,,True,21.254644395367333,91
+conditional_cashflows,calls_puts,l1,1.0,,True,19.807820320499026,75
+conditional_cashflows,calls_puts,l2,1.0,,True,18.56110318460989,88
+conditional_cashflows,full,elastic_net,0.0001,0.5,True,6.557498078417266,182
+conditional_cashflows,full,l0,1e-08,,True,9.076860076662488,152
+conditional_cashflows,full,l1,1.0,,True,6.536757112844635,153
+conditional_cashflows,full,l2,0.0001,,True,9.103905610468491,159
+static_cashflows,calls_puts,elastic_net,1.0,0.9,True,30.151392410857053,102
+static_cashflows,calls_puts,l1,1.0,,True,29.18648969730238,102
+static_cashflows,calls_puts,l2,10000.0,,True,44.61841269854288,87
+static_cashflows,full,elastic_net,1.0,0.9,True,32.6856263984724,203
+static_cashflows,full,l1,1.0,,True,30.00123777893731,203
+static_cashflows,full,l2,10000.0,,True,44.596432625573236,174

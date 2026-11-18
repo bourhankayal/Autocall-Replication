@@ -1,0 +1,37 @@
+﻿Famille,Pénalité,Ratio L1 (ρ),alpha_reference,reference_type
+calls_puts,l0,,0.3699,cash-vers-support ; heuristique L0
+calls_puts,l1,,3.2515,seuil RMSE sparse
+calls_puts,l2,,0.0032,croisement RMSE/coût L2 ; pas un seuil de sparsité
+calls_puts,elastic_net,0.05,65.0306,seuil RMSE sparse propre au rho
+calls_puts,elastic_net,0.1,32.5153,seuil RMSE sparse propre au rho
+calls_puts,elastic_net,0.25,13.0061,seuil RMSE sparse propre au rho
+calls_puts,elastic_net,0.5,6.5031,seuil RMSE sparse propre au rho
+calls_puts,elastic_net,0.75,4.3354,seuil RMSE sparse propre au rho
+calls_puts,elastic_net,0.775,4.1955,seuil RMSE sparse propre au rho
+calls_puts,elastic_net,0.8,4.0644,seuil RMSE sparse propre au rho
+calls_puts,elastic_net,0.825,3.9412,seuil RMSE sparse propre au rho
+calls_puts,elastic_net,0.85,3.8253,seuil RMSE sparse propre au rho
+calls_puts,elastic_net,0.875,3.716,seuil RMSE sparse propre au rho
+calls_puts,elastic_net,0.9,3.6128,seuil RMSE sparse propre au rho
+calls_puts,elastic_net,0.925,3.5152,seuil RMSE sparse propre au rho
+calls_puts,elastic_net,0.95,3.4227,seuil RMSE sparse propre au rho
+calls_puts,elastic_net,0.975,3.3349,seuil RMSE sparse propre au rho
+calls_puts,elastic_net,0.99,3.2844,seuil RMSE sparse propre au rho
+full,l0,,0.473,cash-vers-support ; heuristique L0
+full,l1,,3.2515,seuil RMSE sparse
+full,l2,,0.1133,croisement RMSE/coût L2 ; pas un seuil de sparsité
+full,elastic_net,0.05,65.0306,seuil RMSE sparse propre au rho
+full,elastic_net,0.1,32.5153,seuil RMSE sparse propre au rho
+full,elastic_net,0.25,13.0061,seuil RMSE sparse propre au rho
+full,elastic_net,0.5,6.5031,seuil RMSE sparse propre au rho
+full,elastic_net,0.75,4.3354,seuil RMSE sparse propre au rho
+full,elastic_net,0.775,4.1955,seuil RMSE sparse propre au rho
+full,elastic_net,0.8,4.0644,seuil RMSE sparse propre au rho
+full,elastic_net,0.825,3.9412,seuil RMSE sparse propre au rho
+full,elastic_net,0.85,3.8253,seuil RMSE sparse propre au rho
+full,elastic_net,0.875,3.716,seuil RMSE sparse propre au rho
+full,elastic_net,0.9,3.6128,seuil RMSE sparse propre au rho
+full,elastic_net,0.925,3.5152,seuil RMSE sparse propre au rho
+full,elastic_net,0.95,3.4227,seuil RMSE sparse propre au rho
+full,elastic_net,0.975,3.3349,seuil RMSE sparse propre au rho
+full,elastic_net,0.99,3.2844,seuil RMSE sparse propre au rho

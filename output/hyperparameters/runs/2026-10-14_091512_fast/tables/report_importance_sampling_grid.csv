@@ -1,0 +1,9 @@
+﻿Famille,Mélange IS,ES moyen,Écart-type ES,ESS minimale (ratio),Recommandé
+calls_puts,0,12.474,3.883,0.9256,False
+calls_puts,1,11.5011,2.7489,0.7601,False
+calls_puts,2,12.3586,3.1412,0.7129,False
+calls_puts,3,12.9839,2.617,0.6948,True
+full,0,10.3687,3.1668,0.9256,False
+full,1,10.6525,2.3975,0.7601,True
+full,2,11.1972,2.7818,0.7129,False
+full,3,11.5561,2.7412,0.6948,False

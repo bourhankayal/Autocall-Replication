@@ -1,0 +1,9 @@
+﻿Famille,Pénalité,current_compromise_rmse,current_compromise_es_975,minimum_es_rmse,minimum_es_975,current_compromise_n_options,minimum_es_n_options
+calls_puts,l0,223.0873,1191.6214,223.0873,1191.6214,4,4
+calls_puts,l1,48.1595,254.6577,6.9079,13.2989,4,2
+calls_puts,l2,9.787,4.6473,9.787,4.6473,70,70
+calls_puts,elastic_net,14.1582,64.1268,6.9165,15.9921,7,5
+full,l0,90.4128,482.6386,90.4106,482.6268,8,8
+full,l1,7.8833,12.6355,8.5019,12.0693,7,4
+full,l2,9.9818,4.6985,10.1748,4.6457,156,101
+full,elastic_net,7.8008,18.1957,8.3735,8.1439,11,4

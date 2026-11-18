@@ -1,0 +1,11 @@
+﻿Famille,Pénalité,Alpha,Ratio L1 (ρ),RMSE (évaluation),MAE (évaluation),Erreur moyenne terminale (% nominal),MAE terminale (% nominal),RMSE terminale (% nominal),Taux de sous-réplication terminale,"ES terminal 97,5 % (% nominal)",Perte maximale terminale (% nominal)
+Calls + Puts,none,0.0,,10.8902,4.1867,-0.8926,14.2129,23.5565,0.484,51.88,55.2959
+Full (avec binaires),none,0.0,,0.0641,0.0034,0.0002,0.0137,0.1281,0.2979,0.2761,1.2978
+Calls + Puts,l0,3.0,,15.765,8.04,-2.5342,26.2344,34.4091,0.516,54.8089,73.602
+Full (avec binaires),l0,0.0001,,0.0096,0.0023,0.0027,0.0078,0.0196,0.5,0.0836,0.2279
+Calls + Puts,l2,0.01,,11.1415,4.1434,-0.7156,13.9362,23.2534,0.5213,51.2311,59.5305
+Full (avec binaires),l2,0.0,,0.0,0.0,-0.0,0.0,0.0,0.4468,0.0,0.0
+Calls + Puts,l1,0.1,,10.8696,4.0231,-0.7378,13.6096,22.7472,0.5585,51.7604,57.9489
+Full (avec binaires),l1,0.01,,0.0571,0.0188,0.0248,0.0528,0.1053,0.7713,0.4383,0.9074
+Calls + Puts,elastic_net,0.03,0.875,10.8946,3.9606,-0.714,13.4306,22.7498,0.5957,51.4874,57.5913
+Full (avec binaires),elastic_net,0.001,0.925,0.0106,0.0052,0.0007,0.0159,0.0214,0.4894,0.0573,0.0619

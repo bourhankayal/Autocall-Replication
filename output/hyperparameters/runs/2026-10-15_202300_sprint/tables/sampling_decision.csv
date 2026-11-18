@@ -1,0 +1,3 @@
+﻿family,candidate_index,mixture_description,worst_precision_ratio_to_mc,median_precision_ratio_to_mc,effective_sample_ratio_min,method
+calls_puts,0,IS — 0 : 70% ; -1 : 30%,0.6282010631468907,0.19777081536941216,0.9258865781397893,importance sampling
+full,-1,MC standard — 0 : 100%,1.0,1.0,1.0,MC standard

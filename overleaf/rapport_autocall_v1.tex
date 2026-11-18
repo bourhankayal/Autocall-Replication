@@ -1,0 +1,1580 @@
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[
+  a4paper,
+  inner=30mm,
+  outer=25mm,
+  top=25mm,
+  bottom=25mm,
+  headheight=15pt,
+  headsep=8mm,
+  footskip=12mm
+]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newtxtext,newtxmath}
+\usepackage{microtype}
+\usepackage{amsmath,mathtools}
+\usepackage{booktabs,longtable,tabularx,array,multirow}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{placeins}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{url}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\definecolor{navy}{HTML}{17324D}
+\definecolor{blue}{HTML}{1F6F8B}
+\definecolor{orange}{HTML}{E7903C}
+\definecolor{red}{HTML}{B33A3A}
+\definecolor{green}{HTML}{287A5B}
+\definecolor{pale}{HTML}{EEF4F7}
+\definecolor{muted}{HTML}{667085}
+
+\hypersetup{
+  hidelinks,
+  bookmarksnumbered=true,
+  pdfstartview=FitH
+}
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.18}
+\onehalfspacing
+\setlist[itemize]{topsep=5pt,itemsep=2pt,parsep=0pt}
+\setlist[enumerate]{topsep=5pt,itemsep=2pt,parsep=0pt}
+\captionsetup{
+  font=small,
+  labelfont=bf,
+  labelsep=period,
+  justification=justified,
+  singlelinecheck=false,
+  skip=6pt
+}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{navy}}
+  {\thesection}{0.75em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{navy}}
+  {\thesubsection}{0.75em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries}
+  {\thesubsubsection}{0.75em}{}
+\titlespacing*{\section}{0pt}{2.2ex plus 0.5ex minus 0.2ex}{1.1ex}
+\titlespacing*{\subsection}{0pt}{1.8ex plus 0.4ex minus 0.2ex}{0.8ex}
+\titlespacing*{\subsubsection}{0pt}{1.4ex plus 0.3ex minus 0.2ex}{0.6ex}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape Sparse replication of complex payoffs}
+\fancyhead[R]{}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\newcommand{\HRule}{\color{navy}\rule{\linewidth}{0.8pt}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\VaR}{\operatorname{VaR}}
+\newcommand{\ES}{\operatorname{ES}}
+\newcommand{\RMSE}{\operatorname{RMSE}}
+\newcommand{\1}{\mathbf{1}}
+
+\newcommand{\academicbox}[2]{%
+  \par\vspace{0.8\baselineskip}
+  \noindent\fcolorbox{muted!55}{muted!4}{%
+    \parbox{\dimexpr0.96\linewidth-2\fboxsep-2\fboxrule\relax}{%
+      \textbf{#1}\enspace #2}}
+  \par\vspace{0.8\baselineskip}}
+\newcommand{\infobox}[1]{\academicbox{Research question.}{#1}}
+\newcommand{\warningbox}[1]{\academicbox{Status of the evidence.}{#1}}
+\newcommand{\resultbox}[1]{\academicbox{Main finding.}{#1}}
+\providecommand{\reportlanguage}{en}
+\newcommand{\reportfigurefile}[1]{figures/\reportlanguage/#1}
+\newcommand{\reportfigure}[4][0.92\linewidth]{%
+  \begin{figure}[htbp]
+  \centering
+  \IfFileExists{#2}{%
+    \includegraphics[width=#1]{#2}%
+  }{%
+    \fcolorbox{muted!55}{muted!4}{\parbox[c][48mm][c]{0.86\linewidth}{%
+      \centering\textbf{Figure file to upload}\par
+      \vspace{2mm}\ttfamily\footnotesize\detokenize{#2}}}
+  }
+  \caption{#3}
+  \label{#4}
+  \end{figure}}
+
+\begin{document}
+
+\begin{titlepage}
+\thispagestyle{empty}
+\vspace*{12mm}
+\begin{center}
+{\Large\bfseries CentraleSupélec\par}
+\vspace{3mm}
+{\large Engineering Degree Programme\par}
+\vspace{8mm}
+{\normalsize\scshape Research project\par}
+\vspace{10mm}
+\HRule
+\vspace{10mm}
+{\fontsize{24}{30}\selectfont\bfseries\color{navy}
+Sparse and Conditional Replication of Complex Payoffs}
+
+\vspace{7mm}
+{\large
+A method based on a limited set of options, tested on an autocall}
+\vspace{10mm}
+\HRule
+\end{center}
+
+\vspace{12mm}
+\infobox{How closely can a limited and interpretable portfolio of standard options reproduce a complex payoff, and what risks remain after replication?}
+
+\vfill
+\begin{center}
+{\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}rl@{}}
+\textbf{Author:} & Bourhan Kayal \\
+\textbf{Degree programme:} & Engineering Degree Programme (Diplôme d'Ingénieur) \\
+\textbf{Research affiliation:} & Laboratoire des Signaux et Systèmes (L2S) \\
+\textbf{Supervisor:} & Joseph Gabet \\
+\textbf{Academic year:} & 2026--2027 \\
+\end{tabular}\par}
+\vspace{7mm}
+{\small Research conducted at L2S alongside the CentraleSupélec engineering curriculum.}\par
+\end{center}
+\end{titlepage}
+
+\begin{abstract}
+This report studies how closely a limited portfolio of standard options can reproduce the payoff of a complex financial product. A single-underlying autocall provides the case study because it combines discontinuities, path dependence, several payment dates and random maturity. Under a risk-neutral Black--Scholes model, calls and puts form the reference set of instruments, while digital options extend this set for theoretical comparison. We compare one static basket with conditional portfolios chosen from information available at each decision date. Ridge, Lasso, Elastic Net and an $L^0$ approach, solved heuristically, are assessed on separate calibration and validation samples. For a notional of 100, the autocall's mean discounted value is estimated at 100.538. {On 2,500 independent evaluation paths, the pre-hedging liability has an RMSE of 7.94 points around the mean cash flow on that sample. The four initial Lasso and Elastic Net compromises reduce residual RMSE to 3.56--6.22 points, a reduction of 21.7--55.2\%. Their 97.5\% Expected Shortfall (ES) reaches 10.05--15.64 points, versus 4.49 for the centred liability.} RMSE includes deviations in both directions, whereas ES retains only the worst 2.5\% of losses; their levels therefore need not be ordered. {\textbf{The four compromises reduce overall error, with ES ranging from 2.2 to 3.5 times that of the centred liability.}} Digital options and conditioning on observable state improve the fit, but a low average error is not enough to establish a good hedge. The method can be applied to other products after adapting the payoff, state variables and available instruments; it then evaluates an approximate replication under explicit assumptions.
+\end{abstract}
+
+\newpage
+\section*{Extended summary}
+\addcontentsline{toc}{section}{Extended summary}
+
+\subsection*{Objective and scope}
+
+The general question is whether a limited set of simple options can reproduce a complex payoff well enough to be useful. Under regularity conditions, the Carr--Madan formula shows that a terminal European payoff can be decomposed into cash, a position in the underlying, and a continuum of European calls and puts with the same maturity \cite{carrmadan1998}. In practice, only a limited number of strikes and maturities is available, portfolios must remain manageable, and path-dependent products require information about their history. ``Replication'' in this report therefore means a measured approximation under explicit information and instrument constraints, not an exact representation of every payoff.
+
+The autocall is used as a demanding case study. Its coupons depend on spot at observation dates, it may redeem early, and its terminal payment depends on both final spot and past barrier crossings. The liability is therefore discontinuous, path-dependent and uncertain in maturity. These features show clearly what a limited set of options can reproduce and what remains as residual risk.
+
+The project provides a reproducible procedure that separates product definition, simulation, instrument valuation, portfolio construction and risk evaluation. The universal element is this general procedure: the payoff, state representation, model, simulation design, instruments and loss criterion can all be adapted as needed. The autocall can therefore be replaced by another payoff once its cash flows and observable state are specified, and Black--Scholes by a local-, stochastic- or rough-volatility model. This modularity does not, however, guarantee exact replication of every claim.
+
+Such decompositions can support interpretation, scenario analysis, hedging research, relative-value analysis and model validation. Since average accuracy, extreme risk, transaction costs and funding need not lead to the same portfolio, the approximation is assessed using several criteria.
+
+\subsection*{Method}
+
+Before optimisation, the method fixes the payoff, observable state, model, available instruments and evaluation criterion. The case study is a one-year, single-underlying, memoryless autocall with four quarterly observations (the contract parameters are detailed in the dedicated section). Under the risk-neutral Black--Scholes model, the spot follows a geometric Brownian motion with constant rate, dividend yield and volatility.
+
+Two instrument universes are considered: \emph{Calls + Puts}, composed of vanilla options, and \emph{Full}, which adds digital options to measure their contribution near discontinuities. The static version uses one initial basket. At each observation date, the conditional version may choose a different basket from the state observed at that time, without using future information. The comparisons also include the unhedged autocall and a Black--Scholes delta hedge. The latter combines the underlying with a self-financing cash account; the underlying position is computed from the derivative of a conditional value surface and rebalanced either daily or every five business days.
+
+Portfolio weights are estimated with four regularisation methods. Ridge favours stable but dense solutions, Lasso sets some weights to zero, Elastic Net combines both behaviours, and the $L^0$ approach is a non-convex heuristic that directly favours small portfolios. Hyperparameters are selected with separate calibration and validation samples, parameter grids, Pareto filtering and stability checks across several random seeds. An independent test sample is kept aside until model selection is complete.
+
+\subsection*{Numerical evidence}
+
+The Black--Scholes Monte Carlo value is 100.538 for a notional of 100, with a 95\% confidence interval of $[100.245,100.830]$.
+
+{On the 2,500 independent paths, RMSE of the centred liability is 7.94 points of notional. The four initial Lasso and Elastic Net compromises have residual RMSE of 3.56--6.22 points and 97.5\% ES of 10.05--15.64 points, versus 4.49 for the centred liability.}
+
+By adding many options, including digitals, the conditional model can almost reproduce the simulated cash flows. However, a low terminal RMSE can conceal large errors at payment dates when timing differences offset one another.
+
+\resultbox{A limited set of options can reproduce much of a complex payoff, but a low overall RMSE does not establish a good hedge. Payment timing and residual tail risk must also be assessed.}
+
+\newpage
+\begin{singlespace}
+\tableofcontents
+\end{singlespace}
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{List of figures}
+\begin{singlespace}
+\listoffigures
+\end{singlespace}
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{List of tables}
+\begin{singlespace}
+\listoftables
+\end{singlespace}
+
+\clearpage
+
+\section{Introduction}
+
+\subsection{Motivation}
+
+Complex derivatives are often understood and hedged with portfolios of simpler instruments. The Carr--Madan formula supports payoff decomposition across strikes, while Derman, Ergener and Kani extend the intuition to static replications using several strikes and maturities \cite{carrmadan1998,derman1995}. Practice is more restrictive: only some strikes and maturities are available, correlated instruments can produce unstable positions, and operational constraints favour smaller portfolios. The practical question is therefore how well a limited and interpretable set of options reproduces the payoff on new scenarios.
+
+An autocall provides a demanding case study. Its apparent simplicity to the investor conceals a liability with barrier-triggered coupons, possible early redemption, contingent capital protection and random maturity. Near an observation barrier, a small spot move can change a cash flow discontinuously; two paths with the same current or terminal spot may also differ because of their histories. These features make valuation model-dependent and hedging sensitive to current state and past events \cite{guillaume2015}. During the 2010s, autocalls became important in several structured-product markets, particularly in the South Korean market. Their expansion, together with the valuation and hedging difficulties exposed during large market moves, motivated methods designed for early redemption and barrier features. Kim and Lim provide one of the early studies devoted directly to their static replication, using a recursive construction that links the successive observation dates \cite{kimlim2019}.
+
+The autocall is not presented as the only possible application of the methodology. It is selected because failure modes that are mild for a smooth European payoff---missing discontinuities, timing mismatch, state insufficiency and tail concentration---become visible in one contract. Success on this case would demonstrate useful approximation capacity under the chosen assumptions; it would not prove exact replication of every contingent claim.
+
+\subsection{Research question and hypotheses}
+
+The report addresses the following question:
+
+\begin{quote}
+How closely can a limited and interpretable portfolio of standard options reproduce a complex payoff, and what risks remain after replication?
+\end{quote}
+
+Four hypotheses organise the experiments:
+
+\begin{enumerate}
+\item conditioning on observable state should expand approximation capacity for path-dependent claims relative to one unconditional static basket
+\item basis functions aligned with payoff discontinuities, such as digitals, should improve approximation, although their practical availability is limited
+\item regularisation should trade a modest amount of fit for sparsity and stability in finite option dictionaries
+\item an objective based only on squared error may improve average approximation while leaving, or worsening, tail under-replication
+\end{enumerate}
+
+\subsection{Contributions and limits of novelty}
+
+The contribution is a transferable empirical method rather than a new spanning or no-arbitrage theorem. It combines:
+
+\begin{itemize}
+\item a claim-first implementation with explicit cash-flow, date, state and boundary conventions
+\item static, dated and conditional replication benchmarks
+\item sparse regularisation and stability-based model selection
+\item a strict calibration/validation/test chronology
+\item separate measurement of gross liability and residual replication risk
+\item rare-event estimation on frozen portfolios
+\item explicit diagnostics showing when terminal fit hides dated cash-flow mismatch
+\end{itemize}
+
+The study extends the references introduced in the motivation through a finite empirical framework. It is related to sparse variance-optimal semi-static hedging by Di Tella, Haubold and Keller-Ressel \cite{ditella2019}, and uses the standard distinction between Ridge, Lasso and Elastic Net \cite{hastie2009}. Unlike the analytical constructions cited above, it estimates regularised portfolios on simulated paths, then evaluates their sparsity, stability and residual risk. Its position therefore lies between structural replication and data-driven portfolio selection, without claiming the generality of a representation theorem.
+
+\section{Autocall case study: contract, model and valuation}
+
+\subsection{Prior definition of the case-study contract}
+
+An autocall cannot be identified by its commercial name alone: coupon, call,
+protection and redemption conventions determine its cash flows and therefore
+its replication. The contract is consequently frozen in a functional term
+sheet before calibration. This makes boundary cases reproducible and separates
+contractual errors from modelling or optimisation errors.
+
+\subsection{Contractual specification}
+
+Let $N$ denote notional, $S_0$ the contractual initial spot, $t_1<\cdots<t_m=T$ the observation dates, $B_A$ the autocall barrier, $B_C$ the coupon barrier, $B_P$ the protection barrier and $c$ the coupon rate. While the product is alive, the coupon at $t_i$ is
+\begin{equation}
+ C_i=cN\1_{\{S_{t_i}\geq B_CS_0\}}.
+\label{eq:coupon}
+\end{equation}
+The first call date is
+\begin{equation}
+ \tau_A=\inf\{t_i:S_{t_i}\geq B_AS_0\}.
+\label{eq:first-call}
+\end{equation}
+At $\tau_A$, the investor receives $N+C_i$ and the contract terminates. At each
+date $t_i$, the historical protection indicator is
+\begin{equation}
+ J_i=\1_{\{\min_{u\in\mathcal G_{t_i}}S_u\leq B_PS_0\}},
+\label{eq:barrier-state}
+\end{equation}
+where $\mathcal G_{t_i}$ is the simulated quotation grid up to $t_i$. If there
+is no early call, terminal redemption is
+\begin{equation}
+ R_T=N(1-J_m)+N\frac{S_T}{S_0}J_m,
+\label{eq:terminal-redemption}
+\end{equation}
+to which the final conditional coupon is added. Monitoring is discrete on the available daily grid; it should not be described as mathematically continuous.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lr}
+\toprule
+Parameter & Reference value \\
+\midrule
+Notional and initial spot & 100 and 100 \\
+Autocall barrier & 100\% of $S_0$ \\
+Coupon barrier and coupon & 80\% of $S_0$ and 2\% \\
+Protection barrier & 70\% of $S_0$ \\
+Observations & 3, 6, 9 and 12 months \\
+Risk-free rate / dividend yield & 3\% / 1\% \\
+Black--Scholes volatility & 20\% \\
+Valuation / effective fixing & 20 June / 22 June 2026 \\
+Maturity & 22 June 2027 \\
+\bottomrule
+\end{tabular}
+\caption{Reference contract and market configuration.}
+\label{tab:contract}
+\end{table}
+
+Dates follow a simplified Monday--Friday calendar, with a following convention
+and ACT/365 continuous discounting. This is sufficient to order cash flows and
+calculate funding needs; an actual issuance would nevertheless require a market
+calendar incorporating holidays and settlement conventions.
+
+\subsection{Contract as a finite-state mechanism}
+
+At each observation date, the contract state is described by its survival
+status, the current spot $S_{t_i}$ and the historical indicator $J_i$. If the
+note is called, its state becomes absorbing and every later cash flow is zero.
+Otherwise, $(S_{t_i},J_i)$ is carried to the next observation. At maturity,
+$J_m$ determines whether the notional is protected.
+
+This representation explains why spot alone is not a sufficient state
+variable. Two paths can have the same current spot but different terminal
+redemptions if only one has previously crossed the protection barrier. It also
+explains why European options depending only on the spot at their maturity do
+not automatically suffice to reproduce the product: the liability also depends
+on path history.
+
+\subsection{Payoff hedging difficulties}
+
+Three mechanisms create distinct hedging difficulties:
+
+\begin{itemize}
+\item \textbf{Digital discontinuities.} At a coupon or call barrier, an
+arbitrarily small spot change can switch a discrete payment on or off.
+\item \textbf{Random maturity.} A call removes every subsequent exposure. An
+option intended for a later observation may therefore have to be unwound if
+the product terminates early.
+\item \textbf{Path dependence.} The protection event depends on the minimum of
+the path, not solely on the terminal spot.
+\end{itemize}
+
+The replication method must therefore answer two different questions. It must
+approximate the amount eventually owed, and it must make funds available at
+the correct dates. A terminal payoff comparison addresses the first question
+but can hide a failure on the second.
+
+\subsection{Risk-neutral model and simulation}
+
+\subsubsection*{Black--Scholes as the reference model}
+
+Black--Scholes is retained as a controlled laboratory. Its parameters have a
+clear interpretation, paths can be simulated exactly between dates and vanilla
+option prices are available in closed form. These properties allow errors in
+the payoff, chronology and optimisation to be isolated without simultaneously
+introducing a complex calibration problem.
+
+This choice is methodological rather than empirical. Equity-index autocalls
+are exposed to volatility skew, term structure, stochastic volatility and
+jumps. Black--Scholes does not represent these effects. A successful hedge in
+this model is therefore evidence that the replication machinery works under
+its assumptions; it is not evidence that the same weights are robust under
+market dynamics.
+
+\subsubsection*{Modularity and model extensions}
+
+The method is organised in separate blocks for the contract and its observable
+state, path simulation, valuation of the available instruments, portfolio
+selection and risk evaluation. The autocall contract can be replaced by another
+product once its cash flows, exercise rules and required state variables are
+specified. This includes smooth terminal payoffs, discontinuous payoffs and
+path-dependent products with several payment dates. The method does not assume
+that every such payoff will be replicated accurately: performance still depends
+on the information available to the policy and on the instruments in the
+replication set.
+
+The path generator and Black--Scholes pricing formulas can be replaced by a
+local-, stochastic- or rough-volatility model without changing the general
+selection and evaluation procedure. Each extension nevertheless requires
+consistent calibration, simulation and valuation; a non-Markovian model may
+also require additional state variables.
+
+Under $\Q$, the underlying follows the Black--Scholes dynamics
+\cite{blackscholes1973}
+\begin{equation}
+ \frac{dS_t}{S_t}=(r-q)dt+\sigma dW_t,
+\label{eq:bs-dynamics}
+\end{equation}
+with exact transition
+\begin{equation}
+ S_{t+\Delta}=S_t\exp\left((r-q-\tfrac12\sigma^2)\Delta
+ +\sigma\sqrt{\Delta}Z\right),\qquad Z\sim\mathcal N(0,1).
+\label{eq:gbm-transition}
+\end{equation}
+For discounted pathwise cash flow $Y^{(j)}$, the Monte Carlo price and standard error are
+\cite{glasserman2004}
+\begin{equation}
+ \widehat V_0=\frac1n\sum_{j=1}^nY^{(j)},\qquad
+ \widehat{\operatorname{SE}}(\widehat V_0)=\frac{s_Y}{\sqrt n}.
+\label{eq:mc-estimator}
+\end{equation}
+\subsubsection*{Simulation design}
+
+Paths are simulated using the exact transition in
+Equation~\eqref{eq:gbm-transition}, with antithetic pairs $Z$ and $-Z$ to reduce
+Monte Carlo variance. The spot dynamics therefore contain no Euler
+discretisation error. The protection barrier is nevertheless monitored on a
+discrete daily grid: increasing the number of paths improves statistical
+precision, but removes neither this monitoring error nor the error arising from
+the Black--Scholes assumptions. Before replication, the pricing engine is
+checked through payoff, cash-flow chronology and Monte Carlo convergence tests,
+ensuring that the optimiser fits the specified contract rather than an
+implementation error.
+
+\subsection{Pricing result and interpretation}
+
+The Monte Carlo valuation gives, using Equation~\eqref{eq:mc-estimator},
+\begin{equation}
+ \widehat V_0=100.5378,\qquad
+ \widehat{\operatorname{SE}}(\widehat V_0)=0.1492,
+ \qquad IC_{95\%}=[100.2453,100.8302].
+\label{eq:model-price}
+\end{equation}
+
+\subsubsection*{Interpretation of the model price}
+
+The model price is the risk-neutral expected value of discounted contractual
+cash flows under the stated dynamics. Used to compare methods, it is independent
+of the replication strategy and excludes sales margins, issuer credit spread,
+structuring costs, hedging reserves and bid--ask adjustments. It must not be
+confused either with the initial capital of a particular strategy or with a
+commercial price.
+
+\section{Replication framework and benchmarks}
+
+\subsection{Replication as a projection problem}
+
+The project does not assume that the liability lies exactly in the span of the
+available instruments. Instead, it asks for the closest attainable cash-flow
+profile under a chosen loss function. If $X$ is the matrix of simulated hedge
+payoffs and $y$ the vector of simulated liability cash flows, a linear
+portfolio produces $Xw$. Replication is then a projection of $y$ onto the
+finite-dimensional space generated by the columns of $X$.
+
+This viewpoint makes the sources of residual error explicit. Error can remain
+because the dictionary lacks a necessary payoff shape, because strikes or
+maturities are too coarse, because one set of weights is shared across states,
+or because regularisation deliberately moves the solution away from the
+unconstrained least-squares fit. The residual is not automatically an
+optimisation failure; it may identify missing spanning instruments or an
+information constraint.
+
+\subsection{Instrument dictionaries}
+
+For maturity $u$ and strike $K$, the call payoff $C_{u,K}$ and the put payoff
+$P_{u,K}$ are
+\begin{equation}
+ C_{u,K}=(S_u-K)^+,\qquad P_{u,K}=(K-S_u)^+.
+\label{eq:vanilla-payoffs}
+\end{equation}
+These payoffs are the basis functions of the replication dictionary. Once
+evaluated on the simulated paths, they form the vectors, or columns of the
+matrix $X$, onto which the target payoff is projected. European calls and puts
+form the reference universe because their payoffs are transparent and their
+valuation is standard. A grid of strikes represents slopes and convexity over
+different spot regions, while several maturities align those shapes with the
+autocall observation dates.
+
+Here, \emph{vanilla} describes the payoff form rather than its liquidity, which
+depends on the underlying, maturity, strike and position size. For theoretical
+comparison, the Full dictionary adds digitals
+\begin{equation}
+ D^+_{u,K}=\1_{\{S_u\geq K\}},\qquad
+ D^-_{u,K}=\1_{\{S_u<K\}}.
+\label{eq:digital-payoffs}
+\end{equation}
+They directly represent barrier discontinuities and can be structured through
+OTC transactions. They can also be approximated by a call spread of width
+$\delta K$:
+\begin{equation}
+ \frac{(S_u-K)^+-(S_u-K-\delta K)^+}{\delta K}
+ \longrightarrow \1_{\{S_u>K\}}
+\label{eq:digital-call-spread}
+\end{equation}
+as $\delta K\downarrow0$ away from the strike. A narrow spread nevertheless
+requires large offsetting quantities and becomes sensitive to quote granularity
+and execution. Digitals are therefore excluded from the practical replication
+universe retained in this study. The Full universe is kept only as a theoretical
+benchmark for measuring the effect of discontinuous basis functions.
+
+\subsubsection*{Role of the cash position}
+
+The intercept $b$ is the constant term of the model. It represents a risk-free
+cash position and is not penalised. Its initial amount and subsequent accrual
+enter the funding ledger.
+
+\subsection{Static cash-flow replication}
+
+Let $y_j$ be a target discounted cash flow and $x_j\in\R^p$ the corresponding option-payoff vector. A static fit solves
+\begin{equation}
+ \min_{b,w}\frac1n\sum_{j=1}^n(y_j-b-x_j^\top w)^2+\mathcal P(w),
+\label{eq:static-objective}
+\end{equation}
+where $b$ is an unpenalised cash position. This formulation is deliberately
+restrictive: one fixed vector of weights must cover different call dates and
+barrier histories. It therefore measures the gain subsequently provided by
+conditioning.
+
+\subsubsection*{Cash-flow fit versus value fit}
+
+Fitting discounted total value asks that the sum of hedge cash flows resemble
+the sum of liability cash flows. Fitting dated cash flows asks for agreement at
+each payment date. The latter is more demanding:
+\begin{equation}
+ \sum_i \bigl(H_i-G_i\bigr)\approx0
+ \quad\not\Rightarrow\quad
+ H_i-G_i\approx0\ \text{for every }i.
+\label{eq:timing-cancellation}
+\end{equation}
+Positive and negative timing errors can cancel in present value. This
+distinction motivates the separate payment-date diagnostics and the funding
+ledger.
+
+\subsection{Conditional policy}
+
+At observation date $t_i$, define an observable state $Z_i$ containing the current spot, survival status, protection-barrier history and date. The conditional policy maps that state into an admissible basket:
+\begin{equation}
+ \pi_i:Z_i\longmapsto (b_i(Z_i),w_i(Z_i)).
+\label{eq:conditional-policy}
+\end{equation}
+Only information measurable at $t_i$ may enter $Z_i$. All rows after an early call are removed from subsequent decisions.
+
+After an observation, the hedger knows whether the note has terminated,
+whether the protection barrier has already been touched and where the current
+spot lies relative to contractual barriers. Forcing the same future position
+on all these states discards economically relevant information. Conditioning
+allows different portfolios for different observable states and therefore
+enlarges the attainable payoff space without using future data.
+
+\subsubsection*{Admissible information and absence of look-ahead}
+
+For a decision at $t_i$, the feature vector may contain $S_{t_i}$, observation
+index, survival and barrier history through $t_i$. It may not contain the
+future call date, terminal spot, future minimum or realised terminal payoff.
+Training labels naturally depend on future cash flows, but policy inputs use
+only current information.
+
+The chronology audit checks that rows after early redemption are absent and
+that state variables are constructed from information available at the
+decision date. Without this control, an apparently excellent conditional fit
+could simply be a look-ahead artefact.
+
+\subsection{Regularised objectives}
+
+The penalties inserted in the generic objective~\eqref{eq:static-objective} are
+\begin{align}
+ \mathcal P_{L2}(w)&=\alpha\lVert w\rVert_2^2,
+ &&\label{eq:ridge-penalty}\\
+ \mathcal P_{L1}(w)&=\alpha\lVert w\rVert_1,
+ &&\label{eq:lasso-penalty}\\
+ \mathcal P_{EN}(w)&=\alpha\left(\rho\lVert w\rVert_1+\frac{1-\rho}{2}\lVert w\rVert_2^2\right),
+ &&\label{eq:elastic-net-penalty}\\
+ \mathcal P_{L0}(w)&=\alpha\lVert w\rVert_0.
+ &&\label{eq:l0-penalty}
+\end{align}
+Ridge stabilises correlated option columns but remains dense. Lasso creates sparse supports. Elastic Net is useful when neighbouring strikes are correlated. $L^0$ directly counts active positions but produces a non-convex problem; its solution is treated as heuristic and audited across initialisations.
+
+Ordinary least squares (OLS), obtained with $\alpha=0$, provides a dense
+unregularised reference. It provides the best quadratic fit offered by the
+dictionary before imposing sparsity. This reference is calculated in both static and
+conditional form for both instrument universes; it is not retained as a sparse
+policy.
+
+\subsubsection*{Effects of the different penalties}
+
+Each penalty answers a different question:
+
+\begin{itemize}
+\item Ridge tests whether reducing weight magnitudes stabilises the portfolio when several options have similar payoffs.
+\item Lasso asks whether a small subset of options can preserve most of the
+fit.
+\item Elastic Net asks whether sparsity can be combined with grouping and
+stabilisation of neighbouring strikes.
+\item $L^0$ asks directly how a line-count penalty behaves, at the cost of a
+non-convex search.
+\end{itemize}
+
+This comparison distinguishes the effect of weight stabilisation from that of
+selecting a small number of options. Alpha values are on different scales and
+cannot be compared numerically across
+penalties.
+
+Options do not all have payoffs of the same order of magnitude. Without an
+adjustment, the penalty could favour an option merely because its coefficient
+is numerically smaller. The payoff-matrix columns are therefore standardised
+before optimisation so that instruments are placed on a comparable scale.
+Coefficients are then converted back into financial quantities, and active
+positions are counted after applying the retained numerical tolerance.
+
+\subsection{Dynamic delta-hedging benchmark}
+
+The delta hedge provides a benchmark for comparing our option replication with
+a standard dynamic method. It is constructed in four steps.
+
+\begin{enumerate}
+\item \textbf{Valuation surface.} Under Black--Scholes, the autocall value
+$V(t,S,h)$ is calculated backwards for each business day and both protection-
+barrier states $h$. The calculation uses a logarithmic grid of 801 spot levels
+between $20\%$ and $300\%$ of $S_0$. Conditional expectations between dates are
+evaluated with 40-point Gaussian quadrature. Coupons, early redemption and final
+redemption are applied on their contractual dates.
+
+\item \textbf{Calculation of delta.} Delta measures the change in the autocall
+value caused by a small change in spot:
+\begin{equation}
+  \Delta(t,S,h)=\frac{\partial V}{\partial S}(t,S,h).
+\label{eq:delta-benchmark}
+\end{equation}
+At each rebalancing date, the date, observed spot and state $h$ select the
+corresponding delta from the surface, with interpolation between grid points.
+
+\item \textbf{Self-financing strategy.} Initial capital equals the model value
+of the autocall. The strategy holds $\Delta_0$ units of the underlying and places
+the balance in cash. Delta is then adjusted every business day or every five
+business days. The cash account finances trades, accrues at the risk-free rate,
+receives dividends and pays the autocall cash flows. Positions are closed at
+early redemption or maturity.
+
+\item \textbf{Evaluation.} The surface is frozen before being applied to the
+independent Monte Carlo paths. Hedge performance and turnover are then measured
+without recalibration.
+\end{enumerate}
+
+\subsection{Benchmark ladder}
+
+The final comparison is designed around the following ladder:
+
+\begin{enumerate}
+\item unhedged autocall liability
+\item Black--Scholes delta hedge with daily and five-day rebalancing
+\item one static inception basket
+\item dense conditional policies obtained by ordinary least squares and Ridge
+\item sparse conditional policies under $L^0$, Lasso and Elastic Net.
+\end{enumerate}
+
+\noindent The homogeneous comparison will be constructed in seven steps:
+
+\begin{enumerate}
+\item use the same paths and the same liability for every method
+\item give every strategy the same initial capital
+\item apply the same contractual cash flows at the same dates
+\item use the same self-financing ledger, including the unwind of positions after early redemption
+\item first compare methods without costs, then include consistent costs for the underlying and the options
+\item calculate the same P\&L, RMSE, MAE, VaR, ES and maximum-loss measures, together with the maximum cash deficit on each path, the amount covering 95\% of these deficits, turnover and cost
+\item construct a Pareto frontier across risk, funding, cost and complexity before opening the reserved test sample.
+\end{enumerate}
+
+For each path, the maximum cash deficit is the amount required to bring the lowest
+cash balance back to zero. The amount covering 95\% of these deficits indicates the
+funding that would have prevented a negative cash balance on 95\% of paths.
+
+\section{Experimental design and model selection}
+
+The comparisons use the same contract and model. When several portfolios are compared under the same sampling scheme, they are evaluated on the same paths. Random seeds are
+recorded and robustness is assessed over several independent recalibrations.
+
+\subsection{Data chronology}
+
+In the model selection study, 60\% of paths are used to calibrate positions, 20\% to select hyperparameters and profiles, and 20\% for the reserved test.
+
+The main risk evaluation uses a separate sample of 2,500 paths simulated after the evaluated policies have been fixed. The results depend on the chosen contract and model.
+
+\subsection{Hyperparameter research, an integral part of the method}
+
+Hyperparameter selection is central because it determines the support, tail exposure and stability of the policy. It is therefore presented in the main body, while exhaustive grids and rejected candidates belong in Appendix~\ref{app:hyperparameters}.
+
+For each family and penalty, the procedure is:
+
+\begin{enumerate}
+\item build an alpha path on calibration data
+\item remove non-converged, degenerate and duplicate solutions
+\item evaluate remaining candidates on validation paths
+\item identify non-dominated accuracy--sparsity candidates
+\item assign performance, compromise and parsimony profiles
+\item repeat calibration across seeds and audit both metrics and support stability.
+\end{enumerate}
+
+Elastic Net searches jointly over $\alpha$ and $\rho$. $L^0$ uses warm starts, cold starts and multistarts because a single convergence flag cannot guarantee a global optimum.
+
+The best alpha is not necessarily the value with the smallest training RMSE.
+That point is usually near the unregularised solution. The purpose of
+validation is to identify whether a slightly more constrained solution
+generalises better or achieves nearly the same error with substantially fewer
+positions.
+
+\subsubsection*{Candidate filtering}
+
+Each filter removes a distinct failure mode:
+
+\begin{itemize}
+\item a convergence filter removes solutions for which the numerical solver
+did not meet its stopping criterion
+\item a minimum-support filter removes degenerate cash-only or one-line
+solutions when they cannot represent the intended comparison
+\item a maximum-support filter enforces the scope of a sparse candidate
+\item a dominance filter removes a solution that is both less accurate and
+less sparse than another candidate under the same penalty
+\item a duplicate filter prevents numerically identical portfolios from being
+presented as separate choices
+\item a stability filter rejects candidates whose performance or support is
+too sensitive to recalibration.
+\end{itemize}
+
+The number of candidates retained after each filter is recorded. If no candidate
+satisfies the criteria for a profile, that profile is reported as unavailable.
+
+\subsubsection*{\texorpdfstring{{Initial profile selection by RMSE and sparsity}}{Initial profile selection by RMSE and sparsity}}
+
+There is no universally correct exchange rate between one point of RMSE and
+one additional option line. Selection is therefore performed separately within
+each family and penalty after the preceding filters. The performance profile
+minimises validation RMSE. Among the remaining candidates, the parsimony profile
+uses the smallest total number of active options across the whole policy.
+
+For the compromise profile, validation RMSE and the total number of active options are rescaled to $[0,1]$ within the admissible set. For candidate $i$, define
+\begin{equation}
+ r_i=\frac{\RMSE_i-\RMSE_{\min}}{\RMSE_{\max}-\RMSE_{\min}},\qquad
+ c_i=\frac{N_i-N_{\min}}{N_{\max}-N_{\min}},\qquad
+ d_i=\sqrt{r_i^2+c_i^2}.
+\label{eq:compromise-score}
+\end{equation}
+If all candidates have the same value on an axis, their normalised coordinate on that axis is zero. After assigning the performance and then the parsimony profile, the compromise profile uses the remaining candidate that minimises $d_i$. If all candidates have already been assigned, the candidate that minimises this score is reused. Both axes have equal weight in the distance. {Section 5.3 adds three rules based on 97.5\% ES, estimated at fixed weights on a separate sample.}
+
+\reportfigure[0.88\linewidth]{\reportfigurefile{decision_dashboard.pdf}}{Summary of the eight compromise profiles retained after hyperparameter selection. The option count is the total number of active coefficients across the entire conditional policy.}{fig:decision-dashboard}
+\FloatBarrier
+
+Figure~\ref{fig:decision-dashboard} shows the eight compromise profiles by validation RMSE and active position count. Lasso and Elastic Net use 2 to 19 positions, compared with 92 to 211 for Ridge. In the Full universe, Lasso reaches a validation RMSE of 1.91 points of notional with 13 positions, while $L^0$ retains 5 positions with an RMSE of 3.82 points.
+
+\subsubsection*{Stability across recalibrations}
+
+Two notions of stability are relevant. Metric stability asks whether validation
+RMSE and ES remain similar after recalibration. Support stability asks whether
+the same strikes and maturities remain active. A portfolio can have stable
+performance but unstable support when correlated options substitute for one
+another. This distinction matters operationally: an unstable support weakens
+the interpretation of individual selected positions even if the overall
+payoff remains stable.
+
+For $L^0$, initialisation stability is additionally required. The problem is
+non-convex, so warm starts and multistarts explore different local solutions.
+Numerical convergence does not guarantee global optimality.
+
+\reportfigure{\reportfigurefile{multi_seed_stability.pdf}}{Validation RMSE across 10 recalibration attempts per profile. Boxes summarise the converged results. Grey crosses show provisional results from runs that did not converge.}{fig:stability}
+\FloatBarrier
+
+In the Full universe, the Lasso compromise profile converges in all ten attempts, with substantial variation in validation RMSE. The $L^0$ compromise profile converges in six out of ten attempts (Figure~\ref{fig:stability}).
+
+\subsection{Risk conventions}
+
+Let $H$ be the discounted autocall liability, meaning the sum of the payments owed to the noteholder along one path, and $G(w)$ the discounted hedge cash flow. The residual is
+\begin{equation}
+ \varepsilon(w)=H-G(w).
+\label{eq:residual}
+\end{equation}
+A positive residual corresponds to under-replication and represents a loss for the issuer. A negative residual corresponds to over-replication. RMSE measures the overall fit.
+\begin{equation}
+ \RMSE(w)=\sqrt{\E[\varepsilon(w)^2]},
+\label{eq:rmse}
+\end{equation}
+Expected Shortfall complements this measure by describing the average severity
+of the adverse tail \cite{mcneil2015,rockafellar2000}. Its empirical estimator is
+defined below.
+On a standard Monte Carlo sample of $n$ paths, let $H_j$ denote the discounted autocall cash flow on path $j$ and define
+\begin{equation}
+ \bar H_n=\frac{1}{n}\sum_{j=1}^{n}H_j.
+\label{eq:empirical-liability-mean}
+\end{equation}
+The pre-hedging risk variable is the centred cash flow
+\begin{equation}
+ L_j^{\rm gross}=H_j-\bar H_n,
+\label{eq:empirical-gross-loss}
+\end{equation}
+with empirical RMSE
+\begin{equation}
+ \widehat{\RMSE}_{\rm gross}
+ =\sqrt{\frac{1}{n}\sum_{j=1}^{n}(H_j-\bar H_n)^2}.
+\label{eq:empirical-gross-rmse}
+\end{equation}
+After replication, the residual loss on path $j$ is
+\begin{equation}
+ L_j^{\rm res}=H_j-G_j(w),
+\label{eq:empirical-residual-loss}
+\end{equation}
+and
+\begin{equation}
+ \widehat{\RMSE}_{\rm res}(w)
+ =\sqrt{\frac{1}{n}\sum_{j=1}^{n}\bigl(H_j-G_j(w)\bigr)^2}.
+\label{eq:empirical-residual-rmse}
+\end{equation}
+For the empirical ES, order the losses as $L_{(1)}\leq\cdots\leq L_{(n)}$. When $m=n(1-q)$ is an integer,
+\begin{equation}
+ \widehat{\ES}_{q}(L)
+ =\frac{1}{m}\sum_{k=n-m+1}^{n}L_{(k)}.
+\label{eq:empirical-es}
+\end{equation}
+For 2,500 equally weighted paths, the 97.5\% tail contains the probability mass of 62.5 path-equivalents. All losses above the threshold are included, and the remaining probability mass is spread across the losses tied at the threshold to reach exactly 2.5\%. The same calculation applies to the centred liability $L^{\rm gross}$ and the hedge residual $L^{\rm res}$.
+
+RMSE and 97.5\% ES are the two primary measures. Signed mean error, mean absolute error (MAE), the frequency of positive losses and maximum observed loss complement the comparison. For hedge residuals, the frequency of positive losses is the under-replication rate.
+
+\subsubsection*{Risk of the liability before hedging}
+
+On the 2,500 risk evaluation paths, each discounted cash flow is centred by subtracting the mean cash flow in that sample. The centred liability has an RMSE of 7.94 points of notional and a 97.5\% ES of 4.49 points.
+
+\subsubsection*{Interpretation of each metric}
+
+\begin{itemize}
+\item Mean error measures systematic under- or over-replication. Opposite
+errors can cancel.
+\item MAE measures typical absolute mismatch and is less dominated by extreme
+observations than RMSE.
+\item RMSE penalises large errors quadratically and is the metric most closely
+aligned with least-squares calibration.
+\item The frequency of positive losses is the share of paths with $L>0$. For the centred liability, these are paths whose discounted cash flow exceeds the sample mean.
+\item ES averages the worst tail and is therefore used to measure severity.
+\item Maximum observed loss is a sample diagnostic, not an estimate of a
+population worst case.
+\end{itemize}
+
+\subsubsection*{Possible divergence between RMSE and ES}
+
+Least squares allocates optimisation effort according to squared error
+frequency under the calibration distribution. A rare region contributes little
+if it is scarcely sampled, even if its conditional loss is large. The
+optimiser may improve thousands of ordinary paths by accepting a worse fit on
+a few barrier scenarios. RMSE can then fall while ES rises.
+
+Regularisation can reinforce this mechanism if the instruments needed only in
+rare states are removed because they contribute little to average fit. This is
+not a contradiction between metrics; it shows that they answer different
+questions. Tail protection must enter either the objective, a constraint or a
+separate acceptance rule if it is a required property.
+
+\subsection{Importance sampling}
+
+Standard Monte Carlo may generate too few adverse paths to estimate tail risk precisely. Importance sampling simulates these paths more frequently, then corrects their contribution through weighting to measure risk under the original model \cite{glasserman2004}.
+
+Let $p$ denote the path density under the original model and $q$ the density used for simulation. Each simulated path $X_j$ receives the weight
+\begin{equation}
+ \omega_j=\frac{p(X_j)}{q(X_j)}.
+\label{eq:likelihood-ratio}
+\end{equation}
+A path overrepresented in the simulation therefore receives a lower weight. Here, $q$ is a mixture of Gaussian distributions including shifted components that favour declines in the underlying.
+
+Risk estimators use the normalised weights $\widetilde{\omega}_j=\omega_j/\sum_k\omega_k$. The treatment of probability mass at the VaR threshold is detailed in Appendix~\ref{app:is}.
+
+The experimental design allows two uses of importance sampling. Weighted paths can be used to estimate risk at fixed weights or to recalibrate the weights. The earlier experiment in Section 5.5 illustrates the first use. In the experiment in Section 5.6, the pilot selected standard Monte Carlo for recalibration.
+
+The precision of importance sampling depends on how weights are distributed across paths. If a few paths carry almost all the weight, the estimate effectively relies on few observations. Effective sample size (ESS) measures this concentration:
+\begin{equation}
+ \operatorname{ESS}=\frac{(\sum_j\omega_j)^2}{\sum_j\omega_j^2}.
+\label{eq:ess}
+\end{equation}
+For $n$ equally weighted paths, ESS equals $n$. It decreases as weights become more concentrated. This is a global measure: on its own, it does not guarantee a precise estimate of tail risk.
+
+Additional diagnostics examine the maximum normalised weight and entropy, which describe weight concentration, as well as the contribution of each mixture component. Bootstrap confidence intervals measure uncertainty in the estimates.
+
+The simulation distribution is chosen to improve the precision of risk estimation across the evaluated policies, not to obtain a lower ES.
+
+\subsubsection*{Precision of ordinary Monte Carlo in the tail}
+
+At confidence level 97.5\%, only 2.5\% of standard paths contribute directly
+to ES. With 2,500 paths this is about 63 observations before accounting
+for unequal loss contributions. At 99\%, 25 observations remain.
+Small changes in a handful of paths can therefore move the estimate
+materially.
+
+Increasing the standard path count is always possible, but may be inefficient
+when the relevant regimes are rare. Importance sampling deliberately draws
+more paths from adverse regions and corrects the change of measure with
+likelihood ratios. If the proposal is well chosen, it improves precision for a
+fixed computational budget without changing the target distribution.
+
+\subsubsection*{Standard and shifted mixture components}
+
+The standard component continues to draw paths from the reference model. The moderately and strongly negatively shifted components make paths with low terminal underlying prices more frequent. A strong shift on its own could make ordinary scenarios too rare and concentrate the weight on a few paths.
+
+This mixture favours paths with low terminal underlying prices. A replication loss can also depend on the path, for example after a narrowly missed call followed by a rebound. The residual risk section examines how tail losses are distributed by contract outcome, missed coupons and breaches of the protection barrier.
+
+\subsubsection*{Limitations of importance sampling}
+
+The same mixture can estimate tail risk with different precision across portfolios, depending on which scenarios generate the largest losses.
+
+{With positions held fixed, both methods estimate risk for the same portfolio. The $2\times 2$ recalibration design uses two samples, each with and without an ES constraint, with an Elastic Net penalty throughout. The second sample uses importance sampling if the pilot selects a mixture. In the experiment in Section 5.6, the pilot selects standard Monte Carlo for both universes, so the second sample is an independent repeat.}
+
+\section{Results}
+
+The OLS benchmarks first examine the effects of dictionary choice and conditioning with the penalty fixed at zero. We then compare two calibration objectives. Method A fits payments date by date. Method B fits their discounted total directly on each path. After the OLS comparison, the option portfolios studied are conditional unless stated otherwise. We present their selected profiles, out-of-sample risk and tail-risk experiments.
+
+Amounts are expressed in points of notional unless otherwise stated. The reference notional is 100. Each comparison identifies its sample.
+
+\subsection{Dictionary capacity in the OLS benchmarks}
+
+Table~\ref{tab:ols-capacity} crosses two dictionaries with two formulations. All four benchmarks fit positions by ordinary least squares with $\alpha=0$ fixed in advance. Both formulations are calibrated on dated payments (objective A). The static formulation fits a single basket for all dates. The conditional formulation adapts the basket to the date and the observed state. To calculate the RMSE and ES in the table, we sum the discounted cash-flow errors on each path and compute both measures from these total errors. The evaluation uses the same 1,250 paths as Table~\ref{tab:unified-comparison}.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llrr}
+\toprule
+Formulation & Universe & RMSE & 97.5\% ES \\
+\midrule
+Static & Calls + Puts & 48.596 & 93.464 \\
+Conditional & Calls + Puts & 21.010 & 47.824 \\
+Static & Full & 53.092 & 97.423 \\
+Conditional & Full & 1.035 & 0.944 \\
+\bottomrule
+\end{tabular}
+\caption{Static and conditional OLS benchmarks calibrated on dated payments (A). Metrics concern the total discounted deficit per path. Positions fitted by ordinary least squares, with $\alpha=0$ fixed in advance and no hyperparameter search. RMSE and ES are measured on the same independent evaluation paths, in points of notional.}
+\label{tab:ols-capacity}
+\end{table}
+
+In this comparison, the contribution of digitals depends on how the portfolio is built. In a static basket, they provide discontinuous payoffs, but positions are fixed at the outset. The conditional formulation can adapt the basket to the observed state of the autocall. The combination gives the best fit in this experiment.
+
+\subsection{Fitting dated payments and their discounted total}
+
+Figure~\ref{fig:conditional-objective-tradeoff} compares two penalised conditional calibrations on the same 625 evaluation paths. Table~\ref{tab:capacity} in the appendix reports the penalised fits with their benchmark-specific hyperparameters.
+
+\reportfigure{\reportfigurefile{method_objective_tradeoff.pdf}}{Comparison of conditional calibrations A and B on 625 common evaluation paths. The A bars show portfolios calibrated on dated payments, and the B bars show portfolios calibrated on their discounted total. With weights held fixed, both metrics are computed for each portfolio. The top panels show dated-payment RMSE, and the bottom panels show discounted-total RMSE.}{fig:conditional-objective-tradeoff}
+
+In Calls + Puts, the ranking reverses with the metric, as the calibration objectives suggest. For Elastic Net, A reduces payment RMSE from 49.90 to 10.77 points of notional relative to B, while B reduces discounted-total RMSE from 21.91 to 3.67 points relative to A. Errors of opposite signs on different payment dates can offset in the total.
+
+On the same paths, the 95th-percentile funding requirement for Calls + Puts Elastic Net portfolios is 38.19 points of notional under A and 2.58 under B. The payment-error ranking therefore differs from the funding ranking.
+
+The Full result is more unexpected. A remains better on both RMSE measures, including the total that B directly targets in calibration. Digitals allow A to represent the discontinuities at each date here and reduce aggregate error as well. Regularisation, basket construction and state partitioning also differ, and the scores are measured outside calibration. The figure thus shows that targeting the total during calibration does not guarantee the lowest total RMSE on new paths.
+
+\subsection{Selected hyperparameters and compromise profiles}
+
+Section 4.2 describes how the profiles are selected. The profiles presented here are conditional and calibrated with method B, whose objective concerns total discounted payments. This choice allows sparsity to be studied for that aggregate objective; errors on payment dates remain a complementary diagnostic. Table~\ref{tab:selected} reports the hyperparameters of the initial RMSE--sparsity compromises. For each compromise profile it gives the penalty strength $\alpha$ and the ratio $\rho$ for Elastic Net. Validation RMSE and basket size describe the outcome of that selection. Figures~\ref{fig:decision-dashboard} and~\ref{fig:stability} illustrate the selection and stability diagnostics.
+
+A node combines a payment date with the autocall state known when the basket is chosen. At the same date, baskets can differ depending on whether the protection barrier has been breached. After a call, no later basket is used. In the table, the mean per node accounts for how often each basket is used; the maximum is the option count in the largest basket.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llrrrr}
+\toprule
+Universe & Penalty & Relative $\alpha$ & RMSE & Mean/node & Max/node \\
+\midrule
+Calls + Puts & $L^0$ & 0.74989 & 3.651 & 0.230 & 2 \\
+Calls + Puts & Lasso & 0.17783 & 3.576 & 0.230 & 2 \\
+Calls + Puts & Ridge & 1.77828 & 3.389 & 21.792 & 24 \\
+Calls + Puts & Elastic Net ($\rho=0.25$) & 0.05623 & 2.954 & 2.909 & 9 \\
+Full & $L^0$ & 0.31623 & 3.817 & 0.617 & 4 \\
+Full & Lasso & 0.00237 & 1.907 & 2.416 & 5 \\
+Full & Ridge & 0.03162 & 2.786 & 45.242 & 48 \\
+Full & Elastic Net ($\rho=0.25$) & 0.07499 & 3.020 & 3.124 & 12 \\
+\bottomrule
+\end{tabular}
+\caption{Conditional compromise profiles calibrated on total discounted payments (method B). Validation RMSE measures error in this total on each path. Mean option count per node is weighted by visit frequency. Relative alpha locates the penalty on the scale specific to each method.}
+\label{tab:selected}
+\end{table}
+
+\subsubsection*{Interpretation of the selected profiles}
+
+In Calls + Puts, Elastic Net improves validation RMSE relative to Lasso and Ridge. In Full, Lasso has the lowest validation RMSE among the compromises and uses fewer options per node than Elastic Net. The ordering of penalties therefore depends on the dictionary.
+
+In Calls + Puts, $L^0$ and Lasso each retain two active coefficients, with similar validation RMSE. In Full, $L^0$ uses fewer positions than Lasso at the cost of higher error. Its value therefore depends on the universe and the trade-off sought. Initialisation and stability diagnostics complement this comparison for the non-convex optimisation.
+
+\noindent\begin{minipage}{\linewidth}
+\setlength{\intextsep}{5pt}
+\begin{figure}[H]
+  \centering
+  \vspace*{-3mm}
+  \caption{Selected profiles for conditional B policies in the Calls + Puts universe. RMSE and ES are calculated on the total discounted residual using different paths from those in Table~\ref{tab:selected}.}
+  \vspace{2mm}
+  \includegraphics[width=\linewidth]{\reportfigurefile{alpha_tail_frontier_calls_puts_zoom.pdf}}
+  \label{fig:alpha-tail-frontier-cp}
+\end{figure}
+\vspace{-6mm}
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{0.92}
+\begin{tabular}{llrrrrr}
+\toprule
+Profile & Penalty & Relative $\alpha$ & $\rho$ & Options & \shortstack{RMSE\\(\% of notional)} & \shortstack{ES at 97.5\%\\(\% of notional)} \\
+\midrule
+P & $L^0$ & 0.74989 & --- & 2 & 4.817 & 14.830 \\
+ & Lasso & 0.17783 & --- & 2 & 4.671 & 11.470 \\
+ & Ridge & 0.10000 & --- & 118 & 4.421 & 9.486 \\
+ & Elastic Net & 0.02371 & 0.05 & 31 & 4.370 & 11.514 \\
+\addlinespace[2pt]
+C & $L^0$ & 0.74989 & --- & 2 & 4.817 & 14.830 \\
+ & Lasso & 0.17783 & --- & 2 & 4.671 & 11.470 \\
+ & Ridge & 1.77828 & --- & 92 & 6.719 & 8.680 \\
+ & Elastic Net & 0.05623 & 0.25 & 16 & 4.453 & 13.597 \\
+\addlinespace[2pt]
+S & $L^0$ & 0.74989 & --- & 2 & 4.817 & 14.830 \\
+ & Lasso & 0.17783 & --- & 2 & 4.671 & 11.470 \\
+ & Ridge & 100.00000 & --- & 54 & 7.218 & 8.649 \\
+ & Elastic Net & 0.42170 & 0.90 & 2 & 5.078 & 8.444 \\
+\addlinespace[2pt]
+E & $L^0$ & 0.07499 & --- & 2 & 4.817 & 14.829 \\
+ & Lasso & 0.17783 & --- & 2 & 4.671 & 11.470 \\
+ & Ridge & 100.00000 & --- & 54 & 7.218 & 8.649 \\
+ & Elastic Net & 0.56234 & 0.80 & 2 & 5.734 & 7.992 \\
+\addlinespace[2pt]
+RE & $L^0$ & 0.07499 & --- & 2 & 4.817 & 14.829 \\
+ & Lasso & 0.17783 & --- & 2 & 4.671 & 11.470 \\
+ & Ridge & 0.17783 & --- & 118 & 4.808 & 8.945 \\
+ & Elastic Net & 0.17783 & 0.25 & 10 & 4.824 & 8.500 \\
+\addlinespace[2pt]
+REP & $L^0$ & 0.07499 & --- & 2 & 4.817 & 14.829 \\
+ & Lasso & 0.17783 & --- & 2 & 4.671 & 11.470 \\
+ & Ridge & 100.00000 & --- & 54 & 7.218 & 8.649 \\
+ & Elastic Net & 0.42170 & 0.88 & 2 & 5.121 & 8.371 \\
+\bottomrule
+\end{tabular}
+\caption{Selected profiles for Calls + Puts. RMSE and ES are calculated on the total discounted residual using the same tail-validation sample as Figure~\ref{fig:alpha-tail-frontier-cp}.}
+\label{tab:tail-profiles-cp}
+\end{table}
+\end{minipage}\par
+
+
+For Calls + Puts, the four portfolios in Table~\ref{tab:selected} correspond to profiles C in Table~\ref{tab:tail-profiles-cp}. When the same portfolios are evaluated with fixed weights on the new paths used in Table~\ref{tab:tail-profiles-cp}, RMSE increases in all four cases. Ridge shows the largest change, from 3.39 to 6.72\% of notional. Ridge has a lower RMSE than Lasso in Table~\ref{tab:selected}, while Lasso has a lower RMSE than Ridge in Table~\ref{tab:tail-profiles-cp}.
+
+\noindent\begin{minipage}{\linewidth}
+\setlength{\intextsep}{5pt}
+\begin{figure}[H]
+  \centering
+  \caption{Selected profiles for conditional B policies in the Full universe. RMSE and ES are calculated on the total discounted residual using different paths from those in Table~\ref{tab:selected}.}
+  \vspace{2mm}
+  \includegraphics[width=\linewidth]{\reportfigurefile{alpha_tail_frontier_full_zoom.pdf}}
+  \label{fig:alpha-tail-frontier-full}
+\end{figure}
+\vspace{-6mm}
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{0.92}
+\begin{tabular}{llrrrrr}
+\toprule
+Profile & Penalty & Relative $\alpha$ & $\rho$ & Options & \shortstack{RMSE\\(\% of notional)} & \shortstack{ES at 97.5\%\\(\% of notional)} \\
+\midrule
+P & $L^0$ & 0.31623 & --- & 5 & 4.307 & 11.231 \\
+ & Lasso & 0.00237 & --- & 13 & 7.760 & 26.594 \\
+ & Ridge & 0.05623 & --- & 231 & 4.369 & 9.466 \\
+ & Elastic Net & 0.03162 & 0.05 & 48 & 4.263 & 9.798 \\
+\addlinespace[2pt]
+C & $L^0$ & 0.31623 & --- & 5 & 4.307 & 11.231 \\
+ & Lasso & 0.00237 & --- & 13 & 7.760 & 26.594 \\
+ & Ridge & 0.03162 & --- & 211 & 4.311 & 10.368 \\
+ & Elastic Net & 0.07499 & 0.25 & 19 & 4.282 & 10.634 \\
+\addlinespace[2pt]
+S & $L^0$ & 0.31623 & --- & 5 & 4.307 & 11.231 \\
+ & Lasso & 0.00422 & --- & 12 & 7.810 & 24.920 \\
+ & Ridge & 100.00000 & --- & 99 & 7.222 & 8.646 \\
+ & Elastic Net & 0.74989 & 0.99 & 2 & 6.181 & 8.356 \\
+\addlinespace[2pt]
+E & $L^0$ & 0.31623 & --- & 5 & 4.307 & 11.231 \\
+ & Lasso & 0.74989 & --- & 2 & 6.174 & 8.371 \\
+ & Ridge & 100.00000 & --- & 99 & 7.222 & 8.646 \\
+ & Elastic Net & 0.31623 & 0.25 & 13 & 5.538 & 8.201 \\
+\addlinespace[2pt]
+RE & $L^0$ & 0.31623 & --- & 5 & 4.307 & 11.231 \\
+ & Lasso & 0.31623 & --- & 3 & 4.831 & 9.268 \\
+ & Ridge & 0.10000 & --- & 236 & 4.722 & 9.080 \\
+ & Elastic Net & 0.10000 & 0.10 & 31 & 4.665 & 8.665 \\
+\addlinespace[2pt]
+REP & $L^0$ & 0.31623 & --- & 5 & 4.307 & 11.231 \\
+ & Lasso & 0.31623 & --- & 3 & 4.831 & 9.268 \\
+ & Ridge & 100.00000 & --- & 99 & 7.222 & 8.646 \\
+ & Elastic Net & 0.31623 & 0.90 & 3 & 4.881 & 9.127 \\
+\bottomrule
+\end{tabular}
+\caption{Selected profiles for Full. RMSE and ES are calculated on the total discounted residual using the same tail-validation sample as Figure~\ref{fig:alpha-tail-frontier-full}.}
+\label{tab:tail-profiles-full}
+\end{table}
+\end{minipage}\par
+
+In Tables~\ref{tab:tail-profiles-cp} and~\ref{tab:tail-profiles-full}, the Elastic Net P profiles have the lowest RMSE among the reported profiles, and the Elastic Net E profiles have the lowest ES. In Calls + Puts, REP keeps the same number of active options as profile E (two) and reduces RMSE from 5.73 to 5.12\% of notional, with ES rising from 7.99 to 8.37\%. In Full, REP uses 3 active options compared with 31 for RE, with slightly higher RMSE and ES. Profile E is already sparse in the first universe, while sparsity clearly distinguishes RE and REP in the second.
+
+The Ridge comparison shows what this choice can change in practice. In Calls + Puts, the RE profiles of Ridge and Elastic Net have similar RMSE, around 4.8\% of notional. Elastic Net achieves slightly lower ES with 10 active options, compared with 118 for Ridge. In Full, $L^0$ offers another sparse solution. With five active options, its RMSE is close to the lowest values in Table~\ref{tab:tail-profiles-full}, but its ES is higher. A very small set of options can therefore approximate the discounted total well on average while leaving larger losses in the worst scenarios.
+
+Lasso in Full illustrates the value of comparing several selection rules. On the paths used in Table~\ref{tab:tail-profiles-full}, RE improves both RMSE and ES relative to the initial compromise C, with 3 active options instead of 13. Section~\ref{sec:out-of-sample-risk} compares all eight C profiles with the centred unhedged liability on a common independent sample.
+
+
+\FloatBarrier
+
+\subsection{Out-of-sample residual risk}\label{sec:out-of-sample-risk}
+
+For the eight C profiles, selected by balancing RMSE and the number of active options, we measure how much RMSE falls and how much 97.5\% ES rises relative to the centred unhedged liability, on the same evaluation paths. Table~\ref{tab:risk} reports results with fixed weights on 2,500 independent paths, distinct from those in Figures~\ref{fig:alpha-tail-frontier-cp} and~\ref{fig:alpha-tail-frontier-full}.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrrrrr}
+\toprule
+Universe & Penalty & Options & RMSE & \shortstack[r]{RMSE\\reduction} & 97.5\% ES & \shortstack[r]{Maximum\\loss} & \shortstack[r]{RMSE gain /\\ES increase} \\
+\midrule
+Calls + Puts & $L^0$ & 2 & 4.210 & 47.0\% & 15.218 & 35.146 & 0.35 \\
+ & Lasso & 2 & 3.911 & 50.7\% & 11.207 & 24.289 & 0.60 \\
+ & Ridge & 92 & 5.886 & 25.9\% & 5.855 & 24.353 & 1.50 \\
+ & Elastic Net & 16 & 3.874 & 51.2\% & 13.076 & 45.806 & 0.47 \\
+\addlinespace[2pt]
+Full & $L^0$ & 5 & 3.737 & 52.9\% & 12.263 & 24.289 & 0.54 \\
+ & Lasso & 13 & 6.221 & 21.7\% & 15.645 & 47.180 & 0.15 \\
+ & Ridge & 211 & 3.581 & 54.9\% & 9.588 & 27.700 & 0.85 \\
+ & Elastic Net & 19 & 3.561 & 55.2\% & 10.052 & 25.770 & 0.79 \\
+\midrule
+\multicolumn{2}{l}{Centred unhedged liability} & --- & 7.940 & --- & 4.488 & 4.488 & --- \\
+\bottomrule
+\end{tabular}
+\caption{Risk of the eight conditional B profiles C and the centred unhedged liability on 2,500 independent paths.}
+\label{tab:risk}
+\end{table}
+
+Relative to the centred unhedged liability, Ridge in Calls + Puts has the highest ratio in Table~\ref{tab:risk}, with 1.50 points of RMSE reduction per additional point of 97.5\% ES. Elastic Net in Full achieves the largest RMSE reduction, with a ratio of 0.79 and 19 active option coefficients compared with 92 for Ridge. The profile with the greatest RMSE reduction per point of added tail risk therefore uses nearly five times as many coefficients as the one with the largest overall RMSE reduction.
+
+
+
+
+\subsubsection*{States that generate residual tail loss}
+
+The two conditional B Elastic Net C profiles in Table~\ref{tab:risk} are reevaluated with fixed weights on an independent standard Monte Carlo sample of 25,000 paths per universe. The sample is shared by Calls + Puts and Full and differs from the 2,500 paths in Table~\ref{tab:risk}. The three comparison criteria are early redemption or maturity, at least one missed coupon before contract termination, and a breach of the principal protection barrier.
+
+The coupon barrier is checked at observation dates while the contract is alive. The protection barrier is monitored along the path until the contract effectively ends and affects redemption at maturity. A breach between observations can therefore coexist with payment of every coupon.
+
+The tables compare groups holding two criteria fixed. RMSE and 97.5\% ES are calculated within each group on the total discounted residual, in points of notional. They measure within-group risk. Contributions to global ES are examined afterwards using the whole portfolio’s tail.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrr}
+\toprule
+ & & \multicolumn{2}{c}{Calls + Puts} & \multicolumn{2}{c}{Full} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Outcome & Paths & RMSE & ES & RMSE & ES \\
+\midrule
+\multicolumn{6}{l}{\textit{Barrier not breached · No missed coupons}} \\
+\addlinespace[2pt]
+Early redemption & 18,389 & 0.10 & 0.43 & 0.19 & 0.76 \\
+Maturity & 3,185 & 1.14 & 2.94 & 1.02 & 2.06 \\
+\addlinespace[4pt]
+\multicolumn{6}{l}{\textit{Barrier not breached · Missed coupon}} \\
+\addlinespace[2pt]
+Early redemption & 80 & 2.12 & -1.38 & 2.01 & -1.22 \\
+Maturity & 1,756 & 4.56 & 16.26 & 4.51 & 15.29 \\
+\bottomrule
+\end{tabular}
+
+\caption{Early redemption and maturity with other criteria fixed.}
+\label{tab:tail-contract-counts}
+\end{table}
+
+Without a protection-barrier breach, contracts reaching maturity exhibit higher residual risk than contracts with early redemption, with or without missed coupons. When all coupons are paid, both groups are large and the contrast appears in RMSE and ES for both portfolios. With missed coupons, the comparison includes 80 early-redemption paths, whose 2.5\% tail represents only two path-equivalents. No early redemption with a barrier breach is observed among the 25,000 paths, leaving those comparisons unavailable.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrr}
+\toprule
+ & & \multicolumn{2}{c}{Calls + Puts} & \multicolumn{2}{c}{Full} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Missed coupon & Paths & RMSE & ES & RMSE & ES \\
+\midrule
+\multicolumn{6}{l}{\textit{Maturity · Barrier not breached}} \\
+\addlinespace[2pt]
+No & 3,185 & 1.14 & 2.94 & 1.02 & 2.06 \\
+Yes & 1,756 & 4.56 & 16.26 & 4.51 & 15.29 \\
+\addlinespace[4pt]
+\multicolumn{6}{l}{\textit{Maturity · Barrier breached}} \\
+\addlinespace[2pt]
+No & 10 & 15.23 & -15.23 & 15.77 & -15.77 \\
+Yes & 1,580 & 13.50 & 28.86 & 12.47 & 18.96 \\
+\addlinespace[4pt]
+\multicolumn{6}{l}{\textit{Early redemption · Barrier not breached}} \\
+\addlinespace[2pt]
+No & 18,389 & 0.10 & 0.43 & 0.19 & 0.76 \\
+Yes & 80 & 2.12 & -1.38 & 2.01 & -1.22 \\
+\bottomrule
+\end{tabular}
+
+\caption{Missed coupons with other criteria fixed.}
+\label{tab:tail-group-risk}
+\end{table}
+
+At maturity without a barrier breach, missed coupons are associated with substantially higher RMSE and ES in both universes. A protection-barrier breach alone therefore does not characterise the situations that are difficult to replicate.
+
+The other two comparisons require a different interpretation. Among early redemptions, a missed coupon is associated with higher RMSE, but every loss in this group is negative: errors here are replication surpluses. At maturity with a breach, the group without missed coupons contains only ten paths. Its ES equals its observed maximum and remains negative. These paths show that a breach and payment of every coupon can coexist.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrr}
+\toprule
+ & & \multicolumn{2}{c}{Calls + Puts} & \multicolumn{2}{c}{Full} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Protection barrier & Paths & RMSE & ES & RMSE & ES \\
+\midrule
+\multicolumn{6}{l}{\textit{Maturity · No missed coupons}} \\
+\addlinespace[2pt]
+Not breached & 3,185 & 1.14 & 2.94 & 1.02 & 2.06 \\
+Breached & 10 & 15.23 & -15.23 & 15.77 & -15.77 \\
+\addlinespace[4pt]
+\multicolumn{6}{l}{\textit{Maturity · Missed coupon}} \\
+\addlinespace[2pt]
+Not breached & 1,756 & 4.56 & 16.26 & 4.51 & 15.29 \\
+Breached & 1,580 & 13.50 & 28.86 & 12.47 & 18.96 \\
+\bottomrule
+\end{tabular}
+
+\caption{Protection-barrier breach with other criteria fixed.}
+\label{tab:tail-barrier-comparison}
+\end{table}
+
+At maturity with at least one missed coupon, a protection-barrier breach increases RMSE and ES in both universes. The two groups have similar sizes. Full mainly reduces ES on paths with a breach, while the difference between portfolios is smaller without a breach.
+
+Without missed coupons, the ten paths with a breach have high RMSE and negative ES. RMSE then reflects large surpluses rather than a hedging shortfall. This row illustrates the value of reading both metrics together.
+
+Global ES is 10.00 points for Calls + Puts and 7.95 for Full on this new sample. Its decomposition uses each portfolio’s global tail and allocates tail losses across categories. A share of 100\% denotes the entire tail loss and does not mean that every path in the group belongs to the tail.
+
+Paths reaching maturity with at least one missed coupon carry all global ES for both profiles. There are 3,336 such paths, or 13.34\% of the sample. Other categories contribute zero, including those with positive within-group ES: their losses remain below the global tail threshold.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Protection barrier & Paths & Calls + Puts & Full \\
+\midrule
+Not breached & 1,756 & 52.7\% & 66.6\% \\
+Breached & 1,580 & 47.3\% & 33.4\% \\
+\bottomrule
+\end{tabular}
+\caption{Shares of global ES among contracts reaching maturity with at least one missed coupon.}
+\label{tab:tail-global-shares}
+\end{table}
+
+In Calls + Puts, paths without a breach now contribute just over half of global ES. In Full, they contribute two thirds. Comparing within-group risks shows that this relative shift mainly reflects reduced losses on paths with a breach. The diagnosis therefore covers both contracts whose protection has been triggered and contracts with protected principal and missed coupons.
+
+The shares obtained on 25,000 paths differ from the initial 2,500-path diagnosis. Regime shares in ES depend on the extreme scenarios observed. These comparisons describe simulated groups and do not establish causal effects of events, as paths also differ in their market histories.
+
+\subsubsection*{Descriptive comparison with the main benchmarks}
+
+Table~\ref{tab:unified-comparison} places the retained policies beside the main
+benchmarks using the six retained metrics. The delta rows use self-financing
+terminal P\&L, while the option-policy rows use discounted cash-flow deficits.
+The comparison is therefore descriptive: the columns share statistical
+definitions but do not align initial capital, instruments or costs. For the
+centred liability, the frequency $L>0$ is the share of cash flows above their
+mean, not an under-replication rate.
+
+\begin{table}[H]
+\centering
+\small
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lllrrrrrr}
+\toprule
+Universe & Method & Fit & Mean error & MAE & RMSE & Freq. $L>0$ & ES$_{97.5}$ & Max. loss \\
+\midrule
+\multicolumn{3}{l}{Centred liability} & 0.000 & 4.193 & 8.646 & 92.4\% & 4.833 & 4.833 \\
+\multicolumn{3}{l}{Daily delta} & 0.032 & 0.605 & 1.222 & 51.6\% & 3.976 & 21.682 \\
+\multicolumn{3}{l}{Five-day delta} & -0.023 & 1.103 & 2.175 & 49.2\% & 6.517 & 29.796 \\
+\addlinespace[2pt]
+Calls + Puts & Conditional A & Elastic Net & -0.263 & 12.712 & 20.828 & 55.3\% & 47.297 & 54.780 \\
+ &  & $L^0$ & -1.258 & 24.636 & 31.660 & 53.4\% & 57.607 & 91.206 \\
+ &  & Lasso & -0.288 & 12.886 & 20.787 & 54.6\% & 47.593 & 55.784 \\
+ &  & OLS & -0.387 & 13.335 & 21.010 & 51.8\% & 47.824 & 64.279 \\
+ &  & Ridge & -0.426 & 13.079 & 21.327 & 48.7\% & 47.200 & 53.020 \\
+\addlinespace[2pt]
+ & Conditional B & Elastic Net & -0.117 & 1.289 & 4.213 & 37.5\% & 13.065 & 45.570 \\
+ &  & $L^0$ & -0.228 & 1.324 & 4.645 & 36.2\% & 15.649 & 35.585 \\
+ &  & Lasso & -0.253 & 1.355 & 4.431 & 40.8\% & 12.240 & 34.512 \\
+ &  & Ridge & -0.329 & 2.176 & 5.928 & 52.6\% & 6.952 & 34.566 \\
+\addlinespace[2pt]
+ & Static A & Elastic Net & 1.807 & 36.553 & 43.225 & 51.2\% & 83.614 & 92.920 \\
+ &  & $L^0$ & 16.651 & 37.493 & 45.615 & 67.4\% & 96.040 & 99.348 \\
+ &  & Lasso & 1.306 & 36.793 & 43.485 & 50.6\% & 84.080 & 93.508 \\
+ &  & OLS & 0.223 & 40.210 & 48.596 & 48.6\% & 93.464 & 106.107 \\
+ &  & Ridge & 0.271 & 39.857 & 47.975 & 48.5\% & 90.900 & 104.630 \\
+\addlinespace[2pt]
+Full & Conditional A & Elastic Net & 0.019 & 0.037 & 0.427 & 45.9\% & 0.837 & 12.663 \\
+ &  & $L^0$ & 0.003 & 0.008 & 0.030 & 54.7\% & 0.102 & 0.629 \\
+ &  & Lasso & 0.014 & 0.065 & 0.203 & 76.2\% & 0.479 & 1.047 \\
+ &  & OLS & -0.037 & 0.084 & 1.035 & 23.8\% & 0.944 & 12.657 \\
+ &  & Ridge & 0.001 & 0.001 & 0.029 & 43.5\% & 0.045 & 0.844 \\
+\addlinespace[2pt]
+ & Conditional B & Elastic Net & -0.229 & 1.243 & 4.003 & 39.0\% & 10.813 & 35.820 \\
+ &  & $L^0$ & -0.284 & 1.081 & 4.232 & 24.9\% & 13.471 & 34.512 \\
+ &  & Lasso & -0.750 & 2.033 & 7.121 & 60.3\% & 22.360 & 56.523 \\
+ &  & Ridge & -0.235 & 1.318 & 3.998 & 62.2\% & 10.754 & 37.355 \\
+\addlinespace[2pt]
+ & Static A & Elastic Net & 2.885 & 41.777 & 46.775 & 45.3\% & 84.118 & 90.746 \\
+ &  & Lasso & 3.700 & 44.216 & 49.398 & 45.3\% & 87.559 & 91.980 \\
+ &  & OLS & -0.381 & 44.425 & 53.092 & 47.5\% & 97.423 & 107.708 \\
+ &  & Ridge & 1.513 & 36.742 & 43.535 & 49.2\% & 82.591 & 94.093 \\
+\bottomrule
+\end{tabular}}
+\caption{A and B denote calibration objectives. For option portfolios, RMSE measures the difference between the discounted totals of all payments (coupons and redemption). All 30 rows are evaluated on the same 1,250 independent paths.}
+\label{tab:unified-comparison}
+\end{table}
+
+Table~\ref{tab:unified-comparison} shows that conditional A policies in Full achieve both lower RMSE and lower 97.5\% ES than the two delta hedges. The Full OLS benchmark already outperforms delta hedging on both measures, and the four regularised policies improve on those results. This numerical advantage is obtained with a universe that includes theoretical digital options and under financing conventions that differ from those of the delta hedges.
+
+For conditional B policies, the ranking reverses. All reduce RMSE relative to the centred liability, at the cost of higher ES. Compared with the delta hedges, they perform worse on both measures. Even Ridge in Calls + Puts, whose ES is closest to that of five-day delta, has substantially higher RMSE. At a similar level of tail risk, this policy therefore offers no improvement in fit on this sample.
+
+\subsection{Precision of ES estimation with fixed positions}
+
+For each portfolio, standard Monte Carlo and importance sampling estimate 97.5\% ES using 2,500 paths each. This comparison uses portfolios from a selection preceding the one used in the previous tables.
+
+In standard Monte Carlo, paths are simulated under the reference model and given equal weight. Losses are ranked and the largest are averaged over 2.5\% of the total probability mass, the equivalent of 62.5 paths. In importance sampling, the simulation mixture makes some adverse scenarios more frequent. Likelihood weights correct for this overrepresentation in the ES calculation.
+
+To compare precision, paths are resampled with replacement and ES is recalculated for each resample. With importance sampling, each loss is resampled together with its weight. The policy coefficients remain unchanged during resampling. The bounds of the 95\% bootstrap interval are the 2.5\% and 97.5\% quantiles of the resulting ES estimates. The bootstrap spread indicates how sensitive the estimated ES is to the simulated paths.
+
+\begin{figure}[htbp]
+  \centering
+  \makebox[\linewidth][c]{\includegraphics[width=1.12\linewidth]{\reportfigurefile{importance_sampling_es.pdf}}}
+  \caption{Estimates of 97.5\% ES and 95\% bootstrap intervals for conditional B policies with fixed positions.}
+  \label{fig:is-es-comparison}
+\end{figure}
+
+Across the 24 portfolios in Figure~\ref{fig:is-es-comparison}, importance sampling reduces the width of the bootstrap interval in 22 cases, with reductions ranging from 1.5\% to 46.9\%, using the same number of paths. The improvement depends on the portfolio. For the Ridge compromise profile in Calls + Puts and the Lasso compromise profile in Full, the interval widens by 10.0\% and 3.9\%, respectively. The mixture therefore generally improves precision in this experiment, with two exceptions. The intervals from the two methods overlap in every case.
+
+\subsection{Calibration with an ES constraint}
+
+The pilot selected standard Monte Carlo for both universes. The experiment therefore compares two standard calibration samples, each with and without an ES constraint. In Full, the constrained procedure produces evaluation ES of 8.65 points compared with 9.68 without the constraint on the first sample, and 6.92 compared with 10.28 on the second, with a slight increase in RMSE in the latter case. In Calls + Puts, the second sample produces similar ES values, around 10.4 points with or without the constraint.
+
+Conditional B policies are recalibrated on 375 paths per sample with an Elastic Net penalty. The 97.5\% ES budget is 10 points of notional for Calls + Puts and 5 points for Full. RMSE and ES concern the total discounted residual, evaluated on the same 1,250 independent paths.
+
+\reportfigure{\reportfigurefile{tail_risk_four_experiments.pdf}}{Conditional B policies recalibrated on two standard Monte Carlo samples, with and without an ES constraint.}{fig:tail-four}
+
+\subsubsection*{Exploratory scope of the experiment}
+
+In three of the four calibrations, the unconstrained solution already meets the ES budget. The two procedures also use different solvers: L-BFGS-B without an ES constraint and SLSQP with the constraint. Differences in these cases may therefore depend on optimisation even when the budget does not restrict the initial solution.
+
+On the second Full sample, the unconstrained solution exceeds the calibration budget. The constrained procedure brings calibration ES down to 5 points and reduces evaluation ES from 10.28 to 6.92 points. Risk falls on independent paths but remains above the budget imposed in calibration.
+
+\subsection{Findings from the case study}
+
+Replication capacity depends jointly on the instrument universe and the policy used. In Full, conditional A policies achieve lower RMSE and ES than the delta benchmarks in the reported comparison. The selected conditional B policies reduce RMSE relative to the centred liability but remain behind delta hedging on both measures. Expanding the dictionary and changing the calibration objective therefore substantially affect the results. The numerical advantage observed with A relies in particular on theoretical digitals and on financing conventions that differ from those of the delta benchmarks.
+
+The C profiles show the limits of selection based on RMSE and sparsity. Improved overall fit comes with higher ES relative to the centred liability. Including ES in selection reveals further trade-offs between error, tail risk and the number of positions. The A/B comparison in Section 5.2 shows that large errors at payment dates can offset in the discounted total. Risk assessment must therefore also consider funding needs over the life of the contract.
+
+Importance sampling and the ES constraint address two distinct needs. With a fixed policy, the former reduces bootstrap uncertainty around ES in most cases studied. The latter changes portfolio weights to limit calibration tail loss, with observed gains varying across universes and samples. The reported recalibration experiment uses two standard Monte Carlo samples because the pilot selected that method. It examines the ES constraint and its sensitivity to the draw, while the benefit of recalibration under importance sampling remains to be measured.
+
+These results call for joint assessment of overall error, tail losses, portfolio size and cash-flow timing. The procedure transfers to other payoffs, models, state variables and instruments by repeating calibration, selection and independent evaluation for each configuration.
+
+\section{Interpretation and limitations}
+
+\subsection{From numerical replication to a hedging decision}
+
+The study compares portfolios by accuracy, sparsity and residual risk on new paths. Using these results to make a hedging decision also requires assessing trading and funding conditions.
+
+\subsection{Contributions of the framework}
+
+For the autocall, the procedure compares the contribution of conditioning and digitals and measures the trade-offs between replication error, tail losses and position count. It also allows the selected portfolios to be examined by maturity and strike.
+
+For another product, the payoff, model, state variables and instrument dictionary can be adapted. Calibration and evaluation on independent paths then measure approximation quality for the new configuration.
+
+\subsection{Model risk}
+
+Pricing and evaluation use constant-volatility Black--Scholes under the risk-neutral measure. Local or stochastic volatility models would allow an assessment of sensitivity to model choice. Evaluation under the physical measure would complement the analysis of hedging risk. Sensitivity of portfolio weights and residual losses to volatility, interest rates and dividend yield could also be measured.
+
+The protection barrier is monitored on a simulated weekday grid. A finer grid or a Brownian bridge correction could change breach frequencies. Changing strike spacing or the available maturities can affect replication error and the positions selected.
+
+\subsection{Liquidity and transaction costs}
+
+Execution costs depend on position sizes, bid--ask spreads and unwind conditions after early redemption. One concentrated position may cost more than several smaller positions.
+
+Approximating theoretical digitals with spreads introduces a choice of width and quantities. Executable quotes would allow the cost of this approximation to be compared with its replication benefit.
+
+\subsection{Funding needs}
+
+A close fit to total discounted cash flows can leave shortfalls at payment dates. On a separate sample of 250 paths, the 95th percentile funding requirement for the Elastic Net C profile is 4.08 points of notional for Calls + Puts and 4.03 for Full. In Full, replacing theoretical digitals with spreads brings this requirement to 4.07 points.
+
+These amounts rely on theoretical prices and a simplified settlement schedule. They describe cash-flow timing gaps, but comparison with the delta benchmarks would require aligned initial-capital and funding conventions.
+
+\subsection{Statistical limitations}
+
+The bootstrap intervals in Section 5.5 quantify the variability of ES due to the evaluation paths for a fixed policy. Recalibration across several seeds indicates how stable the results are when the calibration sample changes. A grid search can still favour a candidate whose validation score benefits from sampling variation.
+
+The reserved test sample will allow the procedure to be evaluated once the calibration and selection rules, loss convention and metrics are fixed.
+
+The chronology audit checks that each decision uses only the information available at its date. Convergence diagnostics and trials from multiple starting points indicate the sensitivity of the optimisation, particularly for $L^0$.
+
+\section{Conclusion and research agenda}
+
+This project asks a general question: how closely can a limited and interpretable set of options reproduce a complex payoff? The autocall is a demanding case study, not the only possible application. Its discontinuities, multiple payment dates, path dependence and random maturity reveal the main limits that the method must address.
+
+Within this case study, a portfolio of dated vanilla options captures a substantial part of ordinary liability variation, especially when the policy conditions on observable product state. Sparse regularisation reduces the dictionary to a more interpretable support with little validation-RMSE loss, while digital basis functions reveal the importance of aligning the dictionary with payoff discontinuities. These results demonstrate useful approximation capacity under the stated contract, model and simulation design. They do not prove that the same instruments, weights or policy exactly replicate an arbitrary payoff.
+
+The C profiles, selected by RMSE and sparsity, reduce RMSE and increase 97.5\% ES relative to the centred liability. For Elastic Net, the RE profile, selected by RMSE and ES, reduces ES relative to the C profile in both universes, with higher RMSE on the same evaluation sample. This choice reduces the number of active coefficients in Calls + Puts and increases it in Full.
+
+The main benchmarks were compared on common paths. The residual ES analysis also identified the groups of paths that concentrate losses by contract outcome, missed coupons and protection-barrier breach. Aligning initial capital and funding conventions across strategies would extend this comparison.
+
+Several extensions would address different questions. Once calibration and selection are fixed, evaluation on the reserved test sample would measure performance on paths held out from the study. Dynamically hedging the residual would quantify the additional gain after option replication. Models with skew or stochastic volatility would help assess sensitivity to model choice. With suitable market data, incorporating transaction costs and liquidity would show how these factors affect portfolio selection.
+
+An independent review of decision timing and the implementation of contractual terms would complement the existing checks. Trials with alternative solvers or tolerances would help assess how numerical choices affect the selected portfolios.
+
+Applying the same procedure to other products would assess its transferability and identify which changes to the payoff, observable state and instrument dictionary are needed.
+
+\appendix
+
+\section{Detailed payoff logic}\label{app:payoff}
+
+At each observation date, while the contract is alive, the coupon is paid if the spot reaches or exceeds the coupon threshold. If the spot reaches or exceeds the early redemption threshold, principal is repaid and the contract ends. At the last observation, if there is no early redemption, repayment depends on whether the protection barrier has been breached. The barrier is breached when the spot reaches or falls below it on the monitoring grid. The last coupon follows the same rule as earlier coupons.
+
+\section{Hyperparameter audit}\label{app:hyperparameters}
+
+Figures~\ref{fig:alpha-grid} and~\ref{fig:rho-grid} help identify where changes in the penalty have little effect on fit or portfolio size. Figure~\ref{fig:filter-map} tracks the candidates retained at each stage. For $L^0$, read Figure~\ref{fig:l0-audit} with the possibility that different starting points lead to different supports.
+
+\reportfigure{\reportfigurefile{alpha_grid.pdf}}{Regularisation-path overview by family and penalty.}{fig:alpha-grid}
+
+\reportfigure{\reportfigurefile{elastic_net_rho_grid.pdf}}{Joint Elastic Net search over mixing ratio and regularisation strength.}{fig:rho-grid}
+
+\reportfigure{\reportfigurefile{regularization_filter_map.pdf}}{Number of candidates remaining after each convergence, performance, dominance and duplication filter.}{fig:filter-map}
+
+\reportfigure{\reportfigurefile{l0_initialization_audit.pdf}}{$L^0$ warm-start, cold-start and multistart audit.}{fig:l0-audit}
+
+\reportfigure[0.97\linewidth]{\reportfigurefile{tail_frontiers_calls_puts_elastic_net.pdf}}{Tail-aware Elastic Net selection in the Calls + Puts universe. The left panel studies an Expected-Shortfall penalty and the right panel explicit Expected-Shortfall budgets on an independent validation sample.}{fig:tail-frontier-cp-elastic-net}
+
+\reportfigure[0.97\linewidth]{\reportfigurefile{tail_frontiers_full_elastic_net.pdf}}{Tail-aware Elastic Net selection in the Full universe. Penalised and constrained Expected-Shortfall formulations are compared on the same independent validation sample.}{fig:tail-frontier-full-elastic-net}
+
+Figures~\ref{fig:tail-frontier-cp-elastic-net} and~\ref{fig:tail-frontier-full-elastic-net} compare Elastic Net formulations with an ES penalty and an ES budget on an independent validation sample. Some constrained candidates reach the smallest alpha explored. Their ranking applies to the tested grid. Extending the grid would help assess its stability.
+
+\section{Penalised cash-flow fits and supplementary experiments}\label{app:capacity-supplement}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llrr}
+\toprule
+Method & Universe / penalty & Evaluation RMSE & Active options \\
+\midrule
+Static cash flows & Calls + Puts, $L^0$ & 30.541 & 2 \\
+Static cash flows & Calls + Puts, Lasso & 26.966 & 102 \\
+Static cash flows & Full, Ridge & 25.568 & 206 \\
+Conditional cash flows & Calls + Puts, Elastic Net & 10.895 & --- \\
+Conditional cash flows & Full, Ridge & $<0.001$ & --- \\
+Conditional cash flows & Full, $L^0$ & 0.010 & --- \\
+\bottomrule
+\end{tabular}
+\caption{Static and conditional fits of dated payments (A), with the hyperparameters selected for each benchmark. RMSE pools payment-date errors on this exercise’s evaluation sample. Active-option counts are reported for static baskets.}
+\label{tab:capacity}
+\end{table}
+
+The static Calls~+~Puts RMSE remains above 26 even with more than one hundred
+active options: one unconditional basket has difficulty matching a liability whose
+payment date and survival state vary by path. The two-position $L^0$ solution
+is simpler but has still higher error, illustrating the cost of extreme
+parsimony.
+
+With Ridge, adding digitals to the dictionary slightly reduces the static payment RMSE. In Full, the conditional Ridge policy produces almost no payment error on this sample. The difference shows the contribution of conditioning in this experiment.
+
+The near-zero error, obtained with a large theoretical dictionary and potentially
+sensitive to the simulated grid, is a capacity diagnostic. The remaining problem
+is to obtain a sparse, stable and tail-safe approximation.
+
+The exploratory notebook also studies date--spot price-surface fitting, mean-payoff fitting and a single-basket check of total discounted pathwise cash flows. These experiments use different targets or formulations from those in the main results. The scenarios for OTC digitals and the examination of market costs are exploratory. The corresponding numerical results will be matched to their own protocols and exports before being cited.
+
+
+
+\section{Importance-sampling details}\label{app:is}
+
+For the fixed-position comparison in Figure~\ref{fig:is-es-comparison}, the global ESS represents 71.5\% of the 2,500 paths in Calls + Puts and 77.2\% in Full, or about 1,788 and 1,931 effective paths. The largest normalised weight is below 0.08\% in both universes. Global ESS describes weight concentration across the full sample. Tail ESS describes concentration among the largest losses.
+
+The simulation density is a Gaussian mixture $q=\sum_k\eta_kq_k$. Each path receives a likelihood weight computed from the full mixture density. At confidence level $\beta$, the ES calculation uses exactly $1-\beta$ of the weighted probability mass. If several losses equal the threshold, only the fraction of their mass needed to complete the tail is included.
+
+Figures~\ref{fig:is-grid}, \ref{fig:is-cp} and~\ref{fig:is-full} document mixture selection in the hyperparameter study. Section 5.5 then compares estimator precision for already calibrated policies.
+
+\reportfigure{\reportfigurefile{importance_sampling_grid.pdf}}{Candidate importance-sampling mixtures and precision diagnostics in the hyperparameter study.}{fig:is-grid}
+
+\reportfigure{\reportfigurefile{importance_policy_precision_calls_puts.pdf}}{Precision comparison across Calls + Puts policies.}{fig:is-cp}
+
+\reportfigure{\reportfigurefile{importance_policy_precision_full.pdf}}{Precision comparison across Full policies.}{fig:is-full}
+
+\section{Reproducibility}\label{app:reproducibility}
+
+Run manifests record the contract and model configuration, seeds, path counts and the hyperparameter selection used by the evaluation notebook. The production record links tables and figures to their exports, including the contract event analysis and the importance sampling comparison with fixed policies.
+
+\section{Planned cost-aware extension}\label{app:costs}
+
+For instrument $j$, let $a_j$ be the executable purchase price, $b_j$ the executable sale price and $m_j$ the model reference price. The inception cost measures the difference between the execution price and this reference price, according to the direction and size of the position.
+\begin{equation}
+ \mathcal C_{0}(w)=\sum_j\left[w_j^+(a_j-m_j)+w_j^-(m_j-b_j)\right],
+\label{eq:inception-cost}
+\end{equation}
+with $w_j^+=\max(w_j,0)$ and $w_j^-=\max(-w_j,0)$. A cost-aware objective could minimise
+\begin{equation}
+ \widehat{\RMSE}(w)+\lambda_{\rm ES}\widehat{\ES}_{97.5\%}(L(w))
+ +\lambda_1\lVert w\rVert_1+\lambda_C\mathcal C(w)
+\label{eq:cost-aware-objective}
+\end{equation}
+subject to gross-exposure, line-count and funding constraints. Evaluating this objective would require executable quotes and assumptions about market impact, unwinding and adjustments specific to over-the-counter instruments.
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{References}
+\begin{singlespace}
+\begin{thebibliography}{99}
+
+\bibitem{blackscholes1973}
+F. Black and M. Scholes (1973).
+The pricing of options and corporate liabilities.
+\emph{Journal of Political Economy}, 81(3), 637--654.
+\url{https://doi.org/10.1086/260062}.
+
+\bibitem{carrmadan1998}
+P. Carr and D. Madan (1998).
+Towards a theory of volatility trading.
+In R. A. Jarrow (ed.),
+\emph{Volatility: New Estimation Techniques for Pricing Derivatives},
+417--427. Risk Books.
+
+\bibitem{derman1995}
+E. Derman, D. Ergener and I. Kani (1995).
+Static options replication.
+\emph{The Journal of Derivatives}, 2, 78--95.
+
+\bibitem{ditella2019}
+P. Di Tella, M. Haubold and M. Keller-Ressel (2019).
+Semi-static and sparse variance-optimal hedging.
+\emph{arXiv:1709.05519}.
+\url{https://arxiv.org/abs/1709.05519}.
+
+\bibitem{glasserman2004}
+P. Glasserman (2004).
+\emph{Monte Carlo Methods in Financial Engineering}.
+Springer.
+
+\bibitem{guillaume2015}
+T. Guillaume (2015).
+Autocallable structured products.
+\emph{The Journal of Derivatives}, 22(3), 73--94.
+\url{https://doi.org/10.3905/jod.2015.22.3.073}.
+
+\bibitem{hastie2009}
+T. Hastie, R. Tibshirani and J. Friedman (2009).
+\emph{The Elements of Statistical Learning}, 2nd ed.
+Springer.
+
+\bibitem{kimlim2019}
+K.-K. Kim and D.-Y. Lim (2019).
+A recursive method for static replication of autocallable structured products.
+\emph{Quantitative Finance}, 19(4), 647--661.
+\url{https://doi.org/10.1080/14697688.2018.1523546}.
+
+\bibitem{mcneil2015}
+A. J. McNeil, R. Frey and P. Embrechts (2015).
+\emph{Quantitative Risk Management}, revised ed.
+Princeton University Press.
+
+\bibitem{rockafellar2000}
+R. T. Rockafellar and S. Uryasev (2000).
+Optimization of conditional value-at-risk.
+\emph{Journal of Risk}, 2, 21--41.
+
+\end{thebibliography}
+\end{singlespace}
+
+\end{document}

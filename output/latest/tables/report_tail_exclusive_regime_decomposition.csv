@@ -1,0 +1,25 @@
+﻿Famille,Pénalité,Profil,Régime,Niveau de plafond,share_of_tail_probability,share_of_es
+calls_puts,l0,compromise,recalled,0.975,0.0,0.0
+calls_puts,l0,compromise,maturity_protected,0.975,0.504,0.4656
+calls_puts,l0,compromise,maturity_barrier_hit,0.975,0.496,0.5344
+calls_puts,l1,compromise,recalled,0.975,0.0,0.0
+calls_puts,l1,compromise,maturity_protected,0.975,0.632,0.5943
+calls_puts,l1,compromise,maturity_barrier_hit,0.975,0.368,0.4057
+calls_puts,l2,compromise,recalled,0.975,0.0,0.0
+calls_puts,l2,compromise,maturity_protected,0.975,0.824,0.6077
+calls_puts,l2,compromise,maturity_barrier_hit,0.975,0.176,0.3923
+calls_puts,elastic_net,compromise,recalled,0.975,0.0,0.0
+calls_puts,elastic_net,compromise,maturity_protected,0.975,0.488,0.3557
+calls_puts,elastic_net,compromise,maturity_barrier_hit,0.975,0.512,0.6443
+full,l0,compromise,recalled,0.975,0.0,0.0
+full,l0,compromise,maturity_protected,0.975,0.512,0.6765
+full,l0,compromise,maturity_barrier_hit,0.975,0.488,0.3235
+full,l1,compromise,recalled,0.975,0.0,0.0
+full,l1,compromise,maturity_protected,0.975,0.416,0.3524
+full,l1,compromise,maturity_barrier_hit,0.975,0.584,0.6476
+full,l2,compromise,recalled,0.975,0.0,0.0
+full,l2,compromise,maturity_protected,0.975,0.68,0.5824
+full,l2,compromise,maturity_barrier_hit,0.975,0.32,0.4176
+full,elastic_net,compromise,recalled,0.975,0.0,0.0
+full,elastic_net,compromise,maturity_protected,0.975,0.568,0.5424
+full,elastic_net,compromise,maturity_barrier_hit,0.975,0.432,0.4576

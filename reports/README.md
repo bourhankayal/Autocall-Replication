@@ -18,6 +18,24 @@ lorsqu'une nouvelle exécution a été relue et retenue comme référence.
 
 ## Contenu
 
+### Recherche externe des hyperparamètres
+
+[HYPERPARAMETER_RESEARCH.md](HYPERPARAMETER_RESEARCH.md)
+
+Grilles alpha, ratio Elastic Net, contrôle ES et importance sampling ; séparation
+calibration/validation, stabilité multi-graines, premiers constats FAST et limites
+avant une campagne REPORT.
+
+### Importance sampling et contrôle direct du risque de queue
+
+[TAIL_RISK_IMPORTANCE_OPTIMIZATION.md](TAIL_RISK_IMPORTANCE_OPTIMIZATION.md)
+
+Comparaison structurée de quatre calibrations pathwise : Monte-Carlo standard
+ou importance sampling, chacune avec une optimisation RMSE seule ou une
+contrainte explicite d'Expected Shortfall. Le rapport précise la convention de
+perte, les diagnostics de poids, la séparation calibration/évaluation et les
+limites avant toute conclusion économique.
+
 ### Dossier de passation pour CV et portfolio
 
 [CV_PROJECT_HANDOFF.md](CV_PROJECT_HANDOFF.md)

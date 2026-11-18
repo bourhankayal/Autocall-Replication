@@ -1,0 +1,25 @@
+﻿Famille,Pénalité,Profil,Graines,Taux de convergence,RMSE moyenne,Options moyennes,Jaccard médian
+calls_puts,elastic_net,compromise,10,1.0,3.0223,19.4,0.4916
+calls_puts,elastic_net,parsimony,10,1.0,4.0731,2.8,0.6667
+calls_puts,elastic_net,performance,10,1.0,3.3401,42.1,0.5768
+calls_puts,l0,compromise,10,0.8,3.009,2.0,1.0
+calls_puts,l0,parsimony,10,0.8,3.009,2.0,1.0
+calls_puts,l0,performance,10,0.8,3.009,2.0,1.0
+calls_puts,l1,compromise,10,1.0,4.364,1.0,0.5
+calls_puts,l1,parsimony,10,1.0,4.364,1.0,0.5
+calls_puts,l1,performance,10,1.0,4.364,1.0,0.5
+calls_puts,l2,compromise,10,1.0,5.8867,113.8,0.6992
+calls_puts,l2,parsimony,10,1.0,6.2782,81.4,0.5593
+calls_puts,l2,performance,10,1.0,3.5838,116.6,0.9065
+full,elastic_net,compromise,10,1.0,2.645,24.5,0.4914
+full,elastic_net,parsimony,10,1.0,5.2513,2.6,0.5
+full,elastic_net,performance,10,1.0,3.0066,62.0,0.5644
+full,l0,compromise,10,0.0,1.7579,4.0,0.2857
+full,l0,parsimony,10,0.0,1.758,4.0,0.75
+full,l0,performance,10,0.0,1.7579,4.0,0.2857
+full,l1,compromise,10,1.0,0.872,11.2,0.2
+full,l1,parsimony,10,1.0,0.8755,10.7,0.2859
+full,l1,performance,10,1.0,0.872,11.2,0.2
+full,l2,compromise,10,1.0,2.5926,233.2,0.816
+full,l2,parsimony,10,1.0,6.2795,136.2,0.5745
+full,l2,performance,10,1.0,3.0842,233.2,0.8862

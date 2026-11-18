@@ -41,7 +41,15 @@ sous la proposition reçoit le poids de vraisemblance
 \]
 
 Les moyennes, fréquences, quantiles et Expected Shortfalls sont calculés avec
-ces poids. L'Effective Sample Size contrôle leur concentration.
+ces poids. L'Effective Sample Size contrôle leur concentration. L'ES utilise
+désormais la formule exacte
+
+\[
+ES_q=VaR_q+\frac{1}{1-q}\sum_i\widetilde\omega_i(L_i-VaR_q)_+,
+\]
+
+qui conserve exactement `1-q` de masse dans la queue lorsque des cashflows
+discrets créent un atome à la VaR.
 
 La distinction suivante est impérative :
 
@@ -58,6 +66,8 @@ cette phase.
 - simulateur GBM par mélange gaussien avec rapport de vraisemblance exact ;
 - métriques pondérées RMSE, VaR, ES et fréquence de sous-réplication ;
 - diagnostics des poids, des composantes et de l'ESS ;
+- quantiles des poids, poids normalisé maximal, entropie et ESS de queue ;
+- décomposition de la queue par rappel, maturité et barrière touchée ;
 - bootstrap de l'ES 97,5 % ;
 - évaluateur conditionnel indépendant conservant la politique figée ;
 - comparaison explicite Monte-Carlo standard / importance sampling ;
@@ -92,5 +102,7 @@ Après validation contre le Monte-Carlo standard, les étapes suivantes sont :
 2. ajuster le mélange sans utiliser l'échantillon de test final ;
 3. répéter l'expérience sur plusieurs graines ;
 4. comparer la précision à temps de calcul égal ;
-5. seulement ensuite, étudier une optimisation de portefeuille sensible à la
-   queue comme expérience distincte.
+5. comparer les calibrations MC/IS avec et sans contrainte d'ES sur un même
+   échantillon indépendant ;
+6. rechercher `lambda_ES`, le budget d'ES et le mélange IS hors du notebook
+   principal, sans ouvrir le test final.

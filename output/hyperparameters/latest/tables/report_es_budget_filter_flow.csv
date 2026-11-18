@@ -1,0 +1,57 @@
+﻿Famille,Pénalité,Étape,Restantes,Éliminées
+calls_puts,l0,Solutions calculées,27,0
+calls_puts,l0,Convergence numérique,27,0
+calls_puts,l0,Budget respecté en calibration,27,0
+calls_puts,l0,ES validé sous plafond souple,4,23
+calls_puts,l0,Mesures de validation finies,4,0
+calls_puts,l0,Frontière non dominée,4,0
+calls_puts,l0,Politiques distinctes retenues,1,3
+calls_puts,l1,Solutions calculées,27,0
+calls_puts,l1,Convergence numérique,27,0
+calls_puts,l1,Budget respecté en calibration,27,0
+calls_puts,l1,ES validé sous plafond souple,15,12
+calls_puts,l1,Mesures de validation finies,15,0
+calls_puts,l1,Frontière non dominée,7,8
+calls_puts,l1,Politiques distinctes retenues,2,5
+calls_puts,l2,Solutions calculées,27,0
+calls_puts,l2,Convergence numérique,27,0
+calls_puts,l2,Budget respecté en calibration,27,0
+calls_puts,l2,ES validé sous plafond souple,0,27
+calls_puts,l2,Mesures de validation finies,0,0
+calls_puts,l2,Frontière non dominée,0,0
+calls_puts,l2,Politiques distinctes retenues,0,0
+calls_puts,elastic_net,Solutions calculées,405,0
+calls_puts,elastic_net,Convergence numérique,404,1
+calls_puts,elastic_net,Budget respecté en calibration,404,0
+calls_puts,elastic_net,ES validé sous plafond souple,237,167
+calls_puts,elastic_net,Mesures de validation finies,237,0
+calls_puts,elastic_net,Frontière non dominée,40,197
+calls_puts,elastic_net,Politiques distinctes retenues,1,39
+full,l0,Solutions calculées,27,0
+full,l0,Convergence numérique,27,0
+full,l0,Budget respecté en calibration,27,0
+full,l0,ES validé sous plafond souple,13,14
+full,l0,Mesures de validation finies,13,0
+full,l0,Frontière non dominée,6,7
+full,l0,Politiques distinctes retenues,1,5
+full,l1,Solutions calculées,27,0
+full,l1,Convergence numérique,27,0
+full,l1,Budget respecté en calibration,27,0
+full,l1,ES validé sous plafond souple,15,12
+full,l1,Mesures de validation finies,15,0
+full,l1,Frontière non dominée,8,7
+full,l1,Politiques distinctes retenues,1,7
+full,l2,Solutions calculées,27,0
+full,l2,Convergence numérique,27,0
+full,l2,Budget respecté en calibration,27,0
+full,l2,ES validé sous plafond souple,3,24
+full,l2,Mesures de validation finies,3,0
+full,l2,Frontière non dominée,2,1
+full,l2,Politiques distinctes retenues,1,1
+full,elastic_net,Solutions calculées,405,0
+full,elastic_net,Convergence numérique,400,5
+full,elastic_net,Budget respecté en calibration,400,0
+full,elastic_net,ES validé sous plafond souple,237,163
+full,elastic_net,Mesures de validation finies,237,0
+full,elastic_net,Frontière non dominée,35,202
+full,elastic_net,Politiques distinctes retenues,1,34

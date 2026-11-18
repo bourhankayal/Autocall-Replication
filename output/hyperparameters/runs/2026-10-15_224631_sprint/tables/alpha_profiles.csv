@@ -1,0 +1,25 @@
+﻿family,penalty,profile,alpha,alpha_relative,l1_ratio,validation_rmse,n_options_active,compromise_score,profile_reuses_candidate,selection_reason,solution_index,searched_l1_ratio
+calls_puts,l0,performance,0.0007984251963900667,0.17782794100389232,,9.33520207710044,5,0.0,True,RMSE de validation minimale,1,
+calls_puts,l0,compromise,0.0007984251963900667,0.17782794100389232,,9.33520207710044,5,0.0,True,distance normalisée minimale parmi les candidats non attribués,1,
+calls_puts,l0,parsimony,0.0007984251963900667,0.17782794100389232,,9.33520207710044,5,0.0,True,nombre d'options minimal parmi les candidats non attribués,1,
+calls_puts,l1,performance,0.018220690517033098,0.0316227766016838,,9.473364472638796,5,0.0,True,RMSE de validation minimale,2,
+calls_puts,l1,compromise,0.018220690517033098,0.0316227766016838,,9.473364472638796,5,0.0,True,distance normalisée minimale parmi les candidats non attribués,2,
+calls_puts,l1,parsimony,0.018220690517033098,0.0316227766016838,,9.473364472638796,5,0.0,True,nombre d'options minimal parmi les candidats non attribués,2,
+calls_puts,l2,performance,0.10821949542092572,0.003162277660168378,,9.502370245189974,85,0.0,True,RMSE de validation minimale,3,
+calls_puts,l2,compromise,0.10821949542092572,0.003162277660168378,,9.502370245189974,85,0.0,True,distance normalisée minimale parmi les candidats non attribués,3,
+calls_puts,l2,parsimony,0.10821949542092572,0.003162277660168378,,9.502370245189974,85,0.0,True,nombre d'options minimal parmi les candidats non attribués,3,
+calls_puts,elastic_net,performance,0.02024521168559233,0.0316227766016838,0.9,9.437652774013033,6,0.0,False,RMSE de validation minimale,12,0.9
+calls_puts,elastic_net,compromise,0.03240147878313141,0.005623413251903492,0.1,9.443453191924464,17,1.0052611398810616,False,distance normalisée minimale parmi les candidats non attribués,3,0.1
+calls_puts,elastic_net,parsimony,0.03644138103406618,0.03162277660168379,0.5,9.494124868004928,10,1.0640636282472387,False,nombre d'options minimal parmi les candidats non attribués,7,0.5
+full,l0,performance,0.0003885137091146506,0.17782794100389226,,9.621255650920714,14,0.0,True,RMSE de validation minimale,1,
+full,l0,compromise,0.0003885137091146506,0.17782794100389226,,9.621255650920714,14,0.0,True,distance normalisée minimale parmi les candidats non attribués,1,
+full,l0,parsimony,0.0003885137091146506,0.17782794100389226,,9.621255650920714,14,0.0,True,nombre d'options minimal parmi les candidats non attribués,1,
+full,l1,performance,0.0032401478783131415,0.005623413251903491,,9.589103883897929,7,0.0,True,RMSE de validation minimale,3,
+full,l1,compromise,0.0032401478783131415,0.005623413251903491,,9.589103883897929,7,0.0,True,distance normalisée minimale parmi les candidats non attribués,3,
+full,l1,parsimony,0.0032401478783131415,0.005623413251903491,,9.589103883897929,7,0.0,True,nombre d'options minimal parmi les candidats non attribués,3,
+full,l2,performance,0.007307487954772533,0.0001,,9.47351863915895,169,0.0,True,RMSE de validation minimale,4,
+full,l2,compromise,0.007307487954772533,0.0001,,9.47351863915895,169,0.0,True,distance normalisée minimale parmi les candidats non attribués,4,
+full,l2,parsimony,0.007307487954772533,0.0001,,9.47351863915895,169,0.0,True,nombre d'options minimal parmi les candidats non attribués,4,
+full,elastic_net,performance,0.00576188825748556,0.001,0.1,9.572062616765162,27,1.0,False,RMSE de validation minimale,4,0.1
+full,elastic_net,compromise,0.006480295756626284,0.005623413251903492,0.5,9.597129680303967,14,0.4429072510056019,False,distance normalisée minimale parmi les candidats non attribués,8,0.5
+full,elastic_net,parsimony,0.003600164309236825,0.005623413251903494,0.9,9.589500763861048,8,0.2160399781893517,False,nombre d'options minimal parmi les candidats non attribués,13,0.9

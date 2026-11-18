@@ -1,0 +1,15 @@
+﻿stage,remaining,removed_at_stage,family
+Solutions calculées,91,0,calls_puts
+Convergence numérique,91,0,calls_puts
+Budget respecté en calibration,91,0,calls_puts
+Budget respecté en validation,37,54,calls_puts
+Mesures de validation finies,37,0,calls_puts
+Frontière non dominée,14,23,calls_puts
+Politiques distinctes retenues,3,11,calls_puts
+Solutions calculées,91,0,full
+Convergence numérique,91,0,full
+Budget respecté en calibration,91,0,full
+Budget respecté en validation,63,28,full
+Mesures de validation finies,63,0,full
+Frontière non dominée,21,42,full
+Politiques distinctes retenues,3,18,full

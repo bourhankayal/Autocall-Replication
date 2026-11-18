@@ -1,0 +1,25 @@
+﻿family,penalty,level,risk_limit_pct_notional,n_admissible,selected_validation_rmse_pct_notional,selected_validation_es_pct_notional,selected_optimisation_budget_pct_notional,selected_n_options_active,selected_own_budget_respected,status
+calls_puts,l0,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,l0,intermédiaire,10.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,l0,souple,15.0,4,3.388666049895337,14.240638918840055,15.0,2.0,True,retenu
+calls_puts,l1,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,l1,intermédiaire,10.0,8,2.3541862229458346,9.272929842475031,5.0,23.0,False,retenu
+calls_puts,l1,souple,15.0,15,2.3453888947717303,10.25403401739976,15.0,80.0,True,retenu
+calls_puts,l2,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,l2,intermédiaire,10.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,l2,souple,15.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,elastic_net,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,elastic_net,intermédiaire,10.0,147,2.2923445209841873,9.622298623129703,10.0,33.0,True,retenu
+calls_puts,elastic_net,souple,15.0,237,2.2923445209841873,9.622298623129703,10.0,33.0,True,retenu
+full,l0,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+full,l0,intermédiaire,10.0,0,,,,,,aucun candidat sous ce plafond
+full,l0,souple,15.0,13,3.317734757137566,14.55920075495224,15.0,3.0,True,retenu
+full,l1,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+full,l1,intermédiaire,10.0,12,2.3514981714332652,9.256421436188756,10.0,109.0,True,retenu
+full,l1,souple,15.0,15,2.3514981714332652,9.256421436188756,10.0,109.0,True,retenu
+full,l2,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+full,l2,intermédiaire,10.0,0,,,,,,aucun candidat sous ce plafond
+full,l2,souple,15.0,3,2.8125044301762734,12.284822995663953,10.0,250.0,False,retenu
+full,elastic_net,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+full,elastic_net,intermédiaire,10.0,174,2.296545233448626,9.127439508509422,5.0,37.0,False,retenu
+full,elastic_net,souple,15.0,237,2.296545233448626,9.127439508509422,5.0,37.0,False,retenu

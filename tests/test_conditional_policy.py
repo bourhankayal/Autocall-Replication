@@ -11,13 +11,16 @@ from autocall_replication.replication.conditional_policy import (
     policy_profile_metrics,
     run_conditional_policy_penalty_comparison,
 )
+from autocall_replication.replication.method_comparison import compare_conditional_methods
 from autocall_replication.replication.risk import (
     evaluate_conditional_policy_profile_risk,
+    tail_risk_metrics,
 )
 from autocall_replication.replication.importance_sampling import (
     evaluate_conditional_policy_profile_risk_importance,
 )
 from autocall_replication.replication.stability import (
+    run_conditional_policy_candidate_stability,
     run_conditional_policy_profile_stability,
 )
 from autocall_replication.replication.transaction_costs import (
@@ -115,6 +118,66 @@ class ConditionalPolicyTests(unittest.TestCase):
             self.result["feature_table"]["node_index"].tolist(),
         )
 
+    def test_method_comparison_uses_identical_paths_and_frozen_profiles(self):
+        external = build_external_policy_design(
+            base_result=self.result, product=self.product, spot0=100.0,
+            valuation_date="2026-06-20", maturity_date="2027-06-22",
+            rate=0.03, dividend_yield=0.01, vol=0.20, n_paths=3, seed=901,
+        )
+        dataset = external["dataset"]
+        n_dates = len(dataset[0]["dates"])
+        per_date_result = {
+            "dates": dataset[0]["dates"],
+            "models": {
+                (index, None): {"feature_indices": np.array([0]), "weights": np.array([0.0])}
+                for index in range(n_dates)
+            },
+            "split_final_by_barrier": False,
+        }
+        profile = str(self.result["profiles"].loc[
+            self.result["profiles"]["penalty"].eq("l1"), "profile"
+        ].iloc[0])
+        comparison = compare_conditional_methods(
+            per_date_result, self.result, dataset, dataset,
+            penalty="l1", profile=profile, notional=100.0,
+        )
+        self.assertEqual(set(comparison["summary"]["method"]),
+                         {"par_echeance", "total_pathwise"})
+        self.assertEqual(len(comparison["by_date"]), 2 * n_dates)
+        self.assertTrue(np.isfinite(
+            comparison["summary"]["terminal_rmse_pct_notional"]
+        ).all())
+        external_result = dict(self.result, dataset=dataset)
+        ledger_errors = np.array([
+            conditional_policy_cashflow_ledger(
+                external_result, penalty="l1", profile=profile, path_index=index,
+            )["replication_surplus_pv"].sum()
+            for index in range(len(dataset))
+        ])
+        total_rmse = comparison["summary"].set_index("method").loc[
+            "total_pathwise", "terminal_rmse_pct_notional"
+        ]
+        self.assertAlmostEqual(total_rmse, float(np.sqrt(np.mean(ledger_errors**2))))
+        summary = comparison["summary"].set_index("method")
+        expected = tail_risk_metrics(-ledger_errors, levels=(0.975,))
+        for column, metric in {
+            "terminal_mean_error_pct_notional": "mean_loss",
+            "terminal_mae_pct_notional": "mae",
+            "terminal_rmse_pct_notional": "rmse",
+            "terminal_under_replication_rate": "under_replication_rate",
+            "terminal_es_975_pct_notional": "es_975",
+            "terminal_max_loss_pct_notional": "max_loss",
+        }.items():
+            self.assertAlmostEqual(summary.loc["total_pathwise", column], expected[metric])
+        self.assertTrue({"mae_pct_notional", "under_replication_rate", "es_975_pct_notional", "max_loss_pct_notional"}.issubset(comparison["by_date"].columns))
+        altered = [dict(item) for item in dataset]
+        altered[0] = dict(altered[0], path=altered[1]["path"])
+        with self.assertRaisesRegex(ValueError, "non identique"):
+            compare_conditional_methods(
+                per_date_result, self.result, altered, dataset,
+                penalty="l1", profile=profile,
+            )
+
     def test_conditional_stability_uses_ten_calibrations(self):
         stability = run_conditional_policy_profile_stability(
             base_result=self.result,
@@ -129,10 +192,56 @@ class ConditionalPolicyTests(unittest.TestCase):
             n_paths=20,
             min_valid_calibrations=9,
             max_iter=500,
+            evaluation_n_paths=80,
+            evaluation_seed=84000,
         )
         self.assertEqual(stability["n_calibrations"], 10)
         self.assertEqual(stability["test_status"], "reserved_not_evaluated")
         self.assertEqual(stability["topology_status"], "base_policy_nodes_frozen")
+        self.assertEqual(
+            stability["common_evaluation_status"],
+            "independent_common_paths_not_used_for_selection",
+        )
+        self.assertTrue(np.isfinite(stability["summary"]["common_evaluation_es_mean"]).all())
+        self.assertTrue(
+            stability["summary"]["support_pairwise_jaccard_median"].between(0, 1).all()
+        )
+        self.assertTrue(
+            (stability["summary"]["n_options_active_min"]
+             <= stability["summary"]["n_options_active_median"]).all()
+        )
+        joined = self.result["profiles"].merge(
+            stability["summary"],
+            on=["family", "penalty", "profile", "solution_index"],
+            validate="one_to_one",
+        )
+        self.assertEqual(len(joined), len(self.result["profiles"]))
+
+    def test_candidate_stability_audits_all_initially_eligible_alphas(self):
+        stability = run_conditional_policy_candidate_stability(
+            base_result=self.result,
+            product=self.product,
+            spot0=100.0,
+            valuation_date="2026-06-20",
+            maturity_date="2027-06-22",
+            rate=0.03,
+            dividend_yield=0.01,
+            vol=0.20,
+            n_calibrations=10,
+            seeds=tuple(range(9300, 9310)),
+            n_paths=30,
+            min_active_options=2,
+            max_active_options=10**9,
+            min_valid_calibrations=9,
+            max_iter=500,
+        )
+        eligible = self.result["raw_table"].loc[
+            self.result["raw_table"]["converged"]
+            & self.result["raw_table"]["n_options_active"].ge(2)
+        ]
+        self.assertEqual(stability["n_candidates_audited"], len(eligible))
+        self.assertEqual(len(stability["summary"]), len(eligible))
+        self.assertEqual(len(stability["details"]), 10 * len(eligible))
 
     def test_conditional_risk_uses_independent_paths(self):
         risk = evaluate_conditional_policy_profile_risk(
@@ -154,6 +263,26 @@ class ConditionalPolicyTests(unittest.TestCase):
         )
         self.assertIn("family", risk["risk_summary"])
         self.assertIn("residual_es_975_pct_notional", risk["risk_summary"])
+
+        grouped = risk["tail_contract_group_diagnostics"]
+        dated = risk["tail_payment_date_contributions"]
+        for row in risk["risk_summary"].itertuples():
+            groups = grouped.loc[grouped["penalty"].eq(row.penalty) & grouped["profile"].eq(row.profile)]
+            self.assertEqual(len(groups), 8)
+            self.assertEqual(groups["n_paths"].sum(), 100)
+            self.assertAlmostEqual(groups["global_es_contribution"].sum(), row.residual_es_975)
+            dates = dated.loc[dated["penalty"].eq(row.penalty) & dated["profile"].eq(row.profile)]
+            self.assertAlmostEqual(dates["contribution_to_global_es"].sum(), row.residual_es_975)
+        events = risk["tail_contract_event_decomposition"]
+        for row in risk["risk_summary"].itertuples():
+            selected = events.loc[
+                events["penalty"].eq(row.penalty) & events["profile"].eq(row.profile)
+            ]
+            self.assertEqual(selected["n_paths"].sum(), 100)
+            self.assertAlmostEqual(selected["share_of_tail_probability"].sum(), 1.0)
+            self.assertAlmostEqual(selected["contribution_to_es"].sum(), row.residual_es_975)
+            missed = selected["coupon_pattern"].str.count("M")
+            self.assertTrue(missed.eq(selected["coupons_missed"]).all())
 
     def test_importance_risk_keeps_financial_weights_frozen(self):
         risk = evaluate_conditional_policy_profile_risk_importance(

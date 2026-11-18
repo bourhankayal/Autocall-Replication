@@ -11,7 +11,9 @@ Projet de recherche consacré au pricing Monte-Carlo et à la réplication d'un 
 | Les PDF de référence mis à jour manuellement | [`output/pdf/`](output/pdf/) |
 | Le dernier export structuré du notebook | [`output/latest/`](output/latest/) |
 | L'historique daté des exécutions | [`output/runs/`](output/runs/) |
-| Les notebooks d'exploration | [`notebooks/`](notebooks/) |
+| Le notebook principal (politique conditionnelle) | [`notebooks/autocall_research.ipynb`](notebooks/autocall_research.ipynb) |
+| Les expériences exploratoires de prix, payoff moyen et Pathwise payoff | [`notebooks/exploratory_benchmarks.ipynb`](notebooks/exploratory_benchmarks.ipynb) |
+| La recherche des hyperparamètres | [`notebooks/hyperparameter_research.ipynb`](notebooks/hyperparameter_research.ipynb) |
 | La feuille de route | [`docs/ROADMAP.md`](docs/ROADMAP.md) |
 | Les instructions d'installation | [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) |
 | Le moteur Python | [`src/autocall_replication/`](src/autocall_replication/) |
@@ -20,12 +22,33 @@ Projet de recherche consacré au pricing Monte-Carlo et à la réplication d'un 
 
 Si tu souhaites seulement lire les résultats, ouvre `reports/`. Si tu souhaites expérimenter, ouvre `notebooks/`. Les dossiers `src/`, `tests/` et `scripts/` contiennent la partie technique.
 
+La sélection des hyperparamètres est volontairement séparée du notebook
+principal. `hyperparameter_research.ipynb` explore les alphas des benchmarks de
+cashflows statiques et conditionnels, puis
+les grilles d'alpha de L0, L1, L2 et Elastic Net
+pour la politique conditionnelle, le ratio L1 d'Elastic Net, lambda ES, les budgets
+d'Expected Shortfall et les mélanges d'importance sampling. Une recherche
+complète est sauvegardée sous `output/hyperparameters/runs/` puis doit être
+promue explicitement dans `config/`, séparément en FAST et en REPORT, avant
+d'être chargée dès le début de `autocall_research.ipynb`. Les deux modes utilisent
+les mêmes points de grille et le même produit ; seuls les volumes de simulation
+et les répétitions changent. Le test final de la politique conditionnelle n'est
+jamais consulté pendant cette sélection.
+
+La réplication d'une surface de prix et celle du payoff moyen sont conservées
+dans un notebook exploratoire autonome. Elles ne sont plus exécutées dans le
+notebook principal ni recherchées dans l'étude d'hyperparamètres qui pilote la
+politique finale. La valorisation Monte-Carlo ponctuelle de l'autocall reste dans
+le notebook principal comme prix de référence. Les anciens exports horodatés,
+qui contiennent encore ces expériences, sont préservés.
+
 Le notebook ne génère aucun rapport PDF automatiquement. Sa dernière section
 sauvegarde cependant les résultats importants sous une forme réutilisable :
 tableaux CSV, figures PDF/PNG, configuration et manifeste JSON. Chaque export est
-conservé dans `output/runs/<date>_<mode>/`, tandis que `output/latest/` contient une
-copie du dernier export complet. Cette sauvegarde n'a lieu que lorsque la dernière
-cellule est exécutée ; une exécution partielle ne crée donc pas de demi-export.
+conservé dans `output/runs/<date>_<heure>_<mode>/`, d'après l'heure de démarrage du
+notebook, tandis que `output/latest/` contient une copie du dernier export complet.
+Cette sauvegarde n'a lieu que lorsque la dernière cellule est exécutée ; une
+exécution partielle ne crée donc pas de demi-export.
 
 Les résultats validés sont figés manuellement dans
 `output/pdf/resultats_courants.pdf`. Le rapport académique est maintenu séparément

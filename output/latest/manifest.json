@@ -1,6 +1,8 @@
 {
-  "run_id": "2026-09-25_101827_fast",
-  "created_at": "2026-09-25T10:18:27.715219+01:00",
+  "run_id": "2026-11-17_162245_fast",
+  "started_at": "2026-11-17T16:22:45.489962+00:00",
+  "exported_at": "2026-11-17T17:12:54.857555+00:00",
+  "created_at": "2026-11-17T17:12:54.857555+00:00",
   "run_mode": "fast",
   "completed": true,
   "configuration": {
@@ -28,37 +30,53 @@
     },
     "execution": {
       "mode": "fast",
-      "pricing_paths": 2000,
-      "surface_paths": 200,
-      "benchmark_paths": 200,
-      "pathwise_paths": 300,
-      "alpha_paths": 300,
-      "stability_paths": 300,
+      "pricing_paths": 2500,
+      "alpha_paths": 375,
+      "stability_paths": 375,
       "stability_calibrations": 10,
-      "risk_paths": 2000,
+      "risk_paths": 2500,
       "importance_bootstrap": 100,
-      "funding_paths": 200,
-      "curve_paths": 500
+      "tail_calibration_paths": 375,
+      "tail_evaluation_paths": 1250,
+      "funding_paths": 250,
+      "curve_paths": 625
     },
     "families": [
       "calls_puts",
       "full"
     ],
     "solver": "legacy",
+    "hyperparameter_selection": {
+      "source_run": "2026-11-16_154918_fast_2",
+      "mode": "fast",
+      "configuration_fingerprint": "dad4b0a8f0d5d9f4c7f8bd20532b87d3b50fb1bcb25dcfd7b8d7f78ca67f77c3"
+    },
     "flags": {
       "importance_sampling": true,
-      "market_costs": false,
-      "market_exploration": false
+      "tail_risk_experiments": true
+    },
+    "delta_benchmark": {
+      "rebalancing_business_days": [
+        1,
+        5
+      ],
+      "spot_nodes": 801,
+      "transaction_costs_included": false
     },
     "seeds": {
       "pricing": 42,
-      "alpha_selection": 42,
+      "temporal_benchmark_evaluation": 1042,
+      "conditional_method_comparison": 31500,
       "stability": 10500,
       "standard_risk": 20500,
       "importance_sampling": 20500,
       "importance_bootstrap_standard_base": 31000,
       "importance_bootstrap_is_base": 41000,
-      "funding": 20500
+      "tail_standard_calibration": 51000,
+      "tail_importance_calibration": 52000,
+      "tail_independent_evaluation": 53000,
+      "funding": 20500,
+      "delta_benchmark": 81500
     }
   },
   "metadata": {
@@ -100,23 +118,9 @@
       ]
     },
     {
-      "name": "price_benchmark_table",
-      "file": "tables/price_benchmark_table.csv",
-      "rows": 10,
-      "columns": [
-        "family",
-        "penalty",
-        "n_options_active",
-        "test_rmse",
-        "test_mae",
-        "max_abs_weight",
-        "top_5_concentration"
-      ]
-    },
-    {
       "name": "alpha_table",
       "file": "tables/alpha_table.csv",
-      "rows": 200,
+      "rows": 900,
       "columns": [
         "penalty",
         "l1_ratio",
@@ -130,6 +134,13 @@
         "n_iterations",
         "objective_value",
         "message",
+        "termination_reason",
+        "final_relative_weight_change",
+        "final_relative_objective_change",
+        "final_support_size",
+        "support_change_count",
+        "support_stable_iterations",
+        "objective_monotone",
         "train_mae",
         "train_rmse",
         "train_max_abs_error",
@@ -171,13 +182,15 @@
         "duplicate_status",
         "duplicate_of_alpha",
         "is_candidate_after_duplicates",
-        "family"
+        "family",
+        "searched_l1_ratio",
+        "retained_profile"
       ]
     },
     {
       "name": "candidate_table",
       "file": "tables/candidate_table.csv",
-      "rows": 19,
+      "rows": 129,
       "columns": [
         "penalty",
         "l1_ratio",
@@ -191,6 +204,13 @@
         "n_iterations",
         "objective_value",
         "message",
+        "termination_reason",
+        "final_relative_weight_change",
+        "final_relative_objective_change",
+        "final_support_size",
+        "support_change_count",
+        "support_stable_iterations",
+        "objective_monotone",
         "train_mae",
         "train_rmse",
         "train_max_abs_error",
@@ -232,28 +252,205 @@
         "duplicate_status",
         "duplicate_of_alpha",
         "is_candidate_after_duplicates",
-        "family"
+        "family",
+        "searched_l1_ratio",
+        "retained_profile"
       ]
     },
     {
-      "name": "candidate_policy_table",
-      "file": "tables/candidate_policy_table.csv",
-      "rows": 19,
+      "name": "static_cashflow_benchmark",
+      "file": "tables/static_cashflow_benchmark.csv",
+      "rows": 9,
       "columns": [
-        "candidate_id",
         "family",
         "penalty",
         "alpha",
+        "rho_elastic_net",
+        "test_rmse",
+        "test_mae",
+        "terminal_mean_error_pct_notional",
+        "terminal_mae_pct_notional",
+        "terminal_rmse_pct_notional",
+        "terminal_under_replication_rate",
+        "terminal_es_975_pct_notional",
+        "terminal_max_loss_pct_notional",
+        "n_options_active"
+      ]
+    },
+    {
+      "name": "conditional_cashflow_benchmark",
+      "file": "tables/conditional_cashflow_benchmark.csv",
+      "rows": 10,
+      "columns": [
+        "family",
+        "penalty",
+        "alpha",
+        "rho_elastic_net",
+        "test_rmse",
+        "test_mae",
+        "terminal_mean_error_pct_notional",
+        "terminal_mae_pct_notional",
+        "terminal_rmse_pct_notional",
+        "terminal_under_replication_rate",
+        "terminal_es_975_pct_notional",
+        "terminal_max_loss_pct_notional"
+      ]
+    },
+    {
+      "name": "method_comparison_summary",
+      "file": "tables/method_comparison_summary.csv",
+      "rows": 16,
+      "columns": [
+        "method",
+        "n_paths",
+        "cashflow_rmse_pct_notional",
+        "terminal_mean_error_pct_notional",
+        "terminal_mae_pct_notional",
+        "terminal_rmse_pct_notional",
+        "terminal_under_replication_rate",
+        "terminal_es_975_pct_notional",
+        "terminal_max_loss_pct_notional",
+        "mean_funding_need_pct_notional",
+        "p95_funding_need_pct_notional",
+        "family",
+        "penalty"
+      ]
+    },
+    {
+      "name": "method_comparison_by_date",
+      "file": "tables/method_comparison_by_date.csv",
+      "rows": 64,
+      "columns": [
+        "method",
+        "payment_date",
+        "rmse_pct_notional",
+        "mean_shortfall_pct_notional",
+        "mae_pct_notional",
+        "under_replication_rate",
+        "es_975_pct_notional",
+        "max_loss_pct_notional",
+        "family",
+        "penalty"
+      ]
+    },
+    {
+      "name": "method_comparison_status",
+      "file": "tables/method_comparison_status.csv",
+      "rows": 8,
+      "columns": [
+        "family",
+        "penalty",
+        "status"
+      ]
+    },
+    {
+      "name": "method_objective_tradeoff_table",
+      "file": "tables/method_objective_tradeoff_table.csv",
+      "rows": 8,
+      "columns": [
+        "family",
+        "penalty",
+        "rmse_paiements_A_pct",
+        "rmse_paiements_B_pct",
+        "rmse_total_A_pct",
+        "rmse_total_B_pct"
+      ]
+    },
+    {
+      "name": "delta_benchmark_summary",
+      "file": "tables/delta_benchmark_summary.csv",
+      "rows": 11,
+      "columns": [
+        "method",
+        "n_paths",
+        "initial_capital",
+        "mean_error",
+        "mae",
+        "rmse",
+        "es_975",
+        "max_loss",
+        "under_replication_rate",
+        "mean_rebalances",
+        "mean_gross_turnover",
+        "transaction_costs_included",
+        "family",
+        "comparison_type",
+        "mean_error_pct_notional",
+        "mae_pct_notional",
+        "rmse_pct_notional",
+        "es_975_pct_notional",
+        "max_loss_pct_notional",
+        "under_replication_rate_pct"
+      ]
+    },
+    {
+      "name": "delta_benchmark_details",
+      "file": "tables/delta_benchmark_details.csv",
+      "rows": 2500,
+      "columns": [
+        "path_index",
+        "discounted_loss",
+        "autocall_payoff_pv",
+        "discounted_hedge_value",
+        "stop_date",
+        "barrier_hit",
+        "n_rebalances",
+        "gross_turnover",
+        "initial_shares",
+        "initial_cash",
+        "method"
+      ]
+    },
+    {
+      "name": "unified_benchmark_table",
+      "file": "tables/unified_benchmark_table.csv",
+      "rows": 30,
+      "columns": [
+        "method",
+        "family",
+        "construction",
+        "rebalancing",
+        "sparse",
+        "risk_object",
+        "comparison_scope",
+        "capital_aligned",
+        "transaction_costs_included",
+        "mean_error_pct_notional",
+        "mae_pct_notional",
+        "rmse_pct_notional",
+        "under_replication_rate",
+        "es_975_pct_notional",
+        "max_loss_pct_notional",
+        "mean_rebalances",
+        "mean_gross_turnover",
+        "limitations"
+      ]
+    },
+    {
+      "name": "l0_initialization_audit",
+      "file": "tables/l0_initialization_audit.csv",
+      "rows": 50,
+      "columns": [
+        "solution_index",
+        "alpha",
         "alpha_relative",
-        "l1_ratio",
-        "n_options_active",
-        "validation_rmse"
+        "warm_start_used",
+        "cold_start_checked",
+        "multistart_triggered",
+        "n_initializations",
+        "n_converged_initializations",
+        "n_distinct_supports",
+        "selected_initialization",
+        "warm_cold_relative_objective_gap",
+        "warm_cold_support_jaccard",
+        "warm_cold_relative_weight_distance",
+        "family"
       ]
     },
     {
       "name": "profile_table",
       "file": "tables/profile_table.csv",
-      "rows": 21,
+      "rows": 24,
       "columns": [
         "family",
         "penalty",
@@ -270,40 +467,28 @@
       ]
     },
     {
-      "name": "profile_coverage",
-      "file": "tables/profile_coverage.csv",
-      "rows": 8,
+      "name": "stable_profiles_table",
+      "file": "tables/stable_profiles_table.csv",
+      "rows": 24,
       "columns": [
+        "family",
         "penalty",
-        "n_distinct_candidates",
-        "n_profiles",
-        "status",
-        "family"
-      ]
-    },
-    {
-      "name": "duplicate_report",
-      "file": "tables/duplicate_report.csv",
-      "rows": 1,
-      "columns": [
-        "penalty",
-        "duplicate_type",
-        "kept_alpha",
-        "removed_alpha",
-        "kept_n_options_active",
-        "removed_n_options_active",
-        "kept_validation_rmse",
-        "removed_validation_rmse",
-        "support_jaccard",
-        "relative_weight_distance",
-        "reason",
-        "family"
+        "profile",
+        "alpha",
+        "alpha_relative",
+        "l1_ratio",
+        "validation_rmse",
+        "n_options_active",
+        "compromise_score",
+        "profile_reuses_candidate",
+        "selection_reason",
+        "solution_index"
       ]
     },
     {
       "name": "chronology_audit",
       "file": "tables/chronology_audit.csv",
-      "rows": 1254,
+      "rows": 836,
       "columns": [
         "path_index",
         "payment_date_index",
@@ -318,75 +503,395 @@
       ]
     },
     {
-      "name": "importance_comparison",
-      "file": "tables/importance_comparison.csv",
-      "rows": 19,
+      "name": "tail_concentration_summary",
+      "file": "tables/tail_concentration_summary.csv",
+      "rows": 72,
       "columns": [
         "family",
         "penalty",
         "profile",
-        "standard_residual_rmse",
-        "standard_residual_es_95",
-        "standard_residual_es_975",
-        "standard_residual_es_99",
-        "standard_under_replication_rate",
-        "importance_residual_rmse",
-        "importance_residual_es_95",
-        "importance_residual_es_975",
-        "importance_residual_es_99",
-        "importance_under_replication_rate",
-        "difference_residual_rmse",
-        "relative_difference_residual_rmse",
-        "difference_residual_es_95",
-        "relative_difference_residual_es_95",
-        "difference_residual_es_975",
-        "relative_difference_residual_es_975",
-        "difference_residual_es_99",
-        "relative_difference_residual_es_99",
-        "difference_under_replication_rate",
-        "relative_difference_under_replication_rate"
+        "level",
+        "var",
+        "es",
+        "tail_effective_sample_size",
+        "positive_tail_loss_hhi",
+        "effective_positive_tail_contributors",
+        "top_1pct_tail_mass_share",
+        "top_5pct_tail_mass_share",
+        "top_10pct_tail_mass_share",
+        "es_99_to_es_975_ratio",
+        "estimator"
       ]
     },
     {
-      "name": "importance_ci_table",
-      "file": "tables/importance_ci_table.csv",
-      "rows": 19,
+      "name": "tail_concentration_decision_table",
+      "file": "tables/tail_concentration_decision_table.csv",
+      "rows": 24,
       "columns": [
         "family",
         "penalty",
         "profile",
-        "standard_es_975_pct_notional",
-        "standard_ci_low",
-        "standard_ci_high",
-        "importance_es_975_pct_notional",
-        "importance_ci_low",
-        "importance_ci_high",
-        "confidence_intervals_overlap",
-        "is_minus_mc_pct_notional",
-        "standard_ci_width",
-        "importance_ci_width",
-        "ci_width_change"
+        "level",
+        "var",
+        "es",
+        "tail_effective_sample_size",
+        "positive_tail_loss_hhi",
+        "effective_positive_tail_contributors",
+        "top_1pct_tail_mass_share",
+        "top_5pct_tail_mass_share",
+        "top_10pct_tail_mass_share",
+        "es_99_to_es_975_ratio",
+        "estimator",
+        "es_95",
+        "es_975",
+        "es_99",
+        "family_label",
+        "es_95_pct_notional",
+        "es_975_pct_notional",
+        "es_99_pct_notional",
+        "top_1pct_share_pct",
+        "top_5pct_share_pct",
+        "top_10pct_share_pct"
       ]
     },
     {
-      "name": "importance_precision_table",
-      "file": "tables/importance_precision_table.csv",
-      "rows": 19,
+      "name": "tail_concentration_curve",
+      "file": "tables/tail_concentration_curve.csv",
+      "rows": 504,
       "columns": [
-        "Famille",
-        "Pénalité",
-        "Profil",
-        "Écart IS − MC (point de nominal)",
-        "Largeur IC Monte-Carlo",
-        "Largeur IC importance sampling",
-        "Variation de largeur (IS − MC)",
-        "Intervalles compatibles"
+        "family",
+        "penalty",
+        "profile",
+        "level",
+        "tail_mass_fraction",
+        "positive_tail_loss_share",
+        "estimator"
+      ]
+    },
+    {
+      "name": "tail_exclusive_regime_decomposition",
+      "file": "tables/tail_exclusive_regime_decomposition.csv",
+      "rows": 216,
+      "columns": [
+        "family",
+        "penalty",
+        "profile",
+        "condition",
+        "level",
+        "condition_probability",
+        "tail_probability_mass",
+        "share_of_tail_probability",
+        "contribution_to_es",
+        "share_of_es",
+        "n_paths",
+        "estimator"
+      ]
+    },
+    {
+      "name": "tail_contract_event_decomposition",
+      "file": "tables/tail_contract_event_decomposition.csv",
+      "rows": 1680,
+      "columns": [
+        "level",
+        "condition_probability",
+        "tail_probability_mass",
+        "share_of_tail_probability",
+        "contribution_to_es",
+        "share_of_es",
+        "n_paths",
+        "recalled",
+        "protection_barrier_hit",
+        "coupon_opportunities",
+        "coupons_missed",
+        "coupon_pattern",
+        "family",
+        "penalty",
+        "profile",
+        "evaluation_seed",
+        "n_paths_evaluated",
+        "hyperparameter_source_run"
+      ]
+    },
+    {
+      "name": "tail_contract_group_diagnostics",
+      "file": "tables/tail_contract_group_diagnostics.csv",
+      "rows": 384,
+      "columns": [
+        "family",
+        "penalty",
+        "profile",
+        "recalled",
+        "protection_barrier_hit",
+        "missed_coupon",
+        "n_paths",
+        "sample_frequency",
+        "conditional_rmse",
+        "conditional_es_975",
+        "conditional_mean_loss",
+        "conditional_positive_loss_frequency",
+        "conditional_max_loss",
+        "conditional_tail_path_equivalents",
+        "global_tail_probability_share",
+        "global_es_contribution",
+        "global_es_share",
+        "evaluation_seed",
+        "n_paths_evaluated",
+        "hyperparameter_source_run"
+      ]
+    },
+    {
+      "name": "tail_contract_factor_comparisons",
+      "file": "tables/tail_contract_factor_comparisons.csv",
+      "rows": 576,
+      "columns": [
+        "family",
+        "penalty",
+        "profile",
+        "recalled_false",
+        "protection_barrier_hit",
+        "missed_coupon",
+        "n_paths_false",
+        "sample_frequency_false",
+        "conditional_rmse_false",
+        "conditional_es_975_false",
+        "conditional_mean_loss_false",
+        "conditional_positive_loss_frequency_false",
+        "conditional_max_loss_false",
+        "conditional_tail_path_equivalents_false",
+        "global_tail_probability_share_false",
+        "global_es_contribution_false",
+        "global_es_share_false",
+        "evaluation_seed_false",
+        "n_paths_evaluated_false",
+        "hyperparameter_source_run_false",
+        "recalled_true",
+        "n_paths_true",
+        "sample_frequency_true",
+        "conditional_rmse_true",
+        "conditional_es_975_true",
+        "conditional_mean_loss_true",
+        "conditional_positive_loss_frequency_true",
+        "conditional_max_loss_true",
+        "conditional_tail_path_equivalents_true",
+        "global_tail_probability_share_true",
+        "global_es_contribution_true",
+        "global_es_share_true",
+        "evaluation_seed_true",
+        "n_paths_evaluated_true",
+        "hyperparameter_source_run_true",
+        "varied_factor",
+        "both_groups_observed",
+        "conditional_rmse_difference",
+        "conditional_es_difference",
+        "recalled",
+        "protection_barrier_hit_false",
+        "protection_barrier_hit_true",
+        "missed_coupon_false",
+        "missed_coupon_true"
+      ]
+    },
+    {
+      "name": "tail_contract_path_diagnostics",
+      "file": "tables/tail_contract_path_diagnostics.csv",
+      "rows": 120000,
+      "columns": [
+        "recalled",
+        "protection_barrier_hit",
+        "coupon_opportunities",
+        "coupons_missed",
+        "coupon_pattern",
+        "path_index",
+        "loss",
+        "family",
+        "penalty",
+        "profile",
+        "evaluation_seed",
+        "n_paths_evaluated",
+        "hyperparameter_source_run"
+      ]
+    },
+    {
+      "name": "tail_contract_large_sample_paths",
+      "file": "tables/tail_contract_large_sample_paths.csv",
+      "rows": 50000,
+      "columns": [
+        "recalled",
+        "protection_barrier_hit",
+        "coupon_opportunities",
+        "coupons_missed",
+        "coupon_pattern",
+        "path_index",
+        "loss",
+        "family",
+        "penalty",
+        "profile",
+        "batch",
+        "evaluation_seed"
+      ]
+    },
+    {
+      "name": "tail_contract_large_sample_comparisons",
+      "file": "tables/tail_contract_large_sample_comparisons.csv",
+      "rows": 24,
+      "columns": [
+        "family",
+        "penalty",
+        "profile",
+        "recalled_false",
+        "protection_barrier_hit",
+        "missed_coupon",
+        "n_paths_false",
+        "n_paths_evaluated_false",
+        "sample_frequency_false",
+        "conditional_rmse_false",
+        "conditional_es_975_false",
+        "conditional_tail_path_equivalents_false",
+        "global_es_contribution_false",
+        "global_es_share_false",
+        "hyperparameter_source_run_false",
+        "sampling_method_false",
+        "recalled_true",
+        "n_paths_true",
+        "n_paths_evaluated_true",
+        "sample_frequency_true",
+        "conditional_rmse_true",
+        "conditional_es_975_true",
+        "conditional_tail_path_equivalents_true",
+        "global_es_contribution_true",
+        "global_es_share_true",
+        "hyperparameter_source_run_true",
+        "sampling_method_true",
+        "varied_factor",
+        "both_groups_observed",
+        "conditional_rmse_difference",
+        "conditional_es_difference",
+        "recalled",
+        "protection_barrier_hit_false",
+        "protection_barrier_hit_true",
+        "missed_coupon_false",
+        "missed_coupon_true"
+      ]
+    },
+    {
+      "name": "tail_contract_large_sample_groups",
+      "file": "tables/tail_contract_large_sample_groups.csv",
+      "rows": 16,
+      "columns": [
+        "family",
+        "penalty",
+        "profile",
+        "recalled",
+        "protection_barrier_hit",
+        "missed_coupon",
+        "n_paths",
+        "n_paths_evaluated",
+        "sample_frequency",
+        "conditional_rmse",
+        "conditional_es_975",
+        "conditional_tail_path_equivalents",
+        "global_es_contribution",
+        "global_es_share",
+        "hyperparameter_source_run",
+        "sampling_method"
+      ]
+    },
+    {
+      "name": "tail_payment_date_contributions",
+      "file": "tables/tail_payment_date_contributions.csv",
+      "rows": 192,
+      "columns": [
+        "family",
+        "penalty",
+        "profile",
+        "payment_date",
+        "contribution_to_global_es",
+        "share_of_global_es",
+        "global_es",
+        "evaluation_seed",
+        "n_paths_evaluated",
+        "hyperparameter_source_run"
+      ]
+    },
+    {
+      "name": "tail_risk_experiment_table",
+      "file": "tables/tail_risk_experiment_table.csv",
+      "rows": 8,
+      "columns": [
+        "family",
+        "profile",
+        "calibration_sampling",
+        "risk_control",
+        "penalty",
+        "alpha",
+        "es_level",
+        "es_budget",
+        "converged",
+        "constraint_feasible_in_calibration",
+        "calibration_rmse",
+        "calibration_es",
+        "evaluation_rmse",
+        "evaluation_mean_error",
+        "evaluation_mae",
+        "evaluation_under_replication_rate",
+        "evaluation_max_loss",
+        "evaluation_var",
+        "evaluation_es",
+        "n_active_coefficients",
+        "n_iterations",
+        "message",
+        "es_budget_pct_notional",
+        "calibration_rmse_pct_notional",
+        "calibration_es_pct_notional",
+        "evaluation_mean_error_pct_notional",
+        "evaluation_mae_pct_notional",
+        "evaluation_rmse_pct_notional",
+        "evaluation_var_pct_notional",
+        "evaluation_es_pct_notional",
+        "evaluation_max_loss_pct_notional",
+        "risk_limit_es_pct_notional",
+        "evaluation_cap_respected"
+      ]
+    },
+    {
+      "name": "tail_risk_sampling_diagnostics",
+      "file": "tables/tail_risk_sampling_diagnostics.csv",
+      "rows": 2,
+      "columns": [
+        "n_paths",
+        "weight_mean",
+        "weight_min",
+        "weight_q50",
+        "weight_q90",
+        "weight_q95",
+        "weight_q99",
+        "weight_max",
+        "maximum_normalized_weight",
+        "weight_cv",
+        "effective_sample_size",
+        "effective_sample_ratio",
+        "normalized_weight_entropy",
+        "normalized_weight_entropy_ratio",
+        "family"
+      ]
+    },
+    {
+      "name": "tail_risk_component_summary",
+      "file": "tables/tail_risk_component_summary.csv",
+      "rows": 2,
+      "columns": [
+        "component",
+        "tilt",
+        "configured_probability",
+        "simulated_count",
+        "simulated_frequency",
+        "weighted_target_mass",
+        "family"
       ]
     },
     {
       "name": "funding_summary",
       "file": "tables/funding_summary.csv",
-      "rows": 47,
+      "rows": 36,
       "columns": [
         "family",
         "penalty",
@@ -403,7 +908,6 @@
         "additional_capital_p95",
         "additional_capital_max",
         "cumulative_gross_purchases_mean",
-        "cumulative_otc_execution_cost_mean",
         "loss_n_observations",
         "loss_mean_loss",
         "loss_mae",
@@ -413,10 +917,16 @@
         "loss_under_replication_rate",
         "loss_var_95",
         "loss_es_95",
+        "loss_tail_effective_sample_size_95",
+        "loss_tail_probability_95",
         "loss_var_975",
         "loss_es_975",
+        "loss_tail_effective_sample_size_975",
+        "loss_tail_probability_975",
         "loss_var_99",
         "loss_es_99",
+        "loss_tail_effective_sample_size_99",
+        "loss_tail_probability_99",
         "initial_net_cost_mean_pct_notional",
         "initial_net_cost_mean_bps_notional",
         "initial_gross_exposure_mean_pct_notional",
@@ -431,8 +941,6 @@
         "additional_capital_max_bps_notional",
         "cumulative_gross_purchases_mean_pct_notional",
         "cumulative_gross_purchases_mean_bps_notional",
-        "cumulative_otc_execution_cost_mean_pct_notional",
-        "cumulative_otc_execution_cost_mean_bps_notional",
         "loss_rmse_pct_notional",
         "loss_rmse_bps_notional",
         "loss_es_975_pct_notional",
@@ -445,7 +953,7 @@
     {
       "name": "funding_path_summary",
       "file": "tables/funding_path_summary.csv",
-      "rows": 9400,
+      "rows": 9000,
       "columns": [
         "family",
         "penalty",
@@ -458,7 +966,6 @@
         "minimum_cash",
         "additional_capital_without_borrowing",
         "cumulative_gross_purchases",
-        "cumulative_otc_execution_cost",
         "initial_net_cost",
         "initial_gross_exposure"
       ]
@@ -466,7 +973,7 @@
     {
       "name": "funding_ledger",
       "file": "tables/funding_ledger.csv",
-      "rows": 47000,
+      "rows": 45000,
       "columns": [
         "family",
         "penalty",
@@ -485,7 +992,6 @@
         "next_portfolio_net_model_value",
         "next_portfolio_net_execution_value",
         "next_portfolio_gross_exposure",
-        "otc_execution_cost",
         "cash_after_event",
         "running_min_cash",
         "recalled",
@@ -495,7 +1001,7 @@
     {
       "name": "internal_hedge_benchmark",
       "file": "tables/internal_hedge_benchmark.csv",
-      "rows": 19,
+      "rows": 24,
       "columns": [
         "family",
         "penalty",
@@ -545,7 +1051,7 @@
     {
       "name": "three_price_summary",
       "file": "tables/three_price_summary.csv",
-      "rows": 141,
+      "rows": 108,
       "columns": [
         "price_type",
         "price",
@@ -583,7 +1089,7 @@
     {
       "name": "decision_table",
       "file": "tables/decision_table.csv",
-      "rows": 47,
+      "rows": 36,
       "columns": [
         "family",
         "penalty",
@@ -656,7 +1162,6 @@
         "additional_capital_p95",
         "additional_capital_max",
         "cumulative_gross_purchases_mean",
-        "cumulative_otc_execution_cost_mean",
         "loss_n_observations",
         "loss_mean_loss",
         "loss_mae",
@@ -666,10 +1171,16 @@
         "loss_under_replication_rate",
         "loss_var_95",
         "loss_es_95",
+        "loss_tail_effective_sample_size_95",
+        "loss_tail_probability_95",
         "loss_var_975",
         "loss_es_975",
+        "loss_tail_effective_sample_size_975",
+        "loss_tail_probability_975",
         "loss_var_99",
         "loss_es_99",
+        "loss_tail_effective_sample_size_99",
+        "loss_tail_probability_99",
         "initial_net_cost_mean_pct_notional",
         "initial_net_cost_mean_bps_notional",
         "initial_gross_exposure_mean_pct_notional",
@@ -684,8 +1195,6 @@
         "additional_capital_max_bps_notional",
         "cumulative_gross_purchases_mean_pct_notional",
         "cumulative_gross_purchases_mean_bps_notional",
-        "cumulative_otc_execution_cost_mean_pct_notional",
-        "cumulative_otc_execution_cost_mean_bps_notional",
         "loss_rmse_pct_notional",
         "loss_rmse_bps_notional",
         "loss_es_975_pct_notional",
@@ -696,50 +1205,235 @@
       ]
     },
     {
-      "name": "stability_summary",
-      "file": "tables/stability_summary.csv",
-      "rows": 21,
+      "name": "report_profile_selection",
+      "file": "tables/report_profile_selection.csv",
+      "rows": 8,
+      "columns": [
+        "family",
+        "penalty",
+        "alpha_relative",
+        "l1_ratio",
+        "n_options_active",
+        "n_calibrations",
+        "n_converged",
+        "n_options_active_mean",
+        "support_pairwise_jaccard_median",
+        "size_multiplier"
+      ]
+    },
+    {
+      "name": "report_profile_outcomes",
+      "file": "tables/report_profile_outcomes.csv",
+      "rows": 8,
+      "columns": [
+        "family",
+        "penalty",
+        "mean_replication_error_pct_notional",
+        "mae_replication_error_pct_notional",
+        "under_replication_rate",
+        "gross_rmse_pct_notional",
+        "residual_rmse_pct_notional",
+        "gross_es_975_pct_notional",
+        "residual_es_975_pct_notional",
+        "residual_max_loss_pct_notional",
+        "es_multiplier",
+        "implementation",
+        "additional_capital_p95_pct_notional",
+        "diagnostic"
+      ]
+    },
+    {
+      "name": "risk_profile_selection_comparison",
+      "file": "tables/risk_profile_selection_comparison.csv",
+      "rows": 48,
       "columns": [
         "family",
         "penalty",
         "profile",
+        "mean_replication_error",
+        "mae_replication_error",
+        "under_replication_rate",
+        "gross_rmse",
+        "residual_rmse",
+        "rmse_reduction",
+        "rmse_relative_reduction",
+        "gross_es_975",
+        "residual_es_975",
+        "es_975_reduction",
+        "es_975_relative_reduction",
+        "gross_max_loss",
+        "residual_max_loss",
+        "mean_replication_error_pct_notional",
+        "mean_replication_error_bps_notional",
+        "mae_replication_error_pct_notional",
+        "mae_replication_error_bps_notional",
+        "gross_rmse_pct_notional",
+        "gross_rmse_bps_notional",
+        "residual_rmse_pct_notional",
+        "residual_rmse_bps_notional",
+        "rmse_reduction_pct_notional",
+        "rmse_reduction_bps_notional",
+        "gross_es_975_pct_notional",
+        "gross_es_975_bps_notional",
+        "residual_es_975_pct_notional",
+        "residual_es_975_bps_notional",
+        "es_975_reduction_pct_notional",
+        "es_975_reduction_bps_notional",
+        "gross_max_loss_pct_notional",
+        "gross_max_loss_bps_notional",
+        "residual_max_loss_pct_notional",
+        "residual_max_loss_bps_notional",
+        "solution_index",
+        "alpha",
+        "l1_ratio",
+        "n_options_active",
+        "hyperparameter_source_run",
+        "n_paths",
+        "evaluation_seed"
+      ]
+    },
+    {
+      "name": "stability_summary",
+      "file": "tables/stability_summary.csv",
+      "rows": 854,
+      "columns": [
+        "family",
+        "penalty",
+        "profile",
+        "solution_index",
         "n_calibrations",
         "n_converged",
         "convergence_rate",
+        "iterations_median",
+        "l0_start_objective_gap_mean",
         "n_valid_active_counts",
         "validation_rmse_mean",
         "validation_rmse_std",
         "n_options_active_mean",
         "n_options_active_std",
+        "n_options_active_median",
+        "n_options_active_min",
+        "n_options_active_max",
+        "base_n_options_active",
         "support_jaccard_median",
+        "support_pairwise_jaccard_median",
         "relative_weight_distance_mean",
+        "common_evaluation_rmse_mean",
+        "common_evaluation_rmse_std",
+        "common_evaluation_es_mean",
+        "common_evaluation_es_std",
+        "base_common_evaluation_rmse",
+        "base_common_evaluation_es",
+        "common_evaluation_n_paths",
+        "common_evaluation_seed",
         "passes_stability_filter"
       ]
     },
     {
       "name": "stability_details",
       "file": "tables/stability_details.csv",
-      "rows": 210,
+      "rows": 8540,
       "columns": [
         "family",
         "penalty",
         "profile",
+        "solution_index",
         "seed",
         "alpha",
         "alpha_relative",
         "converged",
+        "n_iterations",
+        "l0_start_objective_gap",
         "validation_rmse",
         "validation_mae",
         "n_options_active",
+        "base_n_options_active",
         "active_count_is_valid",
         "support_jaccard_vs_base",
-        "relative_weight_distance_vs_base"
+        "relative_weight_distance_vs_base",
+        "common_evaluation_rmse",
+        "common_evaluation_es",
+        "base_common_evaluation_rmse",
+        "base_common_evaluation_es"
+      ]
+    },
+    {
+      "name": "selected_stability_summary",
+      "file": "tables/selected_stability_summary.csv",
+      "rows": 24,
+      "columns": [
+        "family",
+        "penalty",
+        "profile",
+        "alpha",
+        "alpha_relative",
+        "l1_ratio",
+        "validation_rmse",
+        "n_options_active",
+        "compromise_score",
+        "profile_reuses_candidate",
+        "selection_reason",
+        "solution_index",
+        "n_calibrations",
+        "n_converged",
+        "convergence_rate",
+        "iterations_median",
+        "l0_start_objective_gap_mean",
+        "n_valid_active_counts",
+        "validation_rmse_mean",
+        "validation_rmse_std",
+        "n_options_active_mean",
+        "n_options_active_std",
+        "n_options_active_median",
+        "n_options_active_min",
+        "n_options_active_max",
+        "base_n_options_active",
+        "support_jaccard_median",
+        "support_pairwise_jaccard_median",
+        "relative_weight_distance_mean",
+        "common_evaluation_rmse_mean",
+        "common_evaluation_rmse_std",
+        "common_evaluation_es_mean",
+        "common_evaluation_es_std",
+        "base_common_evaluation_rmse",
+        "base_common_evaluation_es",
+        "common_evaluation_n_paths",
+        "common_evaluation_seed",
+        "passes_stability_filter"
+      ]
+    },
+    {
+      "name": "selected_stability_details",
+      "file": "tables/selected_stability_details.csv",
+      "rows": 240,
+      "columns": [
+        "family",
+        "penalty",
+        "profile",
+        "solution_index",
+        "seed",
+        "alpha",
+        "alpha_relative",
+        "converged",
+        "n_iterations",
+        "l0_start_objective_gap",
+        "validation_rmse",
+        "validation_mae",
+        "n_options_active",
+        "base_n_options_active",
+        "active_count_is_valid",
+        "support_jaccard_vs_base",
+        "relative_weight_distance_vs_base",
+        "common_evaluation_rmse",
+        "common_evaluation_es",
+        "base_common_evaluation_rmse",
+        "base_common_evaluation_es"
       ]
     },
     {
       "name": "risk_comparison",
       "file": "tables/risk_comparison.csv",
-      "rows": 19,
+      "rows": 24,
       "columns": [
         "penalty",
         "profile",
@@ -796,7 +1490,7 @@
     {
       "name": "risk_conditional_comparison",
       "file": "tables/risk_conditional_comparison.csv",
-      "rows": 76,
+      "rows": 96,
       "columns": [
         "penalty",
         "profile",
@@ -853,7 +1547,7 @@
     {
       "name": "risk_summary",
       "file": "tables/risk_summary.csv",
-      "rows": 19,
+      "rows": 24,
       "columns": [
         "family",
         "penalty",
@@ -910,10 +1604,16 @@
         "under_replication_rate",
         "var_95",
         "es_95",
+        "tail_effective_sample_size_95",
+        "tail_probability_95",
         "var_975",
         "es_975",
+        "tail_effective_sample_size_975",
+        "tail_probability_975",
         "var_99",
-        "es_99"
+        "es_99",
+        "tail_effective_sample_size_99",
+        "tail_probability_99"
       ]
     },
     {
@@ -936,10 +1636,16 @@
         "under_replication_rate",
         "var_95",
         "es_95",
+        "tail_effective_sample_size_95",
+        "tail_probability_95",
         "var_975",
         "es_975",
+        "tail_effective_sample_size_975",
+        "tail_probability_975",
         "var_99",
-        "es_99"
+        "es_99",
+        "tail_effective_sample_size_99",
+        "tail_probability_99"
       ]
     },
     {
@@ -997,16 +1703,22 @@
         "under_replication_rate",
         "var_95",
         "es_95",
+        "tail_effective_sample_size_95",
+        "tail_probability_95",
         "var_975",
         "es_975",
+        "tail_effective_sample_size_975",
+        "tail_probability_975",
         "var_99",
-        "es_99"
+        "es_99",
+        "tail_effective_sample_size_99",
+        "tail_probability_99"
       ]
     },
     {
       "name": "full_residual_risk",
       "file": "tables/full_residual_risk.csv",
-      "rows": 28,
+      "rows": 48,
       "columns": [
         "family",
         "penalty",
@@ -1023,10 +1735,16 @@
         "under_replication_rate",
         "var_95",
         "es_95",
+        "tail_effective_sample_size_95",
+        "tail_probability_95",
         "var_975",
         "es_975",
+        "tail_effective_sample_size_975",
+        "tail_probability_975",
         "var_99",
-        "es_99"
+        "es_99",
+        "tail_effective_sample_size_99",
+        "tail_probability_99"
       ]
     },
     {
@@ -1044,7 +1762,7 @@
     {
       "name": "full_residual_risk_units",
       "file": "tables/full_residual_risk_units.csv",
-      "rows": 308,
+      "rows": 528,
       "columns": [
         "family",
         "penalty",
@@ -1070,7 +1788,7 @@
     {
       "name": "retained_policy_weights",
       "file": "tables/retained_policy_weights.csv",
-      "rows": 4865,
+      "rows": 6720,
       "columns": [
         "family",
         "penalty",
@@ -1089,28 +1807,716 @@
         "strike",
         "maturity_date"
       ]
+    },
+    {
+      "name": "report_pricing",
+      "file": "tables/report_pricing.csv",
+      "rows": 1,
+      "columns": [
+        "actualized_price",
+        "std_error",
+        "ci95_low",
+        "ci95_high",
+        "Trajectoires"
+      ]
+    },
+    {
+      "name": "report_contract_summary",
+      "file": "tables/report_contract_summary.csv",
+      "rows": 12,
+      "columns": [
+        "Paramètre",
+        "valeur"
+      ]
+    },
+    {
+      "name": "report_alpha_table",
+      "file": "tables/report_alpha_table.csv",
+      "rows": 127,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Ratio L1 (ρ)",
+        "Alpha relatif",
+        "RMSE validation",
+        "Options actives",
+        "Convergé"
+      ]
+    },
+    {
+      "name": "report_candidate_table",
+      "file": "tables/report_candidate_table.csv",
+      "rows": 127,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Ratio L1 (ρ)",
+        "Alpha relatif",
+        "RMSE validation",
+        "Options actives"
+      ]
+    },
+    {
+      "name": "report_static_cashflow_benchmark",
+      "file": "tables/report_static_cashflow_benchmark.csv",
+      "rows": 9,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Alpha",
+        "Ratio L1 (ρ)",
+        "RMSE (évaluation)",
+        "MAE (évaluation)",
+        "Erreur moyenne terminale (% nominal)",
+        "MAE terminale (% nominal)",
+        "RMSE terminale (% nominal)",
+        "Taux de sous-réplication terminale",
+        "ES terminal 97,5 % (% nominal)",
+        "Perte maximale terminale (% nominal)",
+        "Options actives"
+      ]
+    },
+    {
+      "name": "report_conditional_cashflow_benchmark",
+      "file": "tables/report_conditional_cashflow_benchmark.csv",
+      "rows": 10,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Alpha",
+        "Ratio L1 (ρ)",
+        "RMSE (évaluation)",
+        "MAE (évaluation)",
+        "Erreur moyenne terminale (% nominal)",
+        "MAE terminale (% nominal)",
+        "RMSE terminale (% nominal)",
+        "Taux de sous-réplication terminale",
+        "ES terminal 97,5 % (% nominal)",
+        "Perte maximale terminale (% nominal)"
+      ]
+    },
+    {
+      "name": "report_method_comparison_summary",
+      "file": "tables/report_method_comparison_summary.csv",
+      "rows": 16,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Méthode",
+        "RMSE paiements (% nominal)",
+        "Erreur moyenne terminale (% nominal)",
+        "MAE terminale (% nominal)",
+        "RMSE terminale (% nominal)",
+        "Taux de sous-réplication terminale",
+        "ES terminal 97,5 % (% nominal)",
+        "Perte maximale terminale (% nominal)",
+        "Besoin de financement P95 (% nominal)"
+      ]
+    },
+    {
+      "name": "report_unified_benchmark_table",
+      "file": "tables/report_unified_benchmark_table.csv",
+      "rows": 30,
+      "columns": [
+        "Méthode",
+        "Famille",
+        "rebalancing",
+        "sparse",
+        "risk_object",
+        "Erreur moyenne (% nominal)",
+        "MAE (% nominal)",
+        "rmse_pct_notional",
+        "Taux de sous-réplication",
+        "es_975_pct_notional",
+        "Perte maximale (% nominal)",
+        "capital_aligned",
+        "transaction_costs_included"
+      ]
+    },
+    {
+      "name": "report_l0_initialization_audit",
+      "file": "tables/report_l0_initialization_audit.csv",
+      "rows": 2,
+      "columns": [
+        "Famille",
+        "Alphas",
+        "Initialisations moyennes",
+        "Supports distincts moyens",
+        "Jaccard médian"
+      ]
+    },
+    {
+      "name": "report_profile_table",
+      "file": "tables/report_profile_table.csv",
+      "rows": 24,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Ratio L1 (ρ)",
+        "Alpha relatif",
+        "RMSE validation",
+        "Options actives"
+      ]
+    },
+    {
+      "name": "report_stable_profiles_table",
+      "file": "tables/report_stable_profiles_table.csv",
+      "rows": 24,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Ratio L1 (ρ)",
+        "Alpha relatif",
+        "RMSE validation",
+        "Options actives"
+      ]
+    },
+    {
+      "name": "report_chronology_audit",
+      "file": "tables/report_chronology_audit.csv",
+      "rows": 2,
+      "columns": [
+        "Famille",
+        "Décisions",
+        "Chronologie valide",
+        "Part des décisions en repli"
+      ]
+    },
+    {
+      "name": "report_tail_concentration_summary",
+      "file": "tables/report_tail_concentration_summary.csv",
+      "rows": 24,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Niveau de plafond",
+        "es",
+        "tail_effective_sample_size",
+        "effective_positive_tail_contributors"
+      ]
+    },
+    {
+      "name": "report_tail_concentration_decision_table",
+      "file": "tables/report_tail_concentration_decision_table.csv",
+      "rows": 24,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "es_975_pct_notional",
+        "es_99_pct_notional",
+        "top_1pct_share_pct",
+        "top_5pct_share_pct",
+        "effective_positive_tail_contributors"
+      ]
+    },
+    {
+      "name": "report_tail_concentration_curve",
+      "file": "tables/report_tail_concentration_curve.csv",
+      "rows": 24,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Niveau de plafond",
+        "tail_mass_fraction",
+        "positive_tail_loss_share"
+      ]
+    },
+    {
+      "name": "report_tail_exclusive_regime_decomposition",
+      "file": "tables/report_tail_exclusive_regime_decomposition.csv",
+      "rows": 24,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Régime",
+        "Niveau de plafond",
+        "share_of_tail_probability",
+        "share_of_es"
+      ]
+    },
+    {
+      "name": "report_tail_risk_experiment_table",
+      "file": "tables/report_tail_risk_experiment_table.csv",
+      "rows": 8,
+      "columns": [
+        "Famille",
+        "Profil",
+        "calibration_sampling",
+        "risk_control",
+        "Pénalité",
+        "Plafond ES (% nominal)",
+        "Plafond ES commun (% nominal)",
+        "constraint_feasible_in_calibration",
+        "Erreur moyenne (% nominal)",
+        "MAE (% nominal)",
+        "evaluation_rmse_pct_notional",
+        "Taux de sous-réplication",
+        "evaluation_es_pct_notional",
+        "Perte maximale (% nominal)",
+        "Plafond respecté en évaluation",
+        "Coefficients actifs"
+      ]
+    },
+    {
+      "name": "report_tail_risk_sampling_diagnostics",
+      "file": "tables/report_tail_risk_sampling_diagnostics.csv",
+      "rows": 2,
+      "columns": [
+        "Famille",
+        "Trajectoires",
+        "effective_sample_size",
+        "effective_sample_ratio",
+        "maximum_normalized_weight"
+      ]
+    },
+    {
+      "name": "report_tail_risk_component_summary",
+      "file": "tables/report_tail_risk_component_summary.csv",
+      "rows": 2,
+      "columns": [
+        "Famille",
+        "component",
+        "tilt",
+        "configured_probability",
+        "simulated_frequency",
+        "weighted_target_mass"
+      ]
+    },
+    {
+      "name": "report_funding_summary",
+      "file": "tables/report_funding_summary.csv",
+      "rows": 12,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Implémentation",
+        "Coût initial (% nominal)",
+        "P&L moyen (% nominal)",
+        "Capital P95 (% nominal)",
+        "ES perte 97,5 % (% nominal)"
+      ]
+    },
+    {
+      "name": "report_funding_path_summary",
+      "file": "tables/report_funding_path_summary.csv",
+      "rows": 12,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "binary_mode",
+        "Trajectoires",
+        "P&L moyen",
+        "Capital P95"
+      ]
+    },
+    {
+      "name": "report_funding_ledger",
+      "file": "tables/report_funding_ledger.csv",
+      "rows": 24,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Événements",
+        "Cash minimum"
+      ]
+    },
+    {
+      "name": "report_internal_hedge_benchmark",
+      "file": "tables/report_internal_hedge_benchmark.csv",
+      "rows": 24,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "RMSE résiduelle (% nominal)",
+        "ES résiduel 97,5 % (% nominal)",
+        "rmse_improvement_vs_reference",
+        "es_975_improvement_vs_reference"
+      ]
+    },
+    {
+      "name": "report_three_price_summary",
+      "file": "tables/report_three_price_summary.csv",
+      "rows": 36,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Implémentation",
+        "price_type",
+        "Prix (% nominal)",
+        "Marge vs théorique (% nominal)"
+      ]
+    },
+    {
+      "name": "report_public_pricing_benchmark",
+      "file": "tables/report_public_pricing_benchmark.csv",
+      "rows": 4,
+      "columns": [
+        "issuer",
+        "document_date",
+        "structure",
+        "issue_price",
+        "estimated_value_low",
+        "estimated_value_high",
+        "gap_pct_mid"
+      ]
+    },
+    {
+      "name": "report_decision_table",
+      "file": "tables/report_decision_table.csv",
+      "rows": 36,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Implémentation",
+        "Options actives",
+        "P&L moyen (% nominal)",
+        "Capital P95 (% nominal)"
+      ]
+    },
+    {
+      "name": "report_stability_summary",
+      "file": "tables/report_stability_summary.csv",
+      "rows": 854,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Convergences",
+        "Graines",
+        "RMSE moyenne",
+        "Écart-type RMSE",
+        "Options moyennes",
+        "Jaccard médian",
+        "Stable"
+      ]
+    },
+    {
+      "name": "report_stability_details",
+      "file": "tables/report_stability_details.csv",
+      "rows": 854,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Graines",
+        "Taux de convergence",
+        "RMSE moyenne",
+        "Options moyennes",
+        "Jaccard médian"
+      ]
+    },
+    {
+      "name": "report_risk_comparison",
+      "file": "tables/report_risk_comparison.csv",
+      "rows": 24,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Régime",
+        "gross_rmse",
+        "residual_rmse",
+        "gross_es_975",
+        "residual_es_975"
+      ]
+    },
+    {
+      "name": "report_risk_conditional_comparison",
+      "file": "tables/report_risk_conditional_comparison.csv",
+      "rows": 32,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Régime",
+        "Observations",
+        "Réduction RMSE (ratio)",
+        "Réduction ES (ratio)",
+        "residual_rmse",
+        "residual_es_975"
+      ]
+    },
+    {
+      "name": "report_risk_summary",
+      "file": "tables/report_risk_summary.csv",
+      "rows": 24,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Erreur moyenne (% nominal)",
+        "MAE (% nominal)",
+        "Taux de sous-réplication",
+        "RMSE brute (% nominal)",
+        "RMSE résiduelle (% nominal)",
+        "Réduction RMSE (ratio)",
+        "ES brut 97,5 % (% nominal)",
+        "ES résiduel 97,5 % (% nominal)",
+        "Réduction ES (ratio)",
+        "Perte maximale résiduelle (% nominal)"
+      ]
+    },
+    {
+      "name": "report_calls_puts_gross_risk",
+      "file": "tables/report_calls_puts_gross_risk.csv",
+      "rows": 4,
+      "columns": [
+        "Régime",
+        "Observations",
+        "Erreur moyenne",
+        "MAE",
+        "RMSE",
+        "Taux de sous-réplication",
+        "ES 97,5 %",
+        "Perte maximale"
+      ]
+    },
+    {
+      "name": "report_calls_puts_residual_risk",
+      "file": "tables/report_calls_puts_residual_risk.csv",
+      "rows": 48,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Régime",
+        "Observations",
+        "Erreur moyenne",
+        "MAE",
+        "RMSE",
+        "Taux de sous-réplication",
+        "ES 97,5 %",
+        "Perte maximale"
+      ]
+    },
+    {
+      "name": "report_calls_puts_gross_risk_units",
+      "file": "tables/report_calls_puts_gross_risk_units.csv",
+      "rows": 3,
+      "columns": [
+        "Régime",
+        "metric",
+        "% du nominal",
+        "bps du nominal"
+      ]
+    },
+    {
+      "name": "report_calls_puts_residual_risk_units",
+      "file": "tables/report_calls_puts_residual_risk_units.csv",
+      "rows": 36,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Régime",
+        "metric",
+        "% du nominal",
+        "bps du nominal"
+      ]
+    },
+    {
+      "name": "report_calls_puts_risk_by_condition",
+      "file": "tables/report_calls_puts_risk_by_condition.csv",
+      "rows": 4,
+      "columns": [
+        "Régime",
+        "Observations",
+        "condition_frequency",
+        "quantile_reliability"
+      ]
+    },
+    {
+      "name": "report_full_gross_risk",
+      "file": "tables/report_full_gross_risk.csv",
+      "rows": 4,
+      "columns": [
+        "Régime",
+        "Observations",
+        "Erreur moyenne",
+        "MAE",
+        "RMSE",
+        "Taux de sous-réplication",
+        "ES 97,5 %",
+        "Perte maximale"
+      ]
+    },
+    {
+      "name": "report_full_residual_risk",
+      "file": "tables/report_full_residual_risk.csv",
+      "rows": 48,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Régime",
+        "Observations",
+        "Erreur moyenne",
+        "MAE",
+        "RMSE",
+        "Taux de sous-réplication",
+        "ES 97,5 %",
+        "Perte maximale"
+      ]
+    },
+    {
+      "name": "report_full_gross_risk_units",
+      "file": "tables/report_full_gross_risk_units.csv",
+      "rows": 3,
+      "columns": [
+        "Régime",
+        "metric",
+        "% du nominal",
+        "bps du nominal"
+      ]
+    },
+    {
+      "name": "report_full_residual_risk_units",
+      "file": "tables/report_full_residual_risk_units.csv",
+      "rows": 36,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "Régime",
+        "metric",
+        "% du nominal",
+        "bps du nominal"
+      ]
+    },
+    {
+      "name": "report_full_risk_by_condition",
+      "file": "tables/report_full_risk_by_condition.csv",
+      "rows": 4,
+      "columns": [
+        "Régime",
+        "Observations",
+        "condition_frequency",
+        "quantile_reliability"
+      ]
+    },
+    {
+      "name": "report_retained_policy_weights",
+      "file": "tables/report_retained_policy_weights.csv",
+      "rows": 96,
+      "columns": [
+        "Famille",
+        "Pénalité",
+        "Profil",
+        "payment_date",
+        "decision_state",
+        "name",
+        "kind",
+        "weight"
+      ]
     }
   ],
   "figures": [
     {
-      "name": "autocall_price_surface",
-      "pdf": "figures/autocall_price_surface.pdf",
-      "png": "figures/autocall_price_surface.png"
+      "name": "hyperparameter_exploratory_alpha_static_cashflows",
+      "pdf": "figures/hyperparameter_exploratory_alpha_static_cashflows.pdf",
+      "png": "figures/hyperparameter_exploratory_alpha_static_cashflows.png"
     },
     {
-      "name": "initial_replication_benchmark",
-      "pdf": "figures/initial_replication_benchmark.pdf",
-      "png": "figures/initial_replication_benchmark.png"
+      "name": "hyperparameter_exploratory_alpha_conditional_cashflows",
+      "pdf": "figures/hyperparameter_exploratory_alpha_conditional_cashflows.pdf",
+      "png": "figures/hyperparameter_exploratory_alpha_conditional_cashflows.png"
     },
     {
-      "name": "alpha_precision_parsimony",
-      "pdf": "figures/alpha_precision_parsimony.pdf",
-      "png": "figures/alpha_precision_parsimony.png"
+      "name": "hyperparameter_alpha_grid",
+      "pdf": "figures/hyperparameter_alpha_grid.pdf",
+      "png": "figures/hyperparameter_alpha_grid.png"
     },
     {
-      "name": "alpha_sensitivity",
-      "pdf": "figures/alpha_sensitivity.pdf",
-      "png": "figures/alpha_sensitivity.png"
+      "name": "hyperparameter_elastic_net_rho_grid",
+      "pdf": "figures/hyperparameter_elastic_net_rho_grid.pdf",
+      "png": "figures/hyperparameter_elastic_net_rho_grid.png"
+    },
+    {
+      "name": "hyperparameter_l0_initialization_audit",
+      "pdf": "figures/hyperparameter_l0_initialization_audit.pdf",
+      "png": "figures/hyperparameter_l0_initialization_audit.png"
+    },
+    {
+      "name": "hyperparameter_multi_seed_stability",
+      "pdf": "figures/hyperparameter_multi_seed_stability.pdf",
+      "png": "figures/hyperparameter_multi_seed_stability.png"
+    },
+    {
+      "name": "hyperparameter_regularization_filter_map",
+      "pdf": "figures/hyperparameter_regularization_filter_map.pdf",
+      "png": "figures/hyperparameter_regularization_filter_map.png"
+    },
+    {
+      "name": "hyperparameter_decision_dashboard",
+      "pdf": "figures/hyperparameter_decision_dashboard.pdf",
+      "png": "figures/hyperparameter_decision_dashboard.png"
+    },
+    {
+      "name": "hyperparameter_es_budget_coverage_summary",
+      "pdf": "figures/hyperparameter_es_budget_coverage_summary.pdf",
+      "png": "figures/hyperparameter_es_budget_coverage_summary.png"
+    },
+    {
+      "name": "hyperparameter_tail_frontiers_calls_puts_elastic_net",
+      "pdf": "figures/hyperparameter_tail_frontiers_calls_puts_elastic_net.pdf",
+      "png": "figures/hyperparameter_tail_frontiers_calls_puts_elastic_net.png"
+    },
+    {
+      "name": "hyperparameter_tail_frontiers_full_elastic_net",
+      "pdf": "figures/hyperparameter_tail_frontiers_full_elastic_net.pdf",
+      "png": "figures/hyperparameter_tail_frontiers_full_elastic_net.png"
+    },
+    {
+      "name": "hyperparameter_importance_sampling_grid",
+      "pdf": "figures/hyperparameter_importance_sampling_grid.pdf",
+      "png": "figures/hyperparameter_importance_sampling_grid.png"
+    },
+    {
+      "name": "hyperparameter_importance_policy_precision_calls_puts",
+      "pdf": "figures/hyperparameter_importance_policy_precision_calls_puts.pdf",
+      "png": "figures/hyperparameter_importance_policy_precision_calls_puts.png"
+    },
+    {
+      "name": "hyperparameter_importance_policy_precision_full",
+      "pdf": "figures/hyperparameter_importance_policy_precision_full.pdf",
+      "png": "figures/hyperparameter_importance_policy_precision_full.png"
+    },
+    {
+      "name": "method_objective_tradeoff",
+      "pdf": "figures/method_objective_tradeoff.pdf",
+      "png": "figures/method_objective_tradeoff.png"
+    },
+    {
+      "name": "conditional_method_payment_comparison",
+      "pdf": "figures/conditional_method_payment_comparison.pdf",
+      "png": "figures/conditional_method_payment_comparison.png"
+    },
+    {
+      "name": "delta_hedge_benchmark",
+      "pdf": "figures/delta_hedge_benchmark.pdf",
+      "png": "figures/delta_hedge_benchmark.png"
+    },
+    {
+      "name": "tail_contract_events_fr",
+      "pdf": "figures/tail_contract_events_fr.pdf",
+      "png": "figures/tail_contract_events_fr.png"
+    },
+    {
+      "name": "tail_contract_events_en",
+      "pdf": "figures/tail_contract_events_en.pdf",
+      "png": "figures/tail_contract_events_en.png"
     },
     {
       "name": "risk_rmse_reduction",
@@ -1128,14 +2534,14 @@
       "png": "figures/risk_absolute_control.png"
     },
     {
-      "name": "importance_sampling_es",
-      "pdf": "figures/importance_sampling_es.pdf",
-      "png": "figures/importance_sampling_es.png"
+      "name": "tail_risk_concentration",
+      "pdf": "figures/tail_risk_concentration.pdf",
+      "png": "figures/tail_risk_concentration.png"
     },
     {
-      "name": "importance_sampling_convergence",
-      "pdf": "figures/importance_sampling_convergence.pdf",
-      "png": "figures/importance_sampling_convergence.png"
+      "name": "tail_risk_four_experiments",
+      "pdf": "figures/tail_risk_four_experiments.pdf",
+      "png": "figures/tail_risk_four_experiments.png"
     },
     {
       "name": "funding_and_terminal_pnl",
@@ -1151,6 +2557,16 @@
       "name": "commercial_cushion_benchmark",
       "pdf": "figures/commercial_cushion_benchmark.pdf",
       "png": "figures/commercial_cushion_benchmark.png"
+    },
+    {
+      "name": "report_compromise_comparison",
+      "pdf": "figures/report_compromise_comparison.pdf",
+      "png": "figures/report_compromise_comparison.png"
+    },
+    {
+      "name": "report_funding_stability_comparison",
+      "pdf": "figures/report_funding_stability_comparison.pdf",
+      "png": "figures/report_funding_stability_comparison.png"
     }
   ]
 }

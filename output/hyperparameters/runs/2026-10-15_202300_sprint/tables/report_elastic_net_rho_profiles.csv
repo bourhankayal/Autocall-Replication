@@ -1,0 +1,19 @@
+﻿Famille,Ratio L1 (ρ),Profil,Alpha relatif,RMSE validation,Options actives
+calls_puts,0.1,performance,0.3162,6.8888,13
+calls_puts,0.1,compromise,0.3162,6.8888,13
+calls_puts,0.1,parsimony,0.3162,6.8888,13
+calls_puts,0.5,performance,0.3162,7.1902,7
+calls_puts,0.5,compromise,0.3162,7.1902,7
+calls_puts,0.5,parsimony,0.3162,7.1902,7
+calls_puts,0.9,performance,0.3162,7.774,5
+calls_puts,0.9,compromise,0.3162,7.774,5
+calls_puts,0.9,parsimony,0.3162,7.774,5
+full,0.1,performance,0.3162,7.041,16
+full,0.1,compromise,0.3162,7.041,16
+full,0.1,parsimony,0.3162,7.041,16
+full,0.5,performance,0.3162,7.0464,11
+full,0.5,compromise,0.3162,7.0464,11
+full,0.5,parsimony,0.3162,7.0464,11
+full,0.9,performance,0.3162,7.0552,4
+full,0.9,compromise,0.3162,7.0552,4
+full,0.9,parsimony,0.3162,7.0552,4

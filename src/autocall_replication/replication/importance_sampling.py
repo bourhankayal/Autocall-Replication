@@ -20,7 +20,11 @@ from .conditional_policy import assemble_policy_design
 from .risk import (
     DEFAULT_RISK_LEVELS,
     _risk_comparison_row,
+    empirical_var_es,
+    exclusive_autocall_regimes,
     risk_table_in_notional_units,
+    tail_concentration_analysis,
+    tail_regime_decomposition,
     tail_risk_metrics,
 )
 from .semi_static import autocall_state_curve_on_path
@@ -41,6 +45,35 @@ def _effective_sample_size(weights: np.ndarray) -> float:
     if denominator <= 0.0:
         return 0.0
     return float(np.sum(weights) ** 2 / denominator)
+
+
+def _weight_diagnostics(weights: np.ndarray) -> dict[str, float]:
+    """Résume la concentration des poids de vraisemblance."""
+    weights = np.asarray(weights, dtype=float).reshape(-1)
+    mean = float(np.mean(weights))
+    std = float(np.std(weights, ddof=1)) if len(weights) > 1 else 0.0
+    normalized = weights / np.sum(weights)
+    positive = normalized[normalized > 0.0]
+    entropy = -float(np.sum(positive * np.log(positive)))
+    maximum_entropy = math.log(len(weights)) if len(weights) > 1 else 0.0
+    return {
+        "n_paths": int(len(weights)),
+        "weight_mean": mean,
+        "weight_min": float(np.min(weights)),
+        "weight_q50": float(np.quantile(weights, 0.50)),
+        "weight_q90": float(np.quantile(weights, 0.90)),
+        "weight_q95": float(np.quantile(weights, 0.95)),
+        "weight_q99": float(np.quantile(weights, 0.99)),
+        "weight_max": float(np.max(weights)),
+        "maximum_normalized_weight": float(np.max(normalized)),
+        "weight_cv": std / mean if mean > 0.0 else np.inf,
+        "effective_sample_size": _effective_sample_size(weights),
+        "effective_sample_ratio": _effective_sample_size(weights) / len(weights),
+        "normalized_weight_entropy": entropy,
+        "normalized_weight_entropy_ratio": (
+            entropy / maximum_entropy if maximum_entropy > 0.0 else 1.0
+        ),
+    }
 
 
 def _validate_importance_mixture(
@@ -109,15 +142,7 @@ def simulate_gbm_paths_importance(
             "component_tilts": tilts_array[component_indices],
             "tilts": tuple(float(value) for value in tilts_array),
             "mixture_probabilities": tuple(float(value) for value in probabilities),
-            "diagnostics": {
-                "n_paths": n_paths,
-                "weight_mean": 1.0,
-                "weight_min": 1.0,
-                "weight_max": 1.0,
-                "weight_cv": 0.0,
-                "effective_sample_size": float(n_paths),
-                "effective_sample_ratio": 1.0,
-            },
+            "diagnostics": _weight_diagnostics(likelihood_weights),
         }
 
     day_gaps = np.diff(dates.values).astype("timedelta64[D]").astype(float)
@@ -146,10 +171,6 @@ def simulate_gbm_paths_importance(
     )
     log_likelihood_weights = -log_q_over_p
     likelihood_weights = np.exp(log_likelihood_weights)
-    weight_mean = float(np.mean(likelihood_weights))
-    weight_std = float(np.std(likelihood_weights, ddof=1)) if n_paths > 1 else 0.0
-    ess = _effective_sample_size(likelihood_weights)
-
     component_rows = []
     normalized_weights = likelihood_weights / np.sum(likelihood_weights)
     for component_index, (tilt, probability) in enumerate(
@@ -178,16 +199,31 @@ def simulate_gbm_paths_importance(
         "tilts": tuple(float(value) for value in tilts_array),
         "mixture_probabilities": tuple(float(value) for value in probabilities),
         "component_summary": pd.DataFrame(component_rows),
-        "diagnostics": {
-            "n_paths": n_paths,
-            "weight_mean": weight_mean,
-            "weight_min": float(np.min(likelihood_weights)),
-            "weight_max": float(np.max(likelihood_weights)),
-            "weight_cv": weight_std / weight_mean if weight_mean > 0.0 else np.inf,
-            "effective_sample_size": ess,
-            "effective_sample_ratio": ess / n_paths,
-        },
+        "diagnostics": _weight_diagnostics(likelihood_weights),
     }
+
+
+def tail_scenario_decomposition(
+    losses: np.ndarray,
+    likelihood_weights: np.ndarray,
+    conditions: dict[str, np.ndarray],
+    level: float = 0.975,
+) -> pd.DataFrame:
+    """Décompose l'ES selon les régimes contractuels observés.
+
+    Les régimes peuvent se chevaucher : ``barrier_hit`` est notamment un
+    sous-ensemble possible de ``maturity``. Les parts ne doivent donc pas être
+    additionnées entre conditions sans tenir compte de ce chevauchement.
+    """
+    result = tail_regime_decomposition(
+        losses,
+        conditions,
+        level=level,
+        likelihood_weights=likelihood_weights,
+    )
+    # Alias conservé pour les anciennes sorties du notebook.
+    result["share_of_es_tail"] = result["share_of_tail_probability"]
+    return result
 
 
 def weighted_tail_risk_metrics(
@@ -216,26 +252,16 @@ def weighted_tail_risk_metrics(
         "max_loss": float(np.max(losses[weights > 0.0])),
         "under_replication_rate": float(np.sum(normalized * (losses > 0.0))),
     }
-    order = np.argsort(losses, kind="stable")
-    sorted_losses = losses[order]
-    sorted_weights = normalized[order]
-    cumulative = np.cumsum(sorted_weights)
     for level in levels:
         level = float(level)
-        if not 0.5 < level < 1.0:
-            raise ValueError("Chaque niveau de risque doit appartenir à ]0.5, 1[.")
-        quantile_index = min(int(np.searchsorted(cumulative, level, side="left")), len(losses) - 1)
-        value_at_risk = float(sorted_losses[quantile_index])
-        tail_mask = losses >= value_at_risk
-        tail_weights = weights[tail_mask]
+        tail = empirical_var_es(losses, level, likelihood_weights=weights)
         suffix = str(int(round(level * 1000))).rstrip("0")
-        metrics[f"var_{suffix}"] = value_at_risk
-        metrics[f"es_{suffix}"] = float(
-            np.sum(tail_weights * losses[tail_mask]) / np.sum(tail_weights)
+        metrics[f"var_{suffix}"] = float(tail["var"])
+        metrics[f"es_{suffix}"] = float(tail["es"])
+        metrics[f"tail_effective_sample_size_{suffix}"] = float(
+            tail["tail_effective_sample_size"]
         )
-        metrics[f"tail_effective_sample_size_{suffix}"] = _effective_sample_size(
-            tail_weights
-        )
+        metrics[f"tail_probability_{suffix}"] = float(tail["tail_probability"])
     return metrics
 
 
@@ -347,6 +373,82 @@ def _conditional_dataset_from_paths(
     return dataset
 
 
+def build_conditional_policy_sampling_design(
+    *,
+    base_result: dict[str, object],
+    product: AutocallProduct,
+    spot0: float,
+    valuation_date: str | pd.Timestamp,
+    maturity_date: str | pd.Timestamp,
+    rate: float,
+    dividend_yield: float,
+    vol: float,
+    n_paths: int,
+    seed: int,
+    sampling_method: str = "standard_mc",
+    tilts: Sequence[float] = DEFAULT_IMPORTANCE_TILTS,
+    mixture_probabilities: Sequence[float] = DEFAULT_IMPORTANCE_MIXTURE,
+) -> dict[str, object]:
+    """Construit ``A, b`` sur MC standard ou IS avec la même politique.
+
+    Les nœuds, états et instruments sont repris de ``base_result``. La seule
+    différence entre les deux expériences est donc la loi de simulation et,
+    pour IS, les poids statistiques ``dP/dQ``.
+    """
+    if sampling_method not in {"standard_mc", "importance_sampling"}:
+        raise ValueError("sampling_method doit être standard_mc ou importance_sampling.")
+    valuation_date = pd.Timestamp(valuation_date)
+    simulation_end = contractual_simulation_end_date(
+        product=product,
+        contract_start_date=valuation_date,
+        requested_maturity_date=pd.Timestamp(maturity_date),
+    )
+    effective_tilts = (0.0,) if sampling_method == "standard_mc" else tilts
+    effective_probabilities = (
+        (1.0,) if sampling_method == "standard_mc" else mixture_probabilities
+    )
+    simulation = simulate_gbm_paths_importance(
+        spot0=spot0,
+        start_date=valuation_date,
+        end_date=simulation_end,
+        rate=rate,
+        dividend_yield=dividend_yield,
+        vol=vol,
+        n_paths=n_paths,
+        seed=seed,
+        tilts=effective_tilts,
+        mixture_probabilities=effective_probabilities,
+    )
+    dataset = _conditional_dataset_from_paths(
+        product=product,
+        vanillas=list(base_result["source_vanillas"]),
+        dates=pd.DatetimeIndex(simulation["dates"]),
+        path_matrix=np.asarray(simulation["paths"], dtype=float),
+        valuation_date=valuation_date,
+        rate=rate,
+    )
+    design = assemble_policy_design(
+        dataset=dataset,
+        nodes=list(base_result["nodes"]),
+        assignments=dict(base_result["assignments"]),
+        vanillas=list(base_result["source_vanillas"]),
+    )
+    return {
+        **design,
+        "dataset": dataset,
+        "likelihood_weights": np.asarray(simulation["likelihood_weights"], dtype=float),
+        "sampling_diagnostics": simulation["diagnostics"],
+        "sampling_diagnostics_table": pd.DataFrame([simulation["diagnostics"]]),
+        "component_summary": simulation["component_summary"],
+        "sampling_method": sampling_method,
+        "tilts": simulation["tilts"],
+        "mixture_probabilities": simulation["mixture_probabilities"],
+        "seed": int(seed),
+        "n_paths": int(n_paths),
+        "test_status": "calibration_or_validation_only_final_sample_untouched",
+    }
+
+
 def evaluate_conditional_policy_profile_risk_importance(
     base_result: dict[str, object],
     product: AutocallProduct,
@@ -415,6 +517,7 @@ def evaluate_conditional_policy_profile_risk_importance(
         "maturity": ~called,
         "barrier_hit": barrier_hit,
     }
+    exclusive_regimes = exclusive_autocall_regimes(called, barrier_hit)
     normalized_weights = likelihood_weights / np.sum(likelihood_weights)
     gross_reference_value = float(np.sum(normalized_weights * y))
     gross_losses = y - gross_reference_value
@@ -454,6 +557,10 @@ def evaluate_conditional_policy_profile_risk_importance(
 
     residual_rows: list[dict[str, object]] = []
     profile_losses: dict[tuple[str, str], np.ndarray] = {}
+    tail_decomposition_rows: list[pd.DataFrame] = []
+    concentration_rows: list[pd.DataFrame] = []
+    concentration_curve_rows: list[pd.DataFrame] = []
+    exclusive_regime_rows: list[pd.DataFrame] = []
     for _, profile in profiles.iterrows():
         penalty, profile_name = str(profile["penalty"]), str(profile["profile"])
         financial_weights = np.asarray(
@@ -464,6 +571,41 @@ def evaluate_conditional_policy_profile_risk_importance(
         )
         losses = y - A @ financial_weights
         profile_losses[(penalty, profile_name)] = losses
+        concentration = tail_concentration_analysis(
+            losses,
+            levels=levels,
+            likelihood_weights=likelihood_weights,
+        )
+        for table_name in ("summary", "curve"):
+            table = concentration[table_name].copy()
+            table.insert(0, "profile", profile_name)
+            table.insert(0, "penalty", penalty)
+            table.insert(0, "family", base_result["family"])
+            if table_name == "summary":
+                concentration_rows.append(table)
+            else:
+                concentration_curve_rows.append(table)
+        for level in levels:
+            decomposition = tail_scenario_decomposition(
+                losses,
+                likelihood_weights,
+                conditions,
+                level=float(level),
+            )
+            decomposition.insert(0, "profile", profile_name)
+            decomposition.insert(0, "penalty", penalty)
+            decomposition.insert(0, "family", base_result["family"])
+            tail_decomposition_rows.append(decomposition)
+            exclusive_decomposition = tail_regime_decomposition(
+                losses,
+                exclusive_regimes,
+                level=float(level),
+                likelihood_weights=likelihood_weights,
+            )
+            exclusive_decomposition.insert(0, "profile", profile_name)
+            exclusive_decomposition.insert(0, "penalty", penalty)
+            exclusive_decomposition.insert(0, "family", base_result["family"])
+            exclusive_regime_rows.append(exclusive_decomposition)
         for condition, mask in conditions.items():
             if not np.any(mask):
                 continue
@@ -540,6 +682,19 @@ def evaluate_conditional_policy_profile_risk_importance(
         "likelihood_weights": likelihood_weights,
         "sampling_diagnostics": simulation["diagnostics"],
         "component_summary": simulation["component_summary"],
+        "sampling_diagnostics_table": pd.DataFrame([simulation["diagnostics"]]),
+        "tail_scenario_decomposition": (
+            pd.concat(tail_decomposition_rows, ignore_index=True)
+            if tail_decomposition_rows
+            else pd.DataFrame()
+        ),
+        "tail_concentration": pd.concat(concentration_rows, ignore_index=True),
+        "tail_concentration_curve": pd.concat(
+            concentration_curve_rows, ignore_index=True
+        ),
+        "exclusive_tail_regime_decomposition": pd.concat(
+            exclusive_regime_rows, ignore_index=True
+        ),
         "gross_reference_value": gross_reference_value,
         "notional": float(product.notional),
         "n_paths": n_paths,
@@ -553,6 +708,265 @@ def evaluate_conditional_policy_profile_risk_importance(
         "target_measure": "risk_neutral_gbm_unchanged_by_likelihood_reweighting",
         "evaluation_status": "independent_sample_not_used_for_alpha_selection",
         "test_status": base_result.get("test_status", "reserved_not_evaluated"),
+    }
+
+
+def compare_importance_mixture_candidates(
+    *,
+    base_result: dict[str, object],
+    product: AutocallProduct,
+    spot0: float,
+    valuation_date: str | pd.Timestamp,
+    maturity_date: str | pd.Timestamp,
+    rate: float,
+    dividend_yield: float,
+    vol: float,
+    penalty: str,
+    profile: str,
+    candidates: Sequence[dict[str, object]],
+    seeds: Sequence[int],
+    n_paths: int,
+    es_level: float = 0.975,
+    minimum_effective_sample_ratio: float = 0.20,
+) -> dict[str, object]:
+    """Compare des mélanges IS sur un échantillon pilote multi-graines.
+
+    Le mélange est classé par précision (dispersion inter-graines de l'ES),
+    jamais par niveau d'ES estimé. Choisir la valeur la plus basse créerait un
+    biais de sélection. Cette fonction est destinée à la recherche externe au
+    notebook principal.
+    """
+    if len(candidates) == 0 or len(seeds) < 2:
+        raise ValueError("Il faut au moins un candidat et deux graines pilotes.")
+    suffix = str(int(round(es_level * 1000))).rstrip("0")
+    rows: list[dict[str, object]] = []
+    for candidate_index, candidate in enumerate(candidates):
+        tilts = tuple(float(value) for value in candidate["tilts"])
+        probabilities = tuple(
+            float(value) for value in candidate["mixture_probabilities"]
+        )
+        for seed in seeds:
+            result = evaluate_conditional_policy_profile_risk_importance(
+                base_result=base_result,
+                product=product,
+                spot0=spot0,
+                valuation_date=valuation_date,
+                maturity_date=maturity_date,
+                rate=rate,
+                dividend_yield=dividend_yield,
+                vol=vol,
+                n_paths=n_paths,
+                seed=int(seed),
+                levels=(es_level,),
+                tilts=tilts,
+                mixture_probabilities=probabilities,
+            )
+            selected = result["residual_risk"]
+            selected = selected.loc[
+                (selected["penalty"] == penalty)
+                & (selected["profile"] == profile)
+                & (selected["condition"] == "all")
+            ]
+            if len(selected) != 1:
+                raise ValueError("penalty/profile doit identifier un profil unique.")
+            diagnostics = result["sampling_diagnostics"]
+            rows.append(
+                {
+                    "candidate_index": candidate_index,
+                    "tilts": repr(tilts),
+                    "mixture_probabilities": repr(probabilities),
+                    "seed": int(seed),
+                    "es": float(selected.iloc[0][f"es_{suffix}"]),
+                    "tail_effective_sample_size": float(
+                        selected.iloc[0][f"tail_effective_sample_size_{suffix}"]
+                    ),
+                    "effective_sample_ratio": float(
+                        diagnostics["effective_sample_ratio"]
+                    ),
+                    "weight_cv": float(diagnostics["weight_cv"]),
+                    "maximum_normalized_weight": float(
+                        diagnostics["maximum_normalized_weight"]
+                    ),
+                }
+            )
+    details = pd.DataFrame(rows)
+    summary = (
+        details.groupby(
+            ["candidate_index", "tilts", "mixture_probabilities"], as_index=False
+        )
+        .agg(
+            n_repetitions=("seed", "size"),
+            es_mean=("es", "mean"),
+            es_std=("es", "std"),
+            tail_ess_mean=("tail_effective_sample_size", "mean"),
+            effective_sample_ratio_mean=("effective_sample_ratio", "mean"),
+            effective_sample_ratio_min=("effective_sample_ratio", "min"),
+            weight_cv_mean=("weight_cv", "mean"),
+            maximum_normalized_weight_max=("maximum_normalized_weight", "max"),
+        )
+    )
+    summary["passes_weight_diagnostics"] = (
+        summary["effective_sample_ratio_min"] >= minimum_effective_sample_ratio
+    )
+    eligible = summary.loc[summary["passes_weight_diagnostics"]].copy()
+    recommended_index = (
+        None
+        if eligible.empty
+        else int(eligible.sort_values(["es_std", "tail_ess_mean"], ascending=[True, False]).iloc[0]["candidate_index"])
+    )
+    summary["recommended"] = summary["candidate_index"].eq(recommended_index)
+    return {
+        "summary": summary,
+        "details": details,
+        "recommended_candidate_index": recommended_index,
+        "selection_rule": "minimum_between_seed_es_std_subject_to_ess_ratio",
+        "test_status": "pilot_only_final_sample_untouched",
+    }
+
+
+def compare_fixed_policy_importance_mixtures(
+    *,
+    base_result: dict[str, object],
+    product: AutocallProduct,
+    spot0: float,
+    valuation_date: str | pd.Timestamp,
+    maturity_date: str | pd.Timestamp,
+    rate: float,
+    dividend_yield: float,
+    vol: float,
+    policies: Sequence[dict[str, object]],
+    candidates: Sequence[dict[str, object]],
+    seeds: Sequence[int],
+    n_paths: int,
+    es_level: float = 0.975,
+    minimum_effective_sample_ratio: float = 0.20,
+) -> dict[str, object]:
+    """Choose one robust IS mixture across *fixed* retained policies.
+
+    Every candidate is evaluated on all policies using the same simulated
+    paths for a given seed. A standard-MC pilot supplies a policy-specific
+    precision baseline; the selection minimizes the worst IS/MC standard-
+    deviation ratio, subject to a global ESS floor. Standard MC remains an
+    explicit candidate with ratio one. The selection never minimizes ES.
+    """
+
+    if not policies or not candidates or len(seeds) < 2:
+        raise ValueError("Il faut des politiques, des mélanges et au moins deux graines.")
+    if n_paths < 100 or not 0.0 < minimum_effective_sample_ratio <= 1.0:
+        raise ValueError("Volume pilote ou seuil ESS invalide.")
+    policy_rows = []
+    for policy in policies:
+        key = "|".join(str(policy[field]) for field in ("penalty", "objective", "profile"))
+        weights = np.asarray(policy["weights"], dtype=float).reshape(-1)
+        if not np.all(np.isfinite(weights)) or not len(weights):
+            raise ValueError(f"Poids financiers invalides pour {key}.")
+        if key in {item["policy_key"] for item in policy_rows}:
+            raise ValueError(f"Profil ES dupliqué : {key}.")
+        policy_rows.append({
+            "policy_key": key, "penalty": str(policy["penalty"]),
+            "objective": str(policy["objective"]), "profile": str(policy["profile"]),
+            "weights": weights,
+        })
+    n_instruments = len(policy_rows[0]["weights"])
+    if any(len(policy["weights"]) != n_instruments for policy in policy_rows):
+        raise ValueError("Les politiques doivent partager la même base d'instruments.")
+    weight_matrix = np.column_stack([policy["weights"] for policy in policy_rows])
+    observations: list[dict[str, object]] = []
+    settings = [(-1, "standard_mc", (0.0,), (1.0,))]
+    settings.extend(
+        (index, "importance_sampling", tuple(candidate["tilts"]),
+         tuple(candidate["mixture_probabilities"]))
+        for index, candidate in enumerate(candidates)
+    )
+    for candidate_index, method, tilts, probabilities in settings:
+        for seed in seeds:
+            design = build_conditional_policy_sampling_design(
+                base_result=base_result, product=product, spot0=spot0,
+                valuation_date=valuation_date, maturity_date=maturity_date,
+                rate=rate, dividend_yield=dividend_yield, vol=vol,
+                n_paths=n_paths, seed=int(seed), sampling_method=method,
+                tilts=tilts, mixture_probabilities=probabilities,
+            )
+            A = np.asarray(design["A"], dtype=float)
+            b = np.asarray(design["b"], dtype=float).reshape(-1)
+            likelihood = np.asarray(design["likelihood_weights"], dtype=float)
+            diagnostics = design["sampling_diagnostics"]
+            if A.shape != (len(b), n_instruments):
+                raise ValueError("Base d'instruments incompatible avec les politiques ES figées.")
+            loss_matrix = b[:, None] - A @ weight_matrix
+            for policy_index, policy in enumerate(policy_rows):
+                losses = loss_matrix[:, policy_index]
+                risk = empirical_var_es(losses, es_level, likelihood)
+                observations.append({
+                    "candidate_index": candidate_index, "method": method,
+                    "tilts": repr(tilts), "mixture_probabilities": repr(probabilities),
+                    "seed": int(seed), "policy_key": policy["policy_key"],
+                    "penalty": policy["penalty"], "objective": policy["objective"],
+                    "profile": policy["profile"], "es": float(risk["es"]),
+                    "tail_effective_sample_size": float(risk["tail_effective_sample_size"]),
+                    "effective_sample_ratio": float(diagnostics["effective_sample_ratio"]),
+                    "maximum_normalized_weight": float(diagnostics["maximum_normalized_weight"]),
+                })
+    details = pd.DataFrame(observations)
+    policy_summary = details.groupby(
+        ["candidate_index", "method", "tilts", "mixture_probabilities",
+         "policy_key", "penalty", "objective", "profile"], as_index=False,
+    ).agg(
+        n_repetitions=("seed", "size"), es_mean=("es", "mean"),
+        es_std=("es", "std"),
+        tail_ess_min=("tail_effective_sample_size", "min"),
+        effective_sample_ratio_min=("effective_sample_ratio", "min"),
+    )
+    standard = policy_summary.loc[
+        policy_summary["candidate_index"].eq(-1), ["policy_key", "es_mean", "es_std"]
+    ].rename(columns={
+        "es_mean": "standard_mc_es_mean", "es_std": "standard_mc_es_std",
+    })
+    policy_summary = policy_summary.merge(standard, on="policy_key", validate="many_to_one")
+    policy_summary["precision_ratio_to_mc"] = (
+        policy_summary["es_std"] / policy_summary["standard_mc_es_std"].clip(lower=1e-8)
+    )
+    policy_summary["es_mean_difference_to_mc"] = (
+        policy_summary["es_mean"] - policy_summary["standard_mc_es_mean"]
+    )
+    candidate_summary = policy_summary.loc[policy_summary["candidate_index"].ge(0)].groupby(
+        ["candidate_index", "tilts", "mixture_probabilities"], as_index=False,
+    ).agg(
+        n_policies=("policy_key", "nunique"),
+        worst_precision_ratio_to_mc=("precision_ratio_to_mc", "max"),
+        median_precision_ratio_to_mc=("precision_ratio_to_mc", "median"),
+        worst_es_std=("es_std", "max"),
+        tail_ess_min=("tail_ess_min", "min"),
+        effective_sample_ratio_min=("effective_sample_ratio_min", "min"),
+    )
+    candidate_summary["passes_weight_diagnostics"] = (
+        candidate_summary["effective_sample_ratio_min"] >= minimum_effective_sample_ratio
+    ) & np.isfinite(candidate_summary["worst_precision_ratio_to_mc"])
+    baseline = policy_summary.loc[policy_summary["candidate_index"].eq(-1)]
+    baseline_row = pd.DataFrame([{
+        "candidate_index": -1,
+        "tilts": repr((0.0,)), "mixture_probabilities": repr((1.0,)),
+        "n_policies": int(baseline["policy_key"].nunique()),
+        "worst_precision_ratio_to_mc": 1.0,
+        "median_precision_ratio_to_mc": 1.0,
+        "worst_es_std": float(baseline["es_std"].max()),
+        "tail_ess_min": float(baseline["tail_ess_min"].min()),
+        "effective_sample_ratio_min": 1.0,
+        "passes_weight_diagnostics": True,
+    }])
+    candidate_summary = pd.concat([baseline_row, candidate_summary], ignore_index=True)
+    eligible = candidate_summary.loc[candidate_summary["passes_weight_diagnostics"]]
+    recommended_index = int(eligible.sort_values(
+        ["worst_precision_ratio_to_mc", "tail_ess_min", "candidate_index"],
+        ascending=[True, False, True],
+    ).iloc[0]["candidate_index"])
+    candidate_summary["recommended"] = candidate_summary["candidate_index"].eq(recommended_index)
+    policy_summary["recommended"] = policy_summary["candidate_index"].eq(recommended_index)
+    return {
+        "summary": candidate_summary, "policy_summary": policy_summary,
+        "details": details, "recommended_candidate_index": recommended_index,
+        "selection_rule": "minimum_worst_policy_es_std_ratio_including_standard_mc_subject_to_ess_ratio",
+        "test_status": "pilot_only_final_sample_untouched",
     }
 
 

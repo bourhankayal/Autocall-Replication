@@ -7,8 +7,9 @@ from ..products import AutocallProduct, VanillaProduct, Cash, _year_fraction
 from .pathwise_payoff import vanilla_discounted_payoff_from_path
 from ..monte_carlo import simulate_gbm_path
 from .common import benchmark_metrics, build_naive_vanilla_basis, contractual_simulation_end_date
-from .optimization import SolverConfig, solve_replication
+from .optimization import SolverConfig, solve_l0_multistart, solve_replication
 from .portfolio_diagnostics import grouped_portfolio_weight_metrics
+from .risk import tail_risk_metrics
 from .static_cashflows import (
     autocall_value_curve_on_path,
     build_timewise_curve_dataset,
@@ -176,6 +177,8 @@ def run_conditional_benchmark_curve(
     split_final_by_barrier: bool = True,
     min_state_paths: int = 20,
     solver: str = "legacy",
+    l1_ratio: float = 0.5,
+    precomputed_dataset: list[dict[str, object]] | None = None,
 ) -> dict[str, object]:
     """Calibre un panier par date et, à maturité, par état de barrière."""
     valuation_date = pd.Timestamp(valuation_date)
@@ -193,18 +196,26 @@ def run_conditional_benchmark_curve(
         spot_min_mult=spot_min_mult,
         spot_max_mult=spot_max_mult,
     )
-    dataset = build_conditional_curve_dataset(
-        product=product,
-        vanillas=vanillas,
-        spot0=spot0,
-        valuation_date=valuation_date,
-        maturity_date=maturity_date,
-        rate=rate,
-        dividend_yield=dividend_yield,
-        vol=vol,
-        n_paths=n_paths,
-        seed=seed,
-    )
+    if precomputed_dataset is None:
+        dataset = build_conditional_curve_dataset(
+            product=product,
+            vanillas=vanillas,
+            spot0=spot0,
+            valuation_date=valuation_date,
+            maturity_date=maturity_date,
+            rate=rate,
+            dividend_yield=dividend_yield,
+            vol=vol,
+            n_paths=n_paths,
+            seed=seed,
+        )
+    else:
+        dataset = precomputed_dataset
+        if len(dataset) != n_paths or any(
+            np.asarray(item["X_curve"]).shape[1] != len(vanillas)
+            for item in dataset
+        ):
+            raise ValueError("Le dataset pré-calculé ne correspond pas à la base ou au nombre de trajectoires.")
 
     split = max(1, min(int(train_frac * n_paths), n_paths - 1 if n_paths > 1 else 1))
     train_set = dataset[:split]
@@ -224,6 +235,28 @@ def run_conditional_benchmark_curve(
         feature_indices_by_date[date_index] = np.asarray(indices, dtype=int)
 
     models = {}
+    l0_initialization_rows = []
+
+    def fit_node(X: np.ndarray, y: np.ndarray, date_index: int, state: bool | None):
+        config = SolverConfig(
+            solver=solver, scale_features=True, penalty=penalty, alpha=alpha,
+            l1_ratio=l1_ratio,
+        )
+        if penalty != "l0":
+            return solve_replication(X, y, config)
+        node_seed = seed + 7001 + 3 * date_index + (0 if state is None else 1 + int(state))
+        result, audit = solve_l0_multistart(X, y, config, seed=node_seed)
+        for row in audit:
+            l0_initialization_rows.append({
+                "date": pd.Timestamp(dates[date_index]),
+                "state": "alive" if state is None else (
+                    "barrier_hit" if state else "barrier_not_hit"
+                ),
+                "alpha": float(alpha),
+                **row,
+            })
+        return result
+
     for date_index, date in enumerate(dates):
         feature_indices = feature_indices_by_date[date_index]
         alive_mask = np.asarray(
@@ -236,15 +269,8 @@ def run_conditional_benchmark_curve(
         if not np.any(alive_mask):
             raise ValueError(f"Aucun path vivant pour la date {date}.")
 
-        optimization_result = solve_replication(
-            A=X_date[alive_mask],
-            b=y_date[alive_mask],
-            config=SolverConfig(
-                solver=solver,
-                scale_features=True,
-                penalty=penalty,
-                alpha=alpha,
-            ),
+        optimization_result = fit_node(
+            X_date[alive_mask], y_date[alive_mask], date_index, None,
         )
         models[(date_index, None)] = {
             "date": pd.Timestamp(date),
@@ -266,15 +292,8 @@ def run_conditional_benchmark_curve(
                 state_mask = alive_mask & barrier_mask
                 if int(np.sum(state_mask)) < min_state_paths:
                     continue
-                state_optimization_result = solve_replication(
-                    A=X_date[state_mask],
-                    b=y_date[state_mask],
-                    config=SolverConfig(
-                        solver=solver,
-                        scale_features=True,
-                        penalty=penalty,
-                        alpha=alpha,
-                    ),
+                state_optimization_result = fit_node(
+                    X_date[state_mask], y_date[state_mask], date_index, barrier_state,
                 )
                 models[(date_index, barrier_state)] = {
                     "date": pd.Timestamp(date),
@@ -407,10 +426,15 @@ def run_conditional_benchmark_curve(
         "y_test_matrix": y_test_matrix,
         "metrics_train": metrics_train,
         "metrics_test": metrics_test,
+        "terminal_risk_test": (
+            tail_risk_metrics((y_test_matrix - pred_test_matrix).sum(axis=1), levels=(0.975,))
+            if len(test_set) else {}
+        ),
         "metrics_train_alive": metrics_train_alive,
         "metrics_test_alive": metrics_test_alive,
         "metrics_by_date": metrics_by_date,
         "optimization": optimization,
+        "l0_initialization_audit": pd.DataFrame(l0_initialization_rows),
         "portfolio_metrics": portfolio_metrics,
         "family": family,
         "split": split,

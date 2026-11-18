@@ -1,0 +1,7 @@
+﻿Famille,Profil,Ratio L1 (ρ),Alpha relatif (queue),lambda_es,RMSE validation,ES validation,Coefficients actifs
+calls_puts,rmse_priority,0.25,0.01,0.05,2.4507,9.5849,130
+calls_puts,compromise,0.25,0.03,2.0,3.247,3.7249,130
+calls_puts,es_priority,0.25,0.1,1.0,7.4538,-1.3125,154
+full,rmse_priority,0.25,0.01,0.05,2.4323,9.4777,201
+full,compromise,0.25,0.03,2.0,3.1263,3.728,252
+full,es_priority,0.25,0.01,1.0,6.2751,1.5815,336

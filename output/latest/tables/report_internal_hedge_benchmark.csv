@@ -1,0 +1,25 @@
+﻿Famille,Pénalité,Profil,RMSE résiduelle (% nominal),"ES résiduel 97,5 % (% nominal)",rmse_improvement_vs_reference,es_975_improvement_vs_reference
+calls_puts,l0,performance,4.2098,15.2178,0.0,0.0
+calls_puts,l0,compromise,4.2098,15.2178,0.0,0.0
+calls_puts,l0,parsimony,4.2098,15.2178,0.0,0.0
+calls_puts,l1,performance,3.9114,11.2071,0.0,0.0
+calls_puts,l1,compromise,3.9114,11.2071,0.0,0.0
+calls_puts,l1,parsimony,3.9114,11.2071,0.0,0.0
+calls_puts,l2,performance,3.628,8.1461,0.0,0.0
+calls_puts,l2,compromise,5.8861,5.8549,0.0,0.0
+calls_puts,l2,parsimony,6.3811,5.8147,0.0,0.0
+calls_puts,elastic_net,performance,3.6832,10.5423,0.0,0.0
+calls_puts,elastic_net,compromise,3.8744,13.0757,0.0,0.0
+calls_puts,elastic_net,parsimony,4.1813,6.9688,0.0,0.0
+full,l0,performance,3.7371,12.2629,0.1123,0.1942
+full,l0,compromise,3.7371,12.2629,0.1123,0.1942
+full,l0,parsimony,3.7371,12.2629,0.1123,0.1942
+full,l1,performance,6.2205,15.6449,-0.5904,-0.396
+full,l1,compromise,6.2205,15.6449,-0.5904,-0.396
+full,l1,parsimony,6.3315,14.3437,-0.6187,-0.2799
+full,l2,performance,3.5828,8.0849,0.0125,0.0075
+full,l2,compromise,3.5815,9.5877,0.3915,-0.6375
+full,l2,parsimony,6.3844,5.8105,-0.0005,0.0007
+full,elastic_net,performance,3.5034,8.8477,0.0488,0.1607
+full,elastic_net,compromise,3.5609,10.052,0.0809,0.2312
+full,elastic_net,parsimony,5.333,6.1262,-0.2754,0.1209

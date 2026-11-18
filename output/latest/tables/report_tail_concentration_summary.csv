@@ -1,0 +1,25 @@
+﻿Famille,Pénalité,Profil,Niveau de plafond,es,tail_effective_sample_size,effective_positive_tail_contributors
+calls_puts,l0,performance,0.975,15.2178,62.751,54.3286
+calls_puts,l0,compromise,0.975,15.2178,62.751,54.3286
+calls_puts,l0,parsimony,0.975,15.2178,62.751,54.3286
+calls_puts,l1,performance,0.975,11.2071,62.751,53.0711
+calls_puts,l1,compromise,0.975,11.2071,62.751,53.0711
+calls_puts,l1,parsimony,0.975,11.2071,62.751,53.0711
+calls_puts,l2,performance,0.975,8.1461,62.751,47.4892
+calls_puts,l2,compromise,0.975,5.8549,62.751,40.749
+calls_puts,l2,parsimony,0.975,5.8147,62.751,40.9391
+calls_puts,elastic_net,performance,0.975,10.5423,62.751,45.9729
+calls_puts,elastic_net,compromise,0.975,13.0757,62.751,45.5529
+calls_puts,elastic_net,parsimony,0.975,6.9688,62.751,43.477
+full,l0,performance,0.975,12.2629,62.751,50.8609
+full,l0,compromise,0.975,12.2629,62.751,50.8609
+full,l0,parsimony,0.975,12.2629,62.751,50.8609
+full,l1,performance,0.975,15.6449,62.751,38.5682
+full,l1,compromise,0.975,15.6449,62.751,38.5682
+full,l1,parsimony,0.975,14.3437,62.751,38.5652
+full,l2,performance,0.975,8.0849,62.751,48.2195
+full,l2,compromise,0.975,9.5877,62.751,50.7842
+full,l2,parsimony,0.975,5.8105,62.751,40.9111
+full,elastic_net,performance,0.975,8.8477,62.751,49.5576
+full,elastic_net,compromise,0.975,10.052,62.751,51.3737
+full,elastic_net,parsimony,0.975,6.1262,92.8782,44.933

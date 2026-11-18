@@ -250,6 +250,7 @@ def select_regularization_candidates(
     table: pd.DataFrame,
     min_active_options: int = 2,
     max_active_options: int = 100,
+    stability_column: str | None = None,
 ) -> pd.DataFrame:
     """Filtre les candidats et recalcule Pareto au sein de chaque pénalité.
 
@@ -276,7 +277,13 @@ def select_regularization_candidates(
     converged = selected["converged"].astype(bool)
     enough_options = selected["n_options_active"] >= min_active_options
     not_too_many_options = selected["n_options_active"] <= max_active_options
-    eligible = converged & enough_options & not_too_many_options
+    if stability_column is not None and stability_column not in selected:
+        raise KeyError(f"Colonne de stabilité absente : {stability_column}")
+    stable = (
+        selected[stability_column].fillna(False).astype(bool)
+        if stability_column is not None else pd.Series(True, index=selected.index)
+    )
+    eligible = converged & enough_options & not_too_many_options & stable
 
     selected["is_candidate_pareto"] = False
     for _, group in selected.loc[eligible].groupby("penalty", sort=False):
@@ -291,6 +298,8 @@ def select_regularization_candidates(
             reason = "rejected_fewer_than_minimum_options"
         elif int(row["n_options_active"]) > max_active_options:
             reason = "rejected_more_than_maximum_options"
+        elif not bool(stable.loc[index]):
+            reason = "rejected_unstable_across_seeds"
         elif not bool(selected.loc[index, "is_candidate_pareto"]):
             reason = "rejected_dominated_within_penalty"
         else:
@@ -654,13 +663,23 @@ def solve_regularization_path(
     active_threshold: float = DEFAULT_ACTIVE_THRESHOLD,
     max_iter: int = 5000,
     tolerance: float = 1e-6,
+    l0_cold_start_check: bool = True,
+    l0_multistart_count: int = 3,
+    l0_multistart_seed: int = 2718,
+    l0_objective_gap_tolerance: float = 1e-6,
+    l0_support_jaccard_tolerance: float = 0.95,
+    l0_weight_distance_tolerance: float = 0.05,
 ) -> dict[str, object]:
     """Calibre le solveur proximal sur train et compare sur validation uniquement.
 
     Le bloc de test est réservé mais aucune prédiction ni métrique de test n'est
     calculée. Les solutions sont parcourues d'alpha fort vers alpha faible avec
-    warm start. L0 reste non convexe : le chemin décrit les solutions obtenues,
-    sans certifier un optimum global.
+    warm start. Pour L0, un cold start contrôle ensuite la dépendance au chemin.
+    Des initialisations supplémentaires reproductibles ne sont lancées que si
+    les deux solutions diffèrent matériellement. L'initialisation retenue
+    minimise l'objectif train parmi les exécutions convergées ; validation et
+    test ne choisissent jamais l'initialisation. Aucune de ces précautions ne
+    certifie toutefois un optimum global.
     """
     A = np.asarray(A, dtype=float)
     b = np.asarray(b, dtype=float).reshape(-1)
@@ -670,6 +689,19 @@ def solve_regularization_path(
         raise ValueError("Il faut un instrument par colonne de A.")
     if penalty not in {"l0", "l1", "l2", "elastic_net"}:
         raise ValueError("Le chemin accepte uniquement L0, L1, L2 ou Elastic Net.")
+    if l0_multistart_count < 0:
+        raise ValueError("l0_multistart_count doit être positif ou nul.")
+    for name, value in {
+        "l0_objective_gap_tolerance": l0_objective_gap_tolerance,
+        "l0_weight_distance_tolerance": l0_weight_distance_tolerance,
+    }.items():
+        if not np.isfinite(value) or value < 0.0:
+            raise ValueError(f"{name} doit être fini et positif ou nul.")
+    if (
+        not np.isfinite(l0_support_jaccard_tolerance)
+        or not 0.0 <= l0_support_jaccard_tolerance <= 1.0
+    ):
+        raise ValueError("l0_support_jaccard_tolerance doit appartenir à [0, 1].")
 
     slices = train_validation_test_slices(
         len(b),
@@ -728,26 +760,142 @@ def solve_regularization_path(
     rows: list[dict[str, object]] = []
     solutions: list[dict[str, object]] = []
     warm_start: np.ndarray | None = None
+    l0_initialization_rows: list[dict[str, object]] = []
+    l0_rng = np.random.default_rng(l0_multistart_seed)
+
+    def _support(weights: np.ndarray) -> np.ndarray:
+        penalized_mask = np.ones(len(weights), dtype=bool)
+        penalized_mask[list(unpenalized_indices)] = False
+        return penalized_mask & (np.abs(weights) > active_threshold)
+
+    def _support_jaccard(left: np.ndarray, right: np.ndarray) -> float:
+        union = np.count_nonzero(left | right)
+        return 1.0 if union == 0 else float(np.count_nonzero(left & right) / union)
+
+    def _relative_weight_distance(left: np.ndarray, right: np.ndarray) -> float:
+        return float(np.linalg.norm(left - right) / max(1.0, np.linalg.norm(left)))
 
     for solution_index, alpha in enumerate(alpha_grid):
+        solver_config = SolverConfig(
+            solver="proximal" if penalty == "l0" else "fista",
+            penalty=penalty,
+            alpha=float(alpha),
+            l1_ratio=l1_ratio,
+            scale_features=scale_features,
+            max_iter=max_iter,
+            tolerance=tolerance,
+            active_threshold=active_threshold,
+            unpenalized_indices=unpenalized_indices,
+        )
         optimization = solve_replication(
             A_train,
             b_train,
-            SolverConfig(
-                solver="proximal" if penalty == "l0" else "fista",
-                penalty=penalty,
-                alpha=float(alpha),
-                l1_ratio=l1_ratio,
-                scale_features=scale_features,
-                max_iter=max_iter,
-                tolerance=tolerance,
-                unpenalized_indices=unpenalized_indices,
-            ),
+            solver_config,
             initial_weights=warm_start,
         )
+        initialization_results = [
+            ("warm_start" if warm_start is not None else "cold_start", optimization)
+        ]
+        cold_checked = False
+        multistart_triggered = False
+        warm_cold_objective_gap = 0.0
+        warm_cold_support_jaccard = 1.0
+        warm_cold_weight_distance = 0.0
+        selected_initialization = initialization_results[0][0]
+
+        if penalty == "l0" and warm_start is not None and l0_cold_start_check:
+            cold_checked = True
+            cold_optimization = solve_replication(
+                A_train,
+                b_train,
+                solver_config,
+                initial_weights=None,
+            )
+            initialization_results.append(("cold_start", cold_optimization))
+            objective_reference = max(1.0, abs(float(optimization.objective_value)))
+            warm_cold_objective_gap = float(
+                abs(
+                    float(optimization.objective_value)
+                    - float(cold_optimization.objective_value)
+                )
+                / objective_reference
+            )
+            warm_cold_support_jaccard = _support_jaccard(
+                _support(optimization.weights), _support(cold_optimization.weights)
+            )
+            warm_cold_weight_distance = _relative_weight_distance(
+                optimization.weights, cold_optimization.weights
+            )
+            multistart_triggered = bool(
+                not optimization.converged
+                or not cold_optimization.converged
+                or warm_cold_objective_gap > l0_objective_gap_tolerance
+                or warm_cold_support_jaccard < l0_support_jaccard_tolerance
+                or warm_cold_weight_distance > l0_weight_distance_tolerance
+            )
+
+            if multistart_triggered:
+                anchor = min(
+                    initialization_results,
+                    key=lambda item: float(item[1].objective_value),
+                )[1].weights
+                perturbation_scale = np.maximum(np.abs(anchor), 1e-3)
+                for start_index in range(l0_multistart_count):
+                    random_initial = anchor + l0_rng.normal(
+                        loc=0.0,
+                        scale=0.25 * perturbation_scale,
+                        size=len(anchor),
+                    )
+                    random_initial[list(unpenalized_indices)] = anchor[
+                        list(unpenalized_indices)
+                    ]
+                    random_result = solve_replication(
+                        A_train,
+                        b_train,
+                        solver_config,
+                        initial_weights=random_initial,
+                    )
+                    initialization_results.append(
+                        (f"multistart_{start_index + 1}", random_result)
+                    )
+
+            converged_results = [
+                item for item in initialization_results if item[1].converged
+            ]
+            selection_pool = converged_results or initialization_results
+            selected_initialization, optimization = min(
+                selection_pool,
+                key=lambda item: float(item[1].objective_value),
+            )
+
         weights = optimization.weights
         if optimization.converged:
             warm_start = weights.copy()
+
+        if penalty == "l0":
+            distinct_supports = {
+                tuple(np.flatnonzero(_support(result.weights)).tolist())
+                for _, result in initialization_results
+            }
+            l0_initialization_rows.append(
+                {
+                    "solution_index": solution_index,
+                    "alpha": float(alpha),
+                    "alpha_relative": float(alpha / alpha_reference),
+                    "warm_start_used": solution_index > 0,
+                    "cold_start_checked": cold_checked,
+                    "multistart_triggered": multistart_triggered,
+                    "n_initializations": len(initialization_results),
+                    "n_converged_initializations": sum(
+                        int(result.converged) for _, result in initialization_results
+                    ),
+                    "n_distinct_supports": len(distinct_supports),
+                    "selected_initialization": selected_initialization,
+                    "warm_cold_relative_objective_gap": warm_cold_objective_gap,
+                    "warm_cold_support_jaccard": warm_cold_support_jaccard,
+                    "warm_cold_relative_weight_distance": warm_cold_weight_distance,
+                }
+            )
 
         train_metrics = benchmark_metrics(b_train, A_train @ weights)
         validation_metrics = benchmark_metrics(
@@ -796,6 +944,19 @@ def solve_regularization_path(
         "alpha_grid": alpha_grid,
         "table": table,
         "solutions": solutions,
+        "initialization_audit": pd.DataFrame(l0_initialization_rows),
+        "initialization_protocol": (
+            {
+                "stage_1": "warm_start_regularization_path",
+                "stage_2": "cold_start_control_from_second_alpha",
+                "stage_3": "reproducible_multistart_if_nonconverged_or_material_difference",
+                "selection_rule": "minimum_training_objective_among_converged_runs",
+                "validation_selects_initialization": False,
+                "test_status": "reserved_not_evaluated",
+            }
+            if penalty == "l0"
+            else None
+        ),
         "split": {
             "n_train": n_train,
             "n_validation": n_validation,

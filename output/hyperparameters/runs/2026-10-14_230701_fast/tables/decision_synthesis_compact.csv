@@ -1,0 +1,25 @@
+﻿family,penalty,method,profile,alpha_relative,l1_ratio,lambda_es,es_budget_pct_notional,validation_rmse_pct_notional,validation_es_pct_notional,n_options_active,selection_status
+calls_puts,elastic_net,RMSE + lambda ES,compromise,0.1,0.9,0.5,,3.0996873265070715,3.3727357300543686,117.0,retenu
+calls_puts,elastic_net,RMSE régularisée,compromise,0.056234132519034905,0.25,,,2.9541308936979034,,16.0,retenu
+calls_puts,elastic_net,RMSE sous budget ES,compromise,0.1,0.5,,4.764943222507611,3.5303776754686096,4.0776170658927064,46.0,retenu
+calls_puts,l0,RMSE + lambda ES,compromise,1.0,,0.25,,4.199280609401125,9.121658627764228,6.0,retenu
+calls_puts,l0,RMSE régularisée,compromise,0.7498942093324558,,,,3.6510446247428594,,2.0,retenu
+calls_puts,l0,RMSE sous budget ES,compromise,1.0,,,14.294829667522833,3.388666049895337,14.240638918840055,2.0,retenu
+calls_puts,l1,RMSE + lambda ES,compromise,0.1,,0.5,,2.7423072951686702,8.038234954146755,120.0,retenu
+calls_puts,l1,RMSE régularisée,compromise,0.17782794100389226,,,,3.575649980209277,,2.0,retenu
+calls_puts,l1,RMSE sous budget ES,compromise,0.1,,,8.100403478262939,2.412029807923163,7.254553216043854,68.0,retenu
+calls_puts,l2,RMSE + lambda ES,compromise,1.0,,0.5,,5.076460653251897,24.99013707307107,125.0,retenu
+calls_puts,l2,RMSE régularisée,compromise,1.7782794100389228,,,,3.3893046320236793,,92.0,retenu
+calls_puts,l2,RMSE sous budget ES,compromise,,,,,,,,aucun budget propre respecté en validation
+full,elastic_net,RMSE + lambda ES,compromise,0.03,0.25,0.5,,3.087465522724195,3.8500789858385476,196.0,retenu
+full,elastic_net,RMSE régularisée,compromise,0.07498942093324558,0.25,,,3.020023303309361,,19.0,retenu
+full,elastic_net,RMSE sous budget ES,compromise,0.1,0.5,,5.744715617101897,3.466009194582233,4.356121488615026,79.0,retenu
+full,l0,RMSE + lambda ES,compromise,1.0,,0.1,,3.6048592886720554,11.732975808210954,3.0,retenu
+full,l0,RMSE régularisée,compromise,0.3162277660168379,,,,3.8171024649432663,,5.0,retenu
+full,l0,RMSE sous budget ES,compromise,1.0,,,14.936260604464932,3.317734757137566,14.55920075495224,3.0,retenu
+full,l1,RMSE + lambda ES,compromise,0.03,,0.5,,2.421553414138647,6.312110391476394,207.0,retenu
+full,l1,RMSE régularisée,compromise,0.002371373705661656,,,,1.9071063108149608,,13.0,retenu
+full,l1,RMSE sous budget ES,compromise,0.1,,,7.468130302232466,2.4769074639280624,6.406062577556883,155.0,retenu
+full,l2,RMSE + lambda ES,compromise,1.0,,0.25,,3.1543806770354568,11.991289041401508,250.0,retenu
+full,l2,RMSE régularisée,compromise,0.03162277660168378,,,,2.7859238551865517,,211.0,retenu
+full,l2,RMSE sous budget ES,compromise,1.0,,,13.212845919334361,2.8123344582244894,12.28482309469414,242.0,retenu

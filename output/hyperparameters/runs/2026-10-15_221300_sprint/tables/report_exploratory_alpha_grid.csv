@@ -1,0 +1,15 @@
+﻿Benchmark,Famille,Pénalité,Ratio L1 (ρ),Alpha,RMSE validation,Options actives
+conditional_cashflows,calls_puts,elastic_net,0.5,1.0,18.4113,84
+conditional_cashflows,calls_puts,l0,,0.0,21.2546,91
+conditional_cashflows,calls_puts,l1,,1.0,19.8078,75
+conditional_cashflows,calls_puts,l2,,1.0,18.5611,88
+conditional_cashflows,full,elastic_net,0.5,0.0001,6.5575,182
+conditional_cashflows,full,l0,,0.0,9.0769,152
+conditional_cashflows,full,l1,,1.0,6.5368,153
+conditional_cashflows,full,l2,,0.0001,9.1039,159
+static_cashflows,calls_puts,elastic_net,0.9,1.0,30.1514,102
+static_cashflows,calls_puts,l1,,1.0,29.1865,102
+static_cashflows,calls_puts,l2,,10000.0,44.6184,87
+static_cashflows,full,elastic_net,0.9,1.0,32.6856,203
+static_cashflows,full,l1,,1.0,30.0012,203
+static_cashflows,full,l2,,10000.0,44.5964,174

@@ -146,6 +146,32 @@ class ConditionalFundingTests(unittest.TestCase):
         )
         self.assertEqual(self.funding["test_status"], "reserved_not_evaluated")
 
+    def test_binary_modes_can_be_restricted_for_the_main_notebook(self):
+        funding = evaluate_conditional_policy_funding(
+            base_result=self.base,
+            product=self.product,
+            spot0=100.0,
+            valuation_date="2026-06-20",
+            maturity_date="2027-06-22",
+            rate=0.03,
+            dividend_yield=0.01,
+            vol=0.20,
+            n_paths=10,
+            seed=900,
+            initial_autocall_premium=100.0,
+            spread_width=5.0,
+            binary_modes=("theoretical", "vertical_spread"),
+        )
+
+        self.assertEqual(
+            funding["binary_modes"], ("theoretical", "vertical_spread")
+        )
+        self.assertEqual(
+            set(funding["summary"]["binary_mode"]),
+            {"theoretical", "vertical_spread"},
+        )
+        self.assertEqual(funding["otc_status"], "not_evaluated")
+
     def test_cash_ledger_satisfies_the_accounting_identity(self):
         ledger = self.funding["ledger"]
         observations = ledger.loc[ledger["event_type"] == "observation_settlement"]

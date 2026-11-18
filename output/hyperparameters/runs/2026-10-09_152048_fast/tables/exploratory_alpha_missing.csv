@@ -1,0 +1,3 @@
+﻿benchmark,family,penalty,reason
+price_surface,calls_puts,l0,aucun alpha convergé avec au moins deux options actives
+price_surface,full,l0,aucun alpha convergé avec au moins deux options actives

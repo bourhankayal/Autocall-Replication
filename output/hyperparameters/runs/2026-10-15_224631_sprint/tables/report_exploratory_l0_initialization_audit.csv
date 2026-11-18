@@ -1,0 +1,5 @@
+﻿Benchmark,Famille,Essais,Sélectionnés,Taux de convergence
+conditional_cashflows,calls_puts,54,20,0.6667
+conditional_cashflows,full,54,20,0.7963
+static_cashflows,calls_puts,14,5,0.2857
+static_cashflows,full,14,5,0.2857

@@ -1,0 +1,73 @@
+﻿Famille,Pénalité,Étape,Restantes,Éliminées
+calls_puts,l0,Grille initiale,5,0
+calls_puts,l0,Convergés,5,0
+calls_puts,l0,≥ 2 options,4,1
+calls_puts,l0,Robustes sur 2 graines,1,3
+calls_puts,l0,Non dominés,1,0
+calls_puts,l0,Performance statique,1,0
+calls_puts,l0,Sans doublons stricts,1,0
+calls_puts,l0,Sans quasi-doublons,1,0
+calls_puts,l0,Profils distincts,1,0
+calls_puts,l1,Grille initiale,5,0
+calls_puts,l1,Convergés,5,0
+calls_puts,l1,≥ 2 options,4,1
+calls_puts,l1,Robustes sur 2 graines,4,0
+calls_puts,l1,Non dominés,1,3
+calls_puts,l1,Performance statique,1,0
+calls_puts,l1,Sans doublons stricts,1,0
+calls_puts,l1,Sans quasi-doublons,1,0
+calls_puts,l1,Profils distincts,1,0
+calls_puts,l2,Grille initiale,5,0
+calls_puts,l2,Convergés,5,0
+calls_puts,l2,≥ 2 options,5,0
+calls_puts,l2,Robustes sur 2 graines,5,0
+calls_puts,l2,Non dominés,2,3
+calls_puts,l2,Performance statique,1,1
+calls_puts,l2,Sans doublons stricts,1,0
+calls_puts,l2,Sans quasi-doublons,1,0
+calls_puts,l2,Profils distincts,1,0
+calls_puts,elastic_net,Grille initiale,15,0
+calls_puts,elastic_net,Convergés,15,0
+calls_puts,elastic_net,≥ 2 options,12,3
+calls_puts,elastic_net,Robustes sur 2 graines,12,0
+calls_puts,elastic_net,Non dominés,1,11
+calls_puts,elastic_net,Performance statique,1,0
+calls_puts,elastic_net,Sans doublons stricts,1,0
+calls_puts,elastic_net,Sans quasi-doublons,1,0
+calls_puts,elastic_net,Profils distincts,1,0
+full,l0,Grille initiale,5,0
+full,l0,Convergés,5,0
+full,l0,≥ 2 options,4,1
+full,l0,Robustes sur 2 graines,4,0
+full,l0,Non dominés,1,3
+full,l0,Performance statique,1,0
+full,l0,Sans doublons stricts,1,0
+full,l0,Sans quasi-doublons,1,0
+full,l0,Profils distincts,1,0
+full,l1,Grille initiale,5,0
+full,l1,Convergés,5,0
+full,l1,≥ 2 options,4,1
+full,l1,Robustes sur 2 graines,4,0
+full,l1,Non dominés,2,2
+full,l1,Performance statique,1,1
+full,l1,Sans doublons stricts,1,0
+full,l1,Sans quasi-doublons,1,0
+full,l1,Profils distincts,1,0
+full,l2,Grille initiale,5,0
+full,l2,Convergés,5,0
+full,l2,≥ 2 options,5,0
+full,l2,Robustes sur 2 graines,5,0
+full,l2,Non dominés,3,2
+full,l2,Performance statique,1,2
+full,l2,Sans doublons stricts,1,0
+full,l2,Sans quasi-doublons,1,0
+full,l2,Profils distincts,1,0
+full,elastic_net,Grille initiale,15,0
+full,elastic_net,Convergés,15,0
+full,elastic_net,≥ 2 options,12,3
+full,elastic_net,Robustes sur 2 graines,12,0
+full,elastic_net,Non dominés,3,9
+full,elastic_net,Performance statique,1,2
+full,elastic_net,Sans doublons stricts,1,0
+full,elastic_net,Sans quasi-doublons,1,0
+full,elastic_net,Profils distincts,1,0

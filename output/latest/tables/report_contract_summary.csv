@@ -1,0 +1,13 @@
+﻿Paramètre,valeur
+nominal,100.0
+spot initial,100.0
+seuil de rappel,1.0
+coupon par observation,0.02
+barrière de protection,0.7
+observations (mois),"[3, 6, 9, 12]"
+date de valorisation,2026-06-20
+fixing effectif,2026-06-22
+maturité effective,2027-06-22
+taux sans risque,0.03
+rendement du dividende,0.01
+volatilité,0.2

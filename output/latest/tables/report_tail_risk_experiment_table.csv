@@ -1,0 +1,9 @@
+﻿Famille,Profil,calibration_sampling,risk_control,Pénalité,Plafond ES (% nominal),Plafond ES commun (% nominal),constraint_feasible_in_calibration,Erreur moyenne (% nominal),MAE (% nominal),evaluation_rmse_pct_notional,Taux de sous-réplication,evaluation_es_pct_notional,Perte maximale (% nominal),Plafond respecté en évaluation,Coefficients actifs
+calls_puts,compromise,standard_mc,rmse_only,elastic_net,,10.0,True,-0.0286,0.7576,2.4369,0.536,9.0952,20.0738,True,160
+calls_puts,compromise,standard_mc,es_constraint,elastic_net,10.0,10.0,True,-0.0299,0.6822,2.3334,0.3816,8.652,18.6716,True,82
+calls_puts,compromise,standard_mc_repeat,rmse_only,elastic_net,,10.0,True,0.1677,0.9527,2.656,0.5664,10.3942,18.6022,False,134
+calls_puts,compromise,standard_mc_repeat,es_constraint,elastic_net,10.0,10.0,True,0.184,0.8816,2.6538,0.552,10.4453,17.8867,False,55
+full,compromise,standard_mc,rmse_only,elastic_net,,10.0,True,0.0221,0.8498,2.4775,0.5544,9.6761,17.6543,True,294
+full,compromise,standard_mc,es_constraint,elastic_net,5.0,10.0,True,-0.0297,0.6817,2.3332,0.38,8.6518,18.6873,True,126
+full,compromise,standard_mc_repeat,rmse_only,elastic_net,,10.0,True,0.2495,1.1318,2.7448,0.596,10.2759,17.0001,False,238
+full,compromise,standard_mc_repeat,es_constraint,elastic_net,5.0,10.0,True,-0.1427,0.8959,2.8022,0.5496,6.9224,11.3253,True,64

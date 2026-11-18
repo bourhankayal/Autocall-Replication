@@ -1,8 +1,12 @@
 # Overleaf Report
 
-The `rapport_autocall.tex` file is self-contained and can be imported directly
-into an Overleaf project. The `figures/` directory is intended for the manual
-addition of validated vector-PDF exports.
+The historical `rapport_autocall.tex` file is the V0. The new
+`rapport_autocall_v1.tex` is a separate, complete research-report draft; the V0
+is intentionally preserved. `V1_HANDOFF.md` lists the remaining notebook work,
+the displays still worth creating and the exact vector-PDF files to upload.
+
+Both TeX files are self-contained and can be imported directly into an Overleaf
+project. The `figures/` directory is intended for validated vector-PDF exports.
 
 The document is compatible with Overleaf's default pdfLaTeX compiler; no
 compiler setting needs to be changed.

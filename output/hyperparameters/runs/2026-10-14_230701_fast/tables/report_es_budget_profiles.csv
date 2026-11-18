@@ -1,0 +1,22 @@
+﻿Famille,Pénalité,Profil,Ratio L1 (ρ),Alpha relatif (queue),es_budget_ratio,RMSE validation,ES validation,Options actives,method_status
+calls_puts,l0,rmse_priority,,1.0,1.5,3.3887,14.2406,2,L0 support-refit heuristic; not a global optimum
+calls_puts,l0,compromise,,1.0,1.5,3.3887,14.2406,2,L0 support-refit heuristic; not a global optimum
+calls_puts,l0,es_priority,,1.0,1.5,3.3887,14.2406,2,L0 support-refit heuristic; not a global optimum
+calls_puts,l1,rmse_priority,,0.03,1.15,2.34,9.7605,34,
+calls_puts,l1,compromise,,0.1,0.85,2.412,7.2546,68,
+calls_puts,l1,es_priority,,0.3,0.35,6.0602,2.6234,51,
+calls_puts,elastic_net,rmse_priority,0.5,0.01,1.0,2.2889,9.492,53,
+calls_puts,elastic_net,compromise,0.5,0.1,0.5,3.5304,4.0776,46,
+calls_puts,elastic_net,es_priority,0.25,1.0,0.35,7.77,2.3899,20,
+full,l0,rmse_priority,,1.0,1.3,3.3177,14.5592,3,L0 support-refit heuristic; not a global optimum
+full,l0,compromise,,1.0,1.3,3.3177,14.5592,3,L0 support-refit heuristic; not a global optimum
+full,l0,es_priority,,1.0,1.3,3.3177,14.5592,3,L0 support-refit heuristic; not a global optimum
+full,l1,rmse_priority,,0.03,1.5,2.3459,10.2634,120,
+full,l1,compromise,,0.1,0.65,2.4769,6.4061,155,
+full,l1,es_priority,,1.0,1.15,7.7082,2.6548,229,
+full,l2,rmse_priority,,1.0,1.15,2.8123,12.2848,242,
+full,l2,compromise,,1.0,1.15,2.8123,12.2848,242,
+full,l2,es_priority,,1.0,1.15,2.8123,12.2848,242,
+full,elastic_net,rmse_priority,0.5,0.01,0.85,2.2831,9.5823,219,
+full,elastic_net,compromise,0.5,0.1,0.5,3.466,4.3561,79,
+full,elastic_net,es_priority,0.9,1.0,0.25,7.7034,2.658,151,

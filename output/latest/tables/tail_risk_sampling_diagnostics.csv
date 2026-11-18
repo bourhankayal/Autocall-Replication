@@ -1,0 +1,3 @@
+﻿n_paths,weight_mean,weight_min,weight_q50,weight_q90,weight_q95,weight_q99,weight_max,maximum_normalized_weight,weight_cv,effective_sample_size,effective_sample_ratio,normalized_weight_entropy,normalized_weight_entropy_ratio,family
+375,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0026666666666666666,0.0,375.0,1.0,5.9269260259704115,1.0000000000000002,calls_puts
+375,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0026666666666666666,0.0,375.0,1.0,5.9269260259704115,1.0000000000000002,full

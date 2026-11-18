@@ -8,6 +8,7 @@ from autocall_replication.replication.common import fit_linear
 from autocall_replication.replication.optimization import (
     SolverConfig,
     available_solvers,
+    solve_l0_multistart,
     solve_replication,
 )
 from autocall_replication.replication.portfolio_diagnostics import (
@@ -27,6 +28,26 @@ def sample_instruments():
         EuropeanCall("call_100", 100.0, maturity, 1.0),
         EuropeanCall("call_110", 110.0, maturity, 1.0),
     ]
+
+
+class L0MultistartTests(unittest.TestCase):
+    def test_reproducible_training_only_selection(self):
+        rng = np.random.default_rng(2026)
+        A = np.column_stack((np.ones(30), rng.normal(size=(30, 3))))
+        b = 1.0 + 1.5 * A[:, 1] - 0.8 * A[:, 3]
+        config = SolverConfig(solver="proximal", penalty="l0", alpha=0.02)
+        first, audit_first = solve_l0_multistart(A, b, config, seed=19)
+        second, audit_second = solve_l0_multistart(A, b, config, seed=19)
+        np.testing.assert_allclose(first.weights, second.weights)
+        self.assertEqual(audit_first, audit_second)
+        self.assertGreaterEqual(len(audit_first), 2)
+        self.assertEqual(sum(bool(row["selected"]) for row in audit_first), 1)
+        eligible = [row for row in audit_first if row["converged"]]
+        if eligible:
+            self.assertAlmostEqual(
+                first.objective_value,
+                min(row["objective_train"] for row in eligible),
+            )
 
 
 class PortfolioDiagnosticsTests(unittest.TestCase):
@@ -127,6 +148,17 @@ class PortfolioDiagnosticsTests(unittest.TestCase):
 
 
 class OptimizationInterfaceTests(unittest.TestCase):
+    def test_unpenalized_ols_is_an_explicit_dense_reference(self):
+        A = np.array([[1.0, 0.0], [1.0, 1.0], [1.0, 2.0], [1.0, 3.0]])
+        b = np.array([1.0, 2.0, 2.5, 4.0])
+        result = solve_replication(
+            A, b, SolverConfig(solver="legacy", penalty="none", alpha=0.0)
+        )
+        expected, *_ = np.linalg.lstsq(A, b, rcond=None)
+        np.testing.assert_allclose(result.weights, expected)
+        self.assertEqual(result.penalty, "none")
+        self.assertEqual(result.alpha, 0.0)
+
     def test_legacy_interface_reproduces_fit_linear(self):
         A = np.array([[1.0, 0.0], [1.0, 1.0], [1.0, 2.0], [1.0, 3.0]])
         b = np.array([1.0, 2.0, 2.5, 4.0])
@@ -247,6 +279,54 @@ class OptimizationInterfaceTests(unittest.TestCase):
         self.assertEqual(result.weights[1], 0.0)
         self.assertEqual(result.weights[2], 0.0)
         self.assertAlmostEqual(result.weights[3], 2.0, places=7)
+        self.assertEqual(
+            result.termination_reason, "weight_objective_and_support_stable"
+        )
+        self.assertGreaterEqual(result.support_stable_iterations, 10)
+        self.assertEqual(result.final_support_size, 1)
+        self.assertTrue(result.objective_monotone)
+        self.assertLessEqual(result.final_relative_weight_change, 1e-10)
+        self.assertLessEqual(result.final_relative_objective_change, 1e-8)
+
+    def test_l0_does_not_converge_before_support_patience(self):
+        result = solve_replication(
+            np.eye(3),
+            np.array([1.0, 0.2, 2.0]),
+            SolverConfig(
+                solver="proximal",
+                penalty="l0",
+                alpha=0.1,
+                scale_features=False,
+                max_iter=3,
+                support_patience=4,
+                tolerance=1e-10,
+                objective_tolerance=1e-10,
+            ),
+        )
+
+        self.assertFalse(result.converged)
+        self.assertEqual(result.termination_reason, "max_iter")
+        self.assertLess(result.support_stable_iterations, 4)
+
+    def test_invalid_l0_convergence_hyperparameters_are_rejected(self):
+        with self.assertRaisesRegex(ValueError, "objective_tolerance"):
+            solve_replication(
+                np.eye(2),
+                np.ones(2),
+                SolverConfig(objective_tolerance=0.0),
+            )
+        with self.assertRaisesRegex(ValueError, "support_patience"):
+            solve_replication(
+                np.eye(2),
+                np.ones(2),
+                SolverConfig(support_patience=0),
+            )
+        with self.assertRaisesRegex(ValueError, "active_threshold"):
+            solve_replication(
+                np.eye(2),
+                np.ones(2),
+                SolverConfig(active_threshold=-1.0),
+            )
 
     def test_weighted_l1_penalizes_expensive_lines_more_strongly(self):
         A = np.eye(3)

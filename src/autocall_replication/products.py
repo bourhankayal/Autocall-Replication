@@ -105,6 +105,7 @@ class AutocallProduct:
 
         # Flux de cashflow construits au fil de la trajectoire
         cashflows = []
+        coupon_observations = []
         # Etat du produit
         called = False
         call_date = None
@@ -130,7 +131,9 @@ class AutocallProduct:
 
             # On enregistre le coupon versé à cette date, même si le produit est appelé
             # Coupon Athena : payé seulement si la barrière coupon est franchie
-            if s_obs >= self.coupon_barrier * s0:
+            coupon_paid = s_obs >= self.coupon_barrier * s0
+            coupon_observations.append(coupon_paid)
+            if coupon_paid:
                 cashflows.append({"date": obs_dt,"type": "coupon","amount": coupon_amount,"spot": s_obs})
 
             # On vérifie si le produit est appelé à cette date
@@ -181,6 +184,7 @@ class AutocallProduct:
         return {
             "called": called,
             "call_date": call_date,
+            "coupon_observations": tuple(coupon_observations),
             "barrier_hit": barrier_hit,
             "barrier_hit_date": barrier_hit_date,
             "spot_initial": s0,

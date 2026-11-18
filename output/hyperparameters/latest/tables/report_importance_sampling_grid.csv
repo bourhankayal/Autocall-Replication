@@ -1,0 +1,11 @@
+﻿Famille,Distribution simulée,n_policies,Pire écart-type IS / MC,Ratio médian IS / MC,ESS minimale (ratio),tail_ess_min,Recommandé
+calls_puts,MC standard — 0 : 100%,17,1.0,1.0,1.0,15.8629,True
+calls_puts,IS — 0 : 70% ; -1 : 30%,17,2.1673,1.4332,0.9256,17.8909,False
+calls_puts,IS — 0 : 50% ; -1 : 30% ; -2 : 20%,17,2.2528,1.4277,0.7601,16.9529,False
+calls_puts,IS — 0 : 55% ; -1.5 : 30% ; -3 : 15%,17,2.8851,1.877,0.7129,16.7452,False
+calls_puts,IS — 0 : 60% ; -2 : 25% ; -4 : 15%,17,2.1827,1.0322,0.6948,15.9434,False
+full,MC standard — 0 : 100%,18,1.0,1.0,1.0,15.8629,True
+full,IS — 0 : 70% ; -1 : 30%,18,3.3196,1.3662,0.9256,19.7045,False
+full,IS — 0 : 50% ; -1 : 30% ; -2 : 20%,18,2.2606,1.2624,0.7601,19.6956,False
+full,IS — 0 : 55% ; -1.5 : 30% ; -3 : 15%,18,2.956,1.9229,0.7129,19.2948,False
+full,IS — 0 : 60% ; -2 : 25% ; -4 : 15%,18,1.4841,1.071,0.6948,18.5455,False

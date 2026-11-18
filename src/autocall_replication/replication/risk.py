@@ -18,6 +18,243 @@ def _level_suffix(level: float) -> str:
     return str(int(round(level * 1000))).rstrip("0")
 
 
+def empirical_var_es(
+    losses: np.ndarray,
+    level: float,
+    likelihood_weights: np.ndarray | None = None,
+) -> dict[str, object]:
+    """Calcule une VaR et un ES empiriques avec exactement ``1-level`` de masse.
+
+    La formule de Rockafellar--Uryasev
+
+    ``ES_q = VaR_q + E[(L - VaR_q)+] / (1 - q)``
+
+    évite le biais de la moyenne naïve ``L >= VaR`` lorsque la distribution
+    empirique possède un atome à la VaR. C'est fréquent pour un autocall, dont
+    plusieurs trajectoires peuvent produire exactement le même cashflow.
+    Les poids sont auto-normalisés ; avec des poids unitaires, cette fonction
+    redonne l'estimateur empirique standard.
+    """
+    losses = np.asarray(losses, dtype=float).reshape(-1)
+    if likelihood_weights is None:
+        weights = np.ones(len(losses), dtype=float)
+    else:
+        weights = np.asarray(likelihood_weights, dtype=float).reshape(-1)
+        if losses.shape != weights.shape:
+            raise ValueError("losses et likelihood_weights doivent avoir la même taille.")
+    if not 0.5 < float(level) < 1.0:
+        raise ValueError("level doit appartenir à ]0.5, 1[.")
+    valid = np.isfinite(losses) & np.isfinite(weights) & (weights >= 0.0)
+    losses, weights = losses[valid], weights[valid]
+    total_weight = float(np.sum(weights))
+    if len(losses) == 0 or total_weight <= 0.0:
+        raise ValueError("Les pertes pondérées ne contiennent aucune observation valide.")
+
+    normalized = weights / total_weight
+    order = np.argsort(losses, kind="stable")
+    sorted_losses = losses[order]
+    sorted_weights = normalized[order]
+    cumulative = np.cumsum(sorted_weights)
+    quantile_index = min(
+        int(np.searchsorted(cumulative, float(level), side="left")),
+        len(sorted_losses) - 1,
+    )
+    value_at_risk = float(sorted_losses[quantile_index])
+    tail_probability = 1.0 - float(level)
+    excess = np.maximum(losses - value_at_risk, 0.0)
+    expected_shortfall = value_at_risk + float(np.sum(normalized * excess)) / tail_probability
+
+    # Pour l'ESS de queue, on attribue seulement la fraction de masse à la VaR
+    # nécessaire pour compléter exactement la queue de probabilité 1-q.
+    strict_mask = losses > value_at_risk
+    equal_mask = losses == value_at_risk
+    tail_contributions = np.zeros_like(normalized)
+    tail_contributions[strict_mask] = normalized[strict_mask]
+    strict_mass = float(np.sum(tail_contributions))
+    required_at_var = float(np.clip(tail_probability - strict_mass, 0.0, tail_probability))
+    equal_mass = float(np.sum(normalized[equal_mask]))
+    if required_at_var > 0.0 and equal_mass > 0.0:
+        tail_contributions[equal_mask] = (
+            normalized[equal_mask] * required_at_var / equal_mass
+        )
+    contribution_sum = float(np.sum(tail_contributions))
+    tail_ess = (
+        contribution_sum**2 / float(np.sum(tail_contributions**2))
+        if contribution_sum > 0.0
+        else 0.0
+    )
+    return {
+        "var": value_at_risk,
+        "es": expected_shortfall,
+        "tail_probability": tail_probability,
+        "tail_effective_sample_size": tail_ess,
+        "normalized_weights": normalized,
+        "tail_probability_contributions": tail_contributions,
+    }
+
+
+def exclusive_autocall_regimes(
+    called: np.ndarray,
+    barrier_hit: np.ndarray,
+) -> dict[str, np.ndarray]:
+    """Construit trois régimes terminaux exclusifs couvrant toutes les trajectoires."""
+    called = np.asarray(called, dtype=bool).reshape(-1)
+    barrier_hit = np.asarray(barrier_hit, dtype=bool).reshape(-1)
+    if called.shape != barrier_hit.shape:
+        raise ValueError("called et barrier_hit doivent avoir la même taille.")
+    return {
+        "recalled": called,
+        "maturity_protected": (~called) & (~barrier_hit),
+        "maturity_barrier_hit": (~called) & barrier_hit,
+    }
+
+
+def tail_regime_decomposition(
+    losses: np.ndarray,
+    conditions: dict[str, np.ndarray],
+    level: float = 0.975,
+    likelihood_weights: np.ndarray | None = None,
+) -> pd.DataFrame:
+    """Décompose exactement la masse et l'ES entre régimes exclusifs ou non.
+
+    Si les masques sont exclusifs et couvrent l'échantillon, les parts de masse
+    de queue et les contributions à l'ES totalisent 100 % et l'ES global.
+    """
+    losses = np.asarray(losses, dtype=float).reshape(-1)
+    risk = empirical_var_es(losses, level, likelihood_weights)
+    normalized = np.asarray(risk["normalized_weights"], dtype=float)
+    tail_contributions = np.asarray(
+        risk["tail_probability_contributions"], dtype=float
+    )
+    tail_probability = float(risk["tail_probability"])
+    expected_shortfall = float(risk["es"])
+    rows: list[dict[str, object]] = []
+    for condition, raw_mask in conditions.items():
+        mask = np.asarray(raw_mask, dtype=bool).reshape(-1)
+        if mask.shape != losses.shape:
+            raise ValueError("Chaque condition doit contenir un booléen par trajectoire.")
+        tail_mass = float(np.sum(tail_contributions[mask]))
+        es_contribution = (
+            float(np.sum(tail_contributions[mask] * losses[mask]))
+            / tail_probability
+        )
+        rows.append(
+            {
+                "condition": condition,
+                "level": float(level),
+                "condition_probability": float(np.sum(normalized[mask])),
+                "tail_probability_mass": tail_mass,
+                "share_of_tail_probability": tail_mass / tail_probability,
+                "contribution_to_es": es_contribution,
+                "share_of_es": (
+                    es_contribution / expected_shortfall
+                    if abs(expected_shortfall) > 1e-14
+                    else np.nan
+                ),
+                "n_paths": int(np.sum(mask)),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def tail_concentration_analysis(
+    losses: np.ndarray,
+    levels: Sequence[float] = DEFAULT_RISK_LEVELS,
+    likelihood_weights: np.ndarray | None = None,
+    curve_fractions: Sequence[float] = (0.01, 0.05, 0.10, 0.25, 0.50, 0.75, 1.0),
+) -> dict[str, pd.DataFrame]:
+    """Mesure la profondeur et la concentration de la queue de pertes.
+
+    Les parts ``top_*`` indiquent quelle fraction de la perte positive contenue
+    dans l'ES est expliquée par la fraction la plus défavorable de la masse de
+    queue, et non par une fraction brute du nombre de simulations. Cette
+    définition reste comparable entre Monte-Carlo standard et importance
+    sampling.
+    """
+    losses = np.asarray(losses, dtype=float).reshape(-1)
+    if likelihood_weights is None:
+        weights = np.ones(len(losses), dtype=float)
+    else:
+        weights = np.asarray(likelihood_weights, dtype=float).reshape(-1)
+        if weights.shape != losses.shape:
+            raise ValueError("losses et likelihood_weights doivent avoir la même taille.")
+    fractions = np.asarray(tuple(float(value) for value in curve_fractions))
+    if len(fractions) == 0 or np.any((fractions <= 0.0) | (fractions > 1.0)):
+        raise ValueError("curve_fractions doit contenir des fractions dans ]0, 1].")
+
+    summary_rows: list[dict[str, float]] = []
+    curve_rows: list[dict[str, float]] = []
+    for level in levels:
+        risk = empirical_var_es(losses, float(level), weights)
+        tail_mass = np.asarray(risk["tail_probability_contributions"], dtype=float)
+        adverse_contributions = tail_mass * np.maximum(losses, 0.0)
+        positive_total = float(np.sum(adverse_contributions))
+        order = np.argsort(losses, kind="stable")[::-1]
+        ordered_mass = tail_mass[order]
+        ordered_contributions = adverse_contributions[order]
+        probability = float(risk["tail_probability"])
+
+        shares: dict[float, float] = {}
+        for fraction in fractions:
+            target_mass = fraction * probability
+            consumed_mass = 0.0
+            captured_contribution = 0.0
+            for observation_mass, contribution in zip(
+                ordered_mass, ordered_contributions, strict=True
+            ):
+                if observation_mass <= 0.0 or consumed_mass >= target_mass:
+                    continue
+                used_mass = min(float(observation_mass), target_mass - consumed_mass)
+                captured_contribution += float(contribution) * used_mass / observation_mass
+                consumed_mass += used_mass
+            share = (
+                captured_contribution / positive_total
+                if positive_total > 0.0
+                else np.nan
+            )
+            shares[float(fraction)] = share
+            curve_rows.append(
+                {
+                    "level": float(level),
+                    "tail_mass_fraction": float(fraction),
+                    "positive_tail_loss_share": share,
+                }
+            )
+
+        normalized_contributions = (
+            adverse_contributions / positive_total
+            if positive_total > 0.0
+            else np.zeros_like(adverse_contributions)
+        )
+        hhi = float(np.sum(normalized_contributions**2))
+        summary_rows.append(
+            {
+                "level": float(level),
+                "var": float(risk["var"]),
+                "es": float(risk["es"]),
+                "tail_effective_sample_size": float(
+                    risk["tail_effective_sample_size"]
+                ),
+                "positive_tail_loss_hhi": hhi,
+                "effective_positive_tail_contributors": 1.0 / hhi if hhi > 0.0 else 0.0,
+                "top_1pct_tail_mass_share": shares.get(0.01, np.nan),
+                "top_5pct_tail_mass_share": shares.get(0.05, np.nan),
+                "top_10pct_tail_mass_share": shares.get(0.10, np.nan),
+            }
+        )
+    summary = pd.DataFrame(summary_rows)
+    es_by_level = summary.set_index("level")["es"]
+    steepness = (
+        float(es_by_level.loc[0.99] / es_by_level.loc[0.975])
+        if 0.99 in es_by_level.index
+        and 0.975 in es_by_level.index
+        and abs(float(es_by_level.loc[0.975])) > 1e-14
+        else np.nan
+    )
+    summary["es_99_to_es_975_ratio"] = steepness
+    return {"summary": summary, "curve": pd.DataFrame(curve_rows)}
+
+
 def tail_risk_metrics(
     losses: np.ndarray,
     levels: Sequence[float] = DEFAULT_RISK_LEVELS,
@@ -39,11 +276,14 @@ def tail_risk_metrics(
     for level in levels:
         if not 0.5 < float(level) < 1.0:
             raise ValueError("Chaque niveau de risque doit appartenir à ]0.5, 1[.")
-        value_at_risk = float(np.quantile(losses, level))
-        tail = losses[losses >= value_at_risk]
+        tail = empirical_var_es(losses, float(level))
         suffix = _level_suffix(float(level))
-        metrics[f"var_{suffix}"] = value_at_risk
-        metrics[f"es_{suffix}"] = float(np.mean(tail))
+        metrics[f"var_{suffix}"] = float(tail["var"])
+        metrics[f"es_{suffix}"] = float(tail["es"])
+        metrics[f"tail_effective_sample_size_{suffix}"] = float(
+            tail["tail_effective_sample_size"]
+        )
+        metrics[f"tail_probability_{suffix}"] = float(tail["tail_probability"])
     return metrics
 
 
@@ -377,6 +617,41 @@ def evaluate_conditional_policy_profile_risk(
         "maturity": ~called,
         "barrier_hit": barrier_hit,
     }
+    exclusive_regimes = exclusive_autocall_regimes(called, barrier_hit)
+    missed_coupons = np.asarray([
+        result["coupon_observations"].count(False) for result in path_results
+    ])
+    observed_coupons = np.asarray([
+        len(result["coupon_observations"]) for result in path_results
+    ])
+    # Keep the full joint partition for later aggregation by any event.
+    contract_events = pd.DataFrame({
+        "recalled": called,
+        "protection_barrier_hit": [result["barrier_hit"] for result in path_results],
+        "coupon_opportunities": observed_coupons,
+        "coupons_missed": missed_coupons,
+        "coupon_pattern": [
+            "".join("P" if paid else "M" for paid in result["coupon_observations"])
+            for result in path_results
+        ],
+    })
+    event_groups = contract_events.groupby(list(contract_events.columns)).indices
+    event_masks = {}
+    event_labels = []
+    for group, indices in event_groups.items():
+        mask = np.zeros(n_paths, dtype=bool)
+        mask[indices] = True
+        event_id = str(len(event_labels))
+        event_masks[event_id] = mask
+        event_labels.append({"condition": event_id, **dict(zip(contract_events.columns, group))})
+    event_labels = pd.DataFrame(event_labels)
+    contract_event_rows = []
+    contract_group_rows = []
+    contract_path_rows = []
+    date_contribution_rows = []
+    feature_dates = pd.to_datetime(design["feature_table"]["payment_date"]).to_numpy()
+    payment_dates = pd.to_datetime(design["dataset"][0]["dates"])
+    targets_by_date = np.asarray([item["y_curve"] for item in design["dataset"]])
     gross_reference_value = float(np.mean(y))
     gross_losses = y - gross_reference_value
     gross_rows: list[dict[str, object]] = []
@@ -409,16 +684,100 @@ def evaluate_conditional_policy_profile_risk(
 
     residual_rows: list[dict[str, object]] = []
     profile_losses: dict[tuple[str, str], np.ndarray] = {}
+    concentration_rows: list[pd.DataFrame] = []
+    concentration_curve_rows: list[pd.DataFrame] = []
+    exclusive_regime_rows: list[pd.DataFrame] = []
+    losses_by_solution: dict[tuple[str, int], np.ndarray] = {}
     for _, profile in profiles.iterrows():
         penalty, profile_name = str(profile["penalty"]), str(profile["profile"])
+        solution_index = int(profile["solution_index"])
+        key = (penalty, solution_index)
+        if key not in losses_by_solution:
+            weights = np.asarray(
+                base_result["results"][penalty]["solutions"][solution_index]["weights"],
+                dtype=float,
+            )
+            losses_by_solution[key] = y - A @ weights
+        losses = losses_by_solution[key]
+        profile_losses[(penalty, profile_name)] = losses
         weights = np.asarray(
-            base_result["results"][penalty]["solutions"][
-                int(profile["solution_index"])
-            ]["weights"],
+            base_result["results"][penalty]["solutions"][solution_index]["weights"],
             dtype=float,
         )
-        losses = y - A @ weights
-        profile_losses[(penalty, profile_name)] = losses
+        tail = empirical_var_es(losses, 0.975)
+        tail_mass = np.asarray(tail["tail_probability_contributions"], dtype=float)
+        date_losses = []
+        for date_index, date in enumerate(payment_dates):
+            columns = feature_dates == date.to_datetime64()
+            residual = targets_by_date[:, date_index] - A[:, columns] @ weights[columns]
+            date_losses.append(residual)
+            contribution = float(tail_mass @ residual / 0.025)
+            date_contribution_rows.append({
+                "family": base_result["family"], "penalty": penalty, "profile": profile_name,
+                "payment_date": date, "contribution_to_global_es": contribution,
+                "share_of_global_es": contribution / tail["es"] if abs(tail["es"]) > 1e-14 else np.nan,
+                "global_es": tail["es"],
+            })
+        if not np.allclose(np.sum(date_losses, axis=0), losses):
+            raise ValueError("Date residuals must reconstruct the total residual.")
+        contract_path_rows.append(contract_events.assign(
+            path_index=np.arange(n_paths), loss=losses,
+            family=base_result["family"], penalty=penalty, profile=profile_name,
+        ))
+        # A complete cube retains absent categories and avoids summing conditional ES.
+        for recalled in (False, True):
+            for breached in (False, True):
+                for missed in (False, True):
+                    mask = (
+                        contract_events["recalled"].eq(recalled).to_numpy()
+                        & contract_events["protection_barrier_hit"].eq(breached).to_numpy()
+                        & (missed_coupons > 0 if missed else missed_coupons == 0)
+                    )
+                    count = int(mask.sum())
+                    decomposition = tail_regime_decomposition(
+                        losses, {"group": mask}, level=0.975,
+                    ).iloc[0].to_dict()
+                    metrics = tail_risk_metrics(losses[mask], levels=(0.975,)) if count else {}
+                    contract_group_rows.append({
+                        "family": base_result["family"], "penalty": penalty,
+                        "profile": profile_name, "recalled": recalled,
+                        "protection_barrier_hit": breached, "missed_coupon": missed,
+                        "n_paths": count, "sample_frequency": count / n_paths,
+                        "conditional_rmse": float(np.sqrt(np.mean(losses[mask] ** 2))) if count else np.nan,
+                        "conditional_es_975": metrics.get("es_975", np.nan),
+                        "conditional_mean_loss": float(np.mean(losses[mask])) if count else np.nan,
+                        "conditional_positive_loss_frequency": float(np.mean(losses[mask] > 0)) if count else np.nan,
+                        "conditional_max_loss": float(np.max(losses[mask])) if count else np.nan,
+                        "conditional_tail_path_equivalents": 0.025 * count,
+                        "global_tail_probability_share": decomposition["share_of_tail_probability"],
+                        "global_es_contribution": decomposition["contribution_to_es"],
+                        "global_es_share": decomposition["share_of_es"],
+                    })
+        events = tail_regime_decomposition(losses, event_masks, level=0.975)
+        events = events.merge(event_labels, on="condition", validate="one_to_one")
+        contract_event_rows.append(events.drop(columns="condition").assign(
+            family=base_result["family"], penalty=penalty, profile=profile_name,
+        ))
+        concentration = tail_concentration_analysis(losses, levels=levels)
+        for table_name in ("summary", "curve"):
+            table = concentration[table_name].copy()
+            table.insert(0, "profile", profile_name)
+            table.insert(0, "penalty", penalty)
+            table.insert(0, "family", base_result["family"])
+            if table_name == "summary":
+                concentration_rows.append(table)
+            else:
+                concentration_curve_rows.append(table)
+        for level in levels:
+            decomposition = tail_regime_decomposition(
+                losses,
+                exclusive_regimes,
+                level=float(level),
+            )
+            decomposition.insert(0, "profile", profile_name)
+            decomposition.insert(0, "penalty", penalty)
+            decomposition.insert(0, "family", base_result["family"])
+            exclusive_regime_rows.append(decomposition)
         for condition, mask in conditions.items():
             if not np.any(mask):
                 continue
@@ -489,6 +848,17 @@ def evaluate_conditional_policy_profile_risk(
         "condition_summary": pd.DataFrame(condition_rows),
         "risk_summary": risk_summary,
         "profile_losses": profile_losses,
+        "tail_concentration": pd.concat(concentration_rows, ignore_index=True),
+        "tail_concentration_curve": pd.concat(
+            concentration_curve_rows, ignore_index=True
+        ),
+        "exclusive_tail_regime_decomposition": pd.concat(
+            exclusive_regime_rows, ignore_index=True
+        ),
+        "tail_contract_event_decomposition": pd.concat(contract_event_rows, ignore_index=True),
+        "tail_contract_group_diagnostics": pd.DataFrame(contract_group_rows),
+        "tail_payment_date_contributions": pd.DataFrame(date_contribution_rows),
+        "tail_contract_path_diagnostics": pd.concat(contract_path_rows, ignore_index=True),
         "gross_reference_value": gross_reference_value,
         "notional": float(product.notional),
         "n_paths": n_paths,

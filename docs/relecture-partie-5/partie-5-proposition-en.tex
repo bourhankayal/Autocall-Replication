@@ -1,0 +1,343 @@
+\section{Results}
+
+The OLS benchmarks first isolate the effects of dictionary choice and conditioning. We then compare two cash-flow fitting objectives and present the selected hyperparameters and the risk of the resulting portfolios on new paths. The final experiments examine the precision of ES estimation and the effect of an ES constraint on calibration.
+
+Amounts are expressed in points of notional unless otherwise stated. The reference notional is 100. Each comparison identifies its sample. Differences in the last decimal places should be read in light of simulation precision.
+
+\subsection{Dictionary capacity in the OLS benchmarks}
+
+Table~\ref{tab:ols-capacity} crosses two dictionaries with two formulations. All four benchmarks fit positions by ordinary least squares with $\alpha=0$ fixed in advance. They compare discounted cash-flow deficits on the same 1,250 evaluation paths as Table~\ref{tab:unified-comparison}. Conditional method A fits dated cash flows.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llrr}
+\toprule
+Formulation & Universe & RMSE & 97.5\% ES \\
+\midrule
+Static & Calls + Puts & 48.596 & 93.464 \\
+Conditional & Calls + Puts & 21.010 & 47.824 \\
+Static & Full & 53.092 & 97.423 \\
+Conditional & Full & 1.035 & 0.944 \\
+\bottomrule
+\end{tabular}
+\caption{Benchmarks fitted by ordinary least squares, with $\alpha=0$ fixed in advance and no hyperparameter search. RMSE and ES are measured on the same independent evaluation paths, in points of notional.}
+\label{tab:ols-capacity}
+\end{table}
+
+Conditioning reduces RMSE and ES in both dictionaries. For the static basket, adding digitals increases RMSE from 48.60 to 53.09 in this comparison. With conditioning, the Full dictionary reduces RMSE from 21.01 to 1.03 and ES from 47.82 to 0.94. In this contract, digitals represent payoff jumps and conditioning accounts for observable state. These results measure the capacity of the dense benchmarks in the simulated model. The stability, risk and funding of the selected portfolios are examined next.
+
+\subsection{Fitting dated payments and their discounted total}
+
+The A/B diagnostic compares the two objectives on 625 common paths. Table~\ref{tab:capacity} in the appendix retains the penalised fits with their benchmark-specific hyperparameters. Figure~\ref{fig:conditional-objective-tradeoff} shows how the two objectives distribute error between dated payments and their discounted total.
+
+Two fitting objectives reveal an important distinction. Method A fits each payment date separately. Method B fits the total discounted pathwise liability. For Calls + Puts, Method B reaches terminal RMSE around 1.47--1.57\%, but its dated cash-flow RMSE is close to 50\%. Method A lowers dated-payment RMSE to about 11.28--11.54\%, while leaving terminal RMSE close to 23.08--23.66\%. For the Full universe, Method A nearly reproduces dated payments, with RMSE between 0.02\% and 0.50\% for the displayed convex penalties, whereas Method B has terminal RMSE around 1.47--1.64\% and dated-payment RMSE close to 50\%. Errors at different dates can therefore compensate in the discounted total.
+
+\reportfigure{\reportfigurefile{method_objective_tradeoff.pdf}}{Effect of the fitting objective on dated-payment RMSE and discounted-total RMSE. For each penalty and instrument universe, the bars compare the payment-date objective (A) with the total-pathwise objective (B).}{fig:conditional-objective-tradeoff}
+
+This result changes the interpretation of the project. A portfolio may be a good terminal payoff proxy yet fail to finance contractual cash flows when they occur. Funding and timing diagnostics are therefore necessary even before market costs are introduced.
+
+On the same paths, the 95th percentile of funding needs for the Calls + Puts Elastic Net portfolios is 36.65 points under A and 0.83 under B. The ranking by dated-payment RMSE can therefore differ from the ranking by funding needs. On a separate sample of 250 paths, the 95th-percentile funding requirement in the self-financing account for the Elastic Net compromise is 3.22 points for Calls + Puts and 3.28 for Full, both with theoretical digitals and with their spread approximations. Each exercise uses its own conventions for capital and model prices.
+
+\subsection{Selected hyperparameters and compromise profiles}
+
+Section 4.2 describes how the profiles are selected. Table~\ref{tab:selected} gives the hyperparameters from the 15 October selection used to build the portfolios evaluated in this section. For each compromise profile it gives the penalty strength $\alpha$ and the ratio $\rho$ for Elastic Net. Validation RMSE and basket size describe the outcome of that selection. Figures~\ref{fig:decision-dashboard} and~\ref{fig:stability} illustrate the separate November diagnostic.
+
+A policy node is not merely an observation date. It combines a payment date with the product state observable at the decision date: the initial state, barrier clear, barrier hit, or a pooled state when a state-specific training sample is too small. Once a path has been called, it no longer visits later nodes. The mean number of options per node is therefore weighted by the effective frequency with which nodes are visited. It measures the expected basket size when a decision is actually made, rather than an arithmetic average over four dates. The maximum is the largest basket used at any node. Cash is excluded from both measures.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llrrrr}
+\toprule
+Universe & Penalty & $\alpha$ & Valid. RMSE & Mean/node & Max/node \\
+\midrule
+Calls + Puts & $L^0$ & 0.00420 & 2.670 & 0.756 & 3 \\
+Calls + Puts & Lasso & 0.02845 & 1.979 & 2.838 & 4 \\
+Calls + Puts & Ridge & 0.00377 & 1.995 & 25.024 & 26 \\
+Calls + Puts & Elastic Net ($\rho=0.90$) & 0.03162 & 1.996 & 2.838 & 4 \\
+Full & $L^0$ & 0.00873 & 3.020 & 0.677 & 4 \\
+Full & Lasso & 0.05060 & 1.994 & 3.119 & 6 \\
+Full & Ridge & 0.00793 & 1.979 & 50.049 & 52 \\
+Full & Elastic Net ($\rho=0.90$) & 0.03162 & 1.944 & 5.240 & 7 \\
+\bottomrule
+\end{tabular}
+\caption{Selected compromise profiles. The mean is weighted by effective node visits and excludes cash. Alpha scales are penalty-specific.}
+\label{tab:selected}
+\end{table}
+
+\subsubsection*{Interpretation of the selected profiles}
+
+Within Calls~+~Puts, the compromise Lasso and Elastic Net policies use an average
+of 2.838 options per visited node, with a maximum of 4, and have validation RMSE
+close to 1.98--2.00. Ridge uses an average of 25.024 options, with a maximum of 26,
+for a similar result. The comparison suggests that most of the dense
+dictionary is unnecessary for this validation criterion.
+
+Within Full, Elastic Net has the lowest displayed compromise validation RMSE and
+uses an average of 5.240 options per node, with a maximum of 7, including theoretical
+digitals. Lasso is slightly less accurate with an average of 3.119 and a maximum
+of 6. The difference is too small to justify a preference
+without stability, tail and implementation evidence. The table therefore
+supports a shortlist rather than a winner.
+
+The $L^0$ profiles are much smaller but have visibly higher validation error.
+They are useful if line count is a dominant constraint, yet their non-convex
+estimation and support sensitivity require stronger auditing. Ridge, at the
+other extreme, describes an accuracy-oriented dense benchmark.
+
+\reportfigure[0.97\linewidth]{\reportfigurefile{alpha_tail_frontier_calls_puts.pdf}}{Validation frontier for the Calls + Puts universe. Each point is a regularisation candidate evaluated on the independent validation sample; the axes report residual RMSE and ES$_{97.5}$, marker size reflects the number of active options, and stars identify previously retained profiles.}{fig:alpha-tail-frontier-cp}
+
+\reportfigure[0.97\linewidth]{\reportfigurefile{alpha_tail_frontier_full.pdf}}{Validation frontier for the Full universe including digital options. The plot jointly displays residual RMSE, ES$_{97.5}$ and portfolio size on the independent validation sample; stars identify previously retained profiles.}{fig:alpha-tail-frontier-full}
+
+The two frontiers show why the validation-RMSE optimum cannot by itself select
+a tail-safe policy. Candidates with similar average error can have materially
+different Expected Shortfall and support size. These figures are selection
+diagnostics, not final-test results.
+
+\subsubsection*{Information still to be added to the profile table}
+
+Mean and maximum basket size per node do not disclose the total number of distinct
+instruments used by the policy, gross quantity, offsetting long and short positions,
+maturity concentration or sensitivity to small spot moves. The
+final report should accompany this table with maturity--strike heatmaps and
+gross-exposure statistics.
+
+\subsection{Out-of-sample residual risk}
+
+On 2,500 independent evaluation paths, RMSE falls from 7.94 points for the centred liability to about 2.11 points for the four Lasso and Elastic Net compromise profiles, a reduction of 73.4--73.5\%. ES at 97.5\% rises from 4.49 to 7.96--8.18 points. Table~\ref{tab:risk} reports the values by profile and Figure~\ref{fig:compromise-risk-comparison} shows the lower RMSE and higher ES on the same sample.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llrrrr}
+\toprule
+Universe & Penalty & \shortstack[r]{Residual\\RMSE} & \shortstack[r]{RMSE\\reduction} & \shortstack[r]{Residual\\ES$_{97.5}$} & \shortstack[r]{Maximum\\loss} \\
+\midrule
+Calls + Puts & Lasso & 2.112 & 73.4\% & 8.170 & 26.810 \\
+Calls + Puts & Elastic Net & 2.114 & 73.4\% & 8.175 & 26.441 \\
+Full & Lasso & 2.108 & 73.4\% & 8.036 & 26.246 \\
+Full & Elastic Net & 2.107 & 73.5\% & 7.958 & 26.744 \\
+\midrule
+Gross liability & --- & 7.940 & --- & 4.488 & --- \\
+\bottomrule
+\end{tabular}
+\caption{Residual risk of compromise policies on 2,500 independent evaluation paths, in points of notional. Maximum loss is the largest observed residual, not a population worst case.}
+\label{tab:risk}
+\end{table}
+
+Table~\ref{tab:secondary-risk-metrics} complements the two primary metrics. It
+separates average bias, typical error and deficit frequency.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llrrr}
+\toprule
+Universe & Penalty & Mean error & MAE & Under-replication \\
+\midrule
+Calls + Puts & Lasso & 0.064 & 0.506 & 25.3\% \\
+Calls + Puts & Elastic Net & 0.068 & 0.510 & 25.8\% \\
+Full & Lasso & 0.069 & 0.488 & 62.4\% \\
+Full & Elastic Net & 0.058 & 0.507 & 28.8\% \\
+\bottomrule
+\end{tabular}
+\caption{Secondary diagnostics for the compromise policies on the same independent sample, in points of notional except for the under-replication rate.}
+\label{tab:secondary-risk-metrics}
+\end{table}
+
+\reportfigure{\reportfigurefile{report_compromise_comparison.pdf}}{Residual RMSE and ES$_{97.5}$ of the compromise profiles on the common independent evaluation sample. The Expected-Shortfall panel includes the project's indicative 10\% decision threshold.}{fig:compromise-risk-comparison}
+
+\resultbox{The compromise policies explain the bulk of ordinary variation but concentrate errors in fewer adverse scenarios. This is consistent with an $L^2$ objective and barrier discontinuities: a small set of severe misses can coexist with a low average squared error.}
+
+Mean errors remain below 0.07 point of notional, so none of the policies displays
+a material average bias. MAE lies between 0.49 and 0.51 despite different
+under-replication frequencies. Full Lasso under-replicates on 62.4\% of paths,
+compared with about 25--29\% for the other three policies. It therefore produces
+small deficits more often without having the highest ES. Maximum observed losses
+remain close, between 26.25 and 26.81 points; they are sample diagnostics, while
+ES remains the primary measure of tail severity.
+
+\subsubsection*{Interpretation of the RMSE reduction}
+
+The mean value of 100.538 points comes from the pricing sample. In the risk sample, pre-hedging cash flows are centred around their own mean, giving a 7.94-point RMSE. After hedging, RMSE of the residual $H-G$ is close to 2.11 points. In this model, a small number of options can therefore reproduce much of the ordinary variation in the simulated liability.
+
+This conclusion remains conditional. The risk paths share the Black--Scholes
+model used for construction, so the experiment measures within-model
+generalisation, not robustness to model misspecification.
+
+\subsubsection*{Deterioration of tail risk}
+
+Gross ES$_{97.5}$ is 4.49 under the centred benchmark, whereas residual values
+are approximately 7.96--8.18 for the displayed sparse policies. The portfolios
+therefore create larger losses in the worst simulated residual states even
+though they reduce average squared error. A hedge recommendation would require
+explaining and controlling this deterioration.
+
+\subsubsection*{States that generate residual tail loss}
+
+The regime decomposition locates the loss more precisely. For the Calls + Puts
+Elastic Net compromise policy, maturity paths without a prior protection-barrier
+hit account for 84.1\% of ES$_{97.5}$ and barrier-hit maturity paths for 15.9\%;
+no recalled path contributes to the tail in this sample. For Full Elastic Net,
+the corresponding shares are 87.8\% and 12.2\%. The residual tail is driven mainly by paths that reach maturity.
+
+\reportfigure{\reportfigurefile{tail_risk_concentration.pdf}}{Concentration of residual tail losses and effective number of contributing scenarios.}{fig:tail-concentration}
+
+Figure~\ref{fig:tail-concentration} complements this breakdown by measuring the concentration of positive contributions to ES. At 97.5\%, the effective contributor count is close to 47 for both Elastic Net profiles under standard Monte Carlo. At 99\%, it is close to 22 and ES reaches 12.65 points for Calls + Puts and 12.32 for Full.
+
+\subsubsection*{Descriptive comparison with the main benchmarks}
+
+Table~\ref{tab:unified-comparison} places the retained policies beside the main
+benchmarks using the six retained metrics. The delta rows use self-financing
+terminal P\&L, while the option-policy rows use discounted cash-flow deficits.
+The comparison is therefore descriptive: the columns share statistical
+definitions but do not align initial capital, instruments or costs. For the
+centred liability, the frequency $L>0$ is the share of cash flows above their
+mean, not an under-replication rate.
+
+\begin{table}[htbp]
+\centering
+\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lrrrrrr}
+\toprule
+Method & Mean error & MAE & RMSE & Freq. $L>0$ & ES$_{97.5}$ & Max. loss \\
+\midrule
+Centred liability & 0.000 & 4.193 & 8.646 & 92.4\% & 4.833 & 4.833 \\
+Daily delta & 0.032 & 0.605 & 1.222 & 51.6\% & 3.976 & 21.682 \\
+Five-day delta & -0.023 & 1.103 & 2.175 & 49.2\% & 6.517 & 29.796 \\
+Calls + Puts conditional B Elastic Net & 0.109 & 0.591 & 2.475 & 27.0\% & 9.852 & 28.225 \\
+Calls + Puts conditional B $L^0$ & 0.134 & 0.706 & 2.672 & 68.1\% & 10.954 & 30.719 \\
+Calls + Puts conditional B Lasso & 0.112 & 0.591 & 2.484 & 26.7\% & 9.905 & 28.673 \\
+Calls + Puts conditional B Ridge & 0.077 & 0.679 & 2.558 & 49.3\% & 10.098 & 29.363 \\
+Calls + Puts conditional A OLS & -0.387 & 13.335 & 21.010 & 51.8\% & 47.824 & 64.279 \\
+Calls + Puts static OLS & 0.223 & 40.210 & 48.596 & 48.6\% & 93.464 & 106.107 \\
+Full conditional B Elastic Net & 0.094 & 0.563 & 2.413 & 28.3\% & 9.344 & 26.818 \\
+Full conditional B $L^0$ & 0.113 & 0.989 & 3.417 & 65.8\% & 14.723 & 33.994 \\
+Full conditional B Lasso & 0.101 & 0.544 & 2.414 & 62.2\% & 9.471 & 26.926 \\
+Full conditional B Ridge & 0.076 & 0.727 & 2.553 & 55.5\% & 9.801 & 26.227 \\
+Full conditional A OLS & -0.037 & 0.084 & 1.035 & 23.8\% & 0.944 & 12.657 \\
+Full static OLS & -0.381 & 44.425 & 53.092 & 47.5\% & 97.423 & 107.708 \\
+\bottomrule
+\end{tabular}}
+\caption{Descriptive comparison of the main benchmarks. Amounts are expressed in points of notional; frequency $L>0$ is expressed as a percentage. A fits dated cash flows and B their discounted total. All 15 rows are evaluated on the same 1,250 independent paths.}
+\label{tab:unified-comparison}
+\end{table}
+
+The conditional B Lasso and Elastic Net policies have MAE between 0.54 and
+0.59, close to daily delta (0.61). Their RMSE is nevertheless about twice as
+high and their ES exceeds 9 points, compared with 3.98 for daily delta and
+6.52 for five-day delta. The B policies with $L^0$ have higher errors and
+tail losses here than Lasso and Elastic Net.
+
+The unpenalised references also distinguish the dictionaries: conditional A
+Full achieves RMSE of 1.03 and ES of 0.94, compared with 21.01 and 47.82 for
+Calls + Puts. Unpenalised static baskets remain much less accurate. This
+result concerns these particular references and objectives, not a general
+ranking of penalties.
+
+\subsection{Tail-risk estimation with fixed positions}
+
+For Calls + Puts Elastic Net compromise, standard Monte Carlo estimates ES$_{97.5}$ at 8.175, while importance sampling estimates 9.927. For Full Elastic Net, the corresponding estimates are 7.958 and 9.046. The bootstrap confidence intervals overlap in both cases, so the differences do not indicate a statistically detectable conflict between estimators.
+
+The proposal weights remain usable: the global ESS ratio is approximately 71.5\% for Calls + Puts and 77.2\% for Full, corresponding to effective sample sizes of about 1,788 and 1,931 out of 2,500. Maximum normalised weights remain below 0.08\%. The standard Monte Carlo tail mass corresponds to 62.5 path-equivalents at 97.5\% and 25 at 99\%.
+
+\reportfigure{\reportfigurefile{importance_sampling_es.pdf}}{Expected-Shortfall estimates and uncertainty intervals under standard Monte Carlo and importance sampling for frozen policies.}{fig:is-es-comparison}
+
+In Figure~\ref{fig:is-es-comparison}, the bootstrap intervals overlap for both portfolios. Their widths decrease from 3.58 to 2.81 points for Calls + Puts and from 2.65 to 2.17 for Full. In this fixed-position comparison, the mixture gives narrower intervals and higher point estimates.
+
+The ESS ratios indicate that the likelihood weights are not dominated by only
+a handful of paths at the global level. However, global ESS does not guarantee
+high tail ESS. The most severe residual losses may still be concentrated in a
+small subset. This is why tail concentration and component diagnostics are
+reported in addition to one aggregate ESS number.
+
+\subsection{Calibration with an ES constraint}
+
+The 2$\times$2 experiment crosses standard Monte Carlo and importance sampling with the presence or absence of an ES constraint. All four cases use RMSE with an Elastic Net penalty and are recalibrated on 375 paths per sampling scheme. Only importance-sampled paths are weighted. The resulting portfolios are compared on 1,250 evaluation paths common to this experiment.
+
+With standard calibration, the ES constraint lowers ES$_{97.5}$ from 20.71 to 8.29 for Calls + Puts and from 8.33 to 6.97 for Full. Under importance-sampled calibration, the corresponding values are 8.73 versus 8.60 for Calls + Puts and 8.31 versus 8.52 for Full.
+
+These results show a marked effect of the ES constraint under standard calibration, especially for Calls + Puts, but little effect under importance-sampled calibration. The comparison remains exploratory because it belongs to a separate calibration exercise and has not been promoted into the retained sparse policies.
+
+Without the ES constraint, switching from standard Monte Carlo to importance sampling takes ES from 20.71 to 8.73 points for Calls + Puts, with RMSE falling from 5.27 to 2.48. In Full, the corresponding comparison gives ES of 8.33 and 8.31 points and RMSE of 2.64 and 2.48 points. When the constraint is imposed, ES goes from 8.29 to 8.60 for Calls + Puts and from 6.97 to 8.52 for Full. The effects of sampling and of the constraint thus depend on the dictionary and combination. Figure~\ref{fig:tail-four} shows the four cases for each universe.
+
+\reportfigure{\reportfigurefile{tail_risk_four_experiments.pdf}}{Exploratory comparison of sampling scheme and tail-risk constraint.}{fig:tail-four}
+
+\subsubsection*{Exploratory scope of the experiment}
+
+An ES constraint changes the optimisation problem from pure approximation to a
+risk-budget problem. It can improve the tail only if the calibration sample
+contains enough informative adverse scenarios and if the dictionary can span
+them. Feasibility in calibration does not guarantee compliance in validation
+or test.
+
+The displayed experiment is valuable because it shows that tail deterioration
+is not mechanically fixed by the instrument dictionary. It is not yet a
+retained policy, and the mixed response to the constraint prevents selecting
+the most favourable row as a general solution. A promoted policy would require
+the same stability, sparsity and independent-evaluation checks as the main
+hyperparameter study.
+
+\subsection{Findings from the case study}
+
+Taken together, the experiments support five conclusions:
+
+\begin{enumerate}
+\item A pricing process that starts from a precise payoff can generate
+reproducible targets for approximation.
+\item In the autocall case, conditioning on observable product state materially
+expands approximation capacity.
+\item Basis functions aligned with discontinuities improve representation but
+can raise implementability questions.
+\item Sparse regularisation can preserve validation RMSE with far fewer
+positions than a dense benchmark.
+\item A portfolio selected for average approximation is not automatically a
+tail hedge. ES must be controlled and estimated with dedicated methods.
+\end{enumerate}
+
+These findings demonstrate the behaviour of the framework on one demanding
+claim. They do not establish exact replication of arbitrary payoffs, a best
+executable strategy, a market price or robustness outside Black--Scholes.
+
+% Inserer cette annexe avant la section sur les details de l importance sampling.
+
+\section{Penalised cash-flow fits and supplementary experiments}\label{app:capacity-supplement}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llrr}
+\toprule
+Method & Universe / penalty & Test RMSE & Active options \\
+\midrule
+Static cash flows & Calls + Puts, $L^0$ & 30.541 & 2 \\
+Static cash flows & Calls + Puts, Lasso & 26.314 & 103 \\
+Static cash flows & Full, Ridge & 24.616 & 206 \\
+Conditional cash flows & Calls + Puts, Elastic Net & 10.843 & --- \\
+Conditional cash flows & Full, Ridge & $<0.001$ & --- \\
+Conditional cash flows & Full, $L^0$ & 0.007 & --- \\
+\bottomrule
+\end{tabular}
+\caption{Penalised fits of dated cash flows with the hyperparameters selected for each benchmark. RMSE is measured on the test paths. Active-option counts are reported for static baskets.}
+\label{tab:capacity}
+\end{table}
+
+The static Calls~+~Puts RMSE remains above 26 even with more than one hundred
+active options: one unconditional basket has difficulty matching a liability whose
+payment date and survival state vary by path. The two-position $L^0$ solution
+is simpler but has still higher error, illustrating the cost of extreme
+parsimony.
+
+Adding digitals improves the static benchmark only moderately in this table,
+because discontinuities are not the sole difficulty: path state and random
+maturity remain. By contrast, the conditional Full benchmark can nearly
+interpolate dated cash flows. The combination of state conditioning and
+digital basis functions addresses both missing information and payoff jumps.
+
+The near-zero error, obtained with a large theoretical dictionary and potentially
+sensitive to the simulated grid, is a capacity diagnostic. The remaining problem
+is to obtain a sparse, stable and tail-safe approximation.
+
+The exploratory notebook also studies date--spot price-surface fitting, mean-payoff fitting and a single-basket check of total discounted pathwise cash flows. These experiments use different targets or formulations from those in the main results. The scenarios for OTC digitals and the examination of market costs are exploratory. The corresponding numerical results will be matched to their own protocols and exports before being cited.

@@ -1,0 +1,25 @@
+﻿Famille,Pénalité,Profil,Niveau de plafond,tail_mass_fraction,positive_tail_loss_share
+calls_puts,l0,compromise,0.975,0.01,0.0231
+calls_puts,l0,compromise,0.975,0.05,0.0996
+calls_puts,l0,compromise,0.975,0.1,0.1798
+calls_puts,l1,compromise,0.975,0.01,0.0217
+calls_puts,l1,compromise,0.975,0.05,0.0999
+calls_puts,l1,compromise,0.975,0.1,0.1847
+calls_puts,l2,compromise,0.975,0.01,0.0416
+calls_puts,l2,compromise,0.975,0.05,0.1885
+calls_puts,l2,compromise,0.975,0.1,0.3006
+calls_puts,elastic_net,compromise,0.975,0.01,0.035
+calls_puts,elastic_net,compromise,0.975,0.05,0.1413
+calls_puts,elastic_net,compromise,0.975,0.1,0.2488
+full,l0,compromise,0.975,0.01,0.0198
+full,l0,compromise,0.975,0.05,0.0908
+full,l0,compromise,0.975,0.1,0.1723
+full,l1,compromise,0.975,0.01,0.0302
+full,l1,compromise,0.975,0.05,0.1482
+full,l1,compromise,0.975,0.1,0.273
+full,l2,compromise,0.975,0.01,0.0289
+full,l2,compromise,0.975,0.05,0.1215
+full,l2,compromise,0.975,0.1,0.2105
+full,elastic_net,compromise,0.975,0.01,0.0256
+full,elastic_net,compromise,0.975,0.05,0.1133
+full,elastic_net,compromise,0.975,0.1,0.1983

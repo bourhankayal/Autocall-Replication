@@ -1,0 +1,11 @@
+﻿Famille,Mélange IS,n_policies,Pire écart-type IS / MC,Ratio médian IS / MC,ESS minimale (ratio),tail_ess_min,Recommandé
+calls_puts,-1,21,1.0,1.0,1.0,15.8629,True
+calls_puts,0,21,3.7569,1.5484,0.9256,17.8882,False
+calls_puts,1,21,3.4095,1.4699,0.7601,16.566,False
+calls_puts,2,21,3.0133,1.877,0.7129,14.0986,False
+calls_puts,3,21,2.4738,1.1658,0.6948,11.9313,False
+full,-1,24,1.0,1.0,1.0,15.8629,True
+full,0,24,3.3196,1.4569,0.9256,14.6822,False
+full,1,24,2.2606,1.3466,0.7601,12.7813,False
+full,2,24,2.956,2.0627,0.7129,11.4311,False
+full,3,24,1.4841,1.071,0.6948,10.8671,False

@@ -1,0 +1,31 @@
+﻿Méthode,Famille,rebalancing,sparse,risk_object,Erreur moyenne (% nominal),MAE (% nominal),rmse_pct_notional,Taux de sous-réplication,es_975_pct_notional,Perte maximale (% nominal),capital_aligned,transaction_costs_included
+Conditionnel A Elastic Net,calls_puts,dates d’observation,True,déficit de cashflows actualisés,-0.2634,12.7116,20.8279,0.5528,47.297,54.7798,False,False
+Conditionnel A L0,calls_puts,dates d’observation,True,déficit de cashflows actualisés,-1.2578,24.6364,31.6597,0.5344,57.6073,91.2065,False,False
+Conditionnel A Lasso,calls_puts,dates d’observation,True,déficit de cashflows actualisés,-0.2876,12.8861,20.7872,0.5456,47.5928,55.7841,False,False
+Conditionnel A OLS,calls_puts,dates d’observation,False,déficit de cashflows actualisés,-0.3875,13.3345,21.0105,0.5176,47.8239,64.2785,False,False
+Conditionnel A Ridge,calls_puts,dates d’observation,False,déficit de cashflows actualisés,-0.4262,13.079,21.3265,0.4872,47.1996,53.0204,False,False
+Conditionnel B — ELASTIC_NET,calls_puts,dates d’observation,True,déficit de cashflows actualisés,-0.1169,1.2895,4.2129,0.3752,13.0649,45.57,False,False
+Conditionnel B — L0,calls_puts,dates d’observation,True,déficit de cashflows actualisés,-0.2284,1.3242,4.6447,0.3616,15.6492,35.5851,False,False
+Conditionnel B — L1,calls_puts,dates d’observation,True,déficit de cashflows actualisés,-0.253,1.3548,4.4306,0.408,12.2405,34.5116,False,False
+Conditionnel B — L2,calls_puts,dates d’observation,False,déficit de cashflows actualisés,-0.3291,2.176,5.9281,0.5264,6.9522,34.566,False,False
+Statique Elastic Net,calls_puts,aucun,True,déficit de cashflows actualisés,1.8067,36.5525,43.2252,0.512,83.6141,92.9203,False,False
+Statique L0,calls_puts,aucun,True,déficit de cashflows actualisés,16.651,37.4931,45.6151,0.6736,96.0401,99.3477,False,False
+Statique Lasso,calls_puts,aucun,True,déficit de cashflows actualisés,1.306,36.7932,43.4848,0.5064,84.0802,93.508,False,False
+Statique OLS,calls_puts,aucun,False,déficit de cashflows actualisés,0.2228,40.2104,48.5959,0.4864,93.4639,106.1066,False,False
+Statique Ridge,calls_puts,aucun,False,déficit de cashflows actualisés,0.2708,39.8566,47.9748,0.4848,90.9004,104.6296,False,False
+Conditionnel A Elastic Net,full,dates d’observation,True,déficit de cashflows actualisés,0.019,0.0365,0.4273,0.4592,0.8371,12.6634,False,False
+Conditionnel A L0,full,dates d’observation,True,déficit de cashflows actualisés,0.0029,0.0078,0.0296,0.5472,0.1016,0.629,False,False
+Conditionnel A Lasso,full,dates d’observation,True,déficit de cashflows actualisés,0.0141,0.0649,0.2032,0.7624,0.4794,1.0468,False,False
+Conditionnel A OLS,full,dates d’observation,False,déficit de cashflows actualisés,-0.0371,0.0842,1.0349,0.2376,0.9437,12.6571,False,False
+Conditionnel A Ridge,full,dates d’observation,False,déficit de cashflows actualisés,0.0011,0.0011,0.0286,0.4352,0.0455,0.8437,False,False
+Conditionnel B — ELASTIC_NET,full,dates d’observation,True,déficit de cashflows actualisés,-0.2289,1.2428,4.0033,0.3896,10.8135,35.8205,False,False
+Conditionnel B — L0,full,dates d’observation,True,déficit de cashflows actualisés,-0.2843,1.0812,4.2324,0.2488,13.4707,34.5119,False,False
+Conditionnel B — L1,full,dates d’observation,True,déficit de cashflows actualisés,-0.7501,2.0333,7.1213,0.6032,22.3605,56.5227,False,False
+Conditionnel B — L2,full,dates d’observation,False,déficit de cashflows actualisés,-0.2352,1.3181,3.9978,0.6216,10.7538,37.3546,False,False
+Statique Elastic Net,full,aucun,True,déficit de cashflows actualisés,2.8848,41.7774,46.7754,0.4528,84.1181,90.7458,False,False
+Statique Lasso,full,aucun,True,déficit de cashflows actualisés,3.6998,44.2159,49.3981,0.4528,87.5595,91.98,False,False
+Statique OLS,full,aucun,False,déficit de cashflows actualisés,-0.3811,44.4251,53.0922,0.4752,97.423,107.7077,False,False
+Statique Ridge,full,aucun,False,déficit de cashflows actualisés,1.513,36.7417,43.5348,0.492,82.5914,94.0927,False,False
+Autocall non couvert,reference,aucun,False,dispersion du passif autour de sa moyenne,0.0,4.1926,8.6459,0.924,4.8328,4.8328,False,False
+Delta quotidien,reference,quotidien,False,P&L terminal autofinancé,0.0325,0.6055,1.2218,0.516,3.9761,21.6822,False,False
+Delta tous les 5 jours,reference,tous les 5 jours,False,P&L terminal autofinancé,-0.0235,1.1028,2.1753,0.492,6.5171,29.7958,False,False

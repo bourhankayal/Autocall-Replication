@@ -1,0 +1,17 @@
+﻿family,penalty,profile,recalled,protection_barrier_hit,missed_coupon,n_paths,n_paths_evaluated,sample_frequency,conditional_rmse,conditional_es_975,conditional_tail_path_equivalents,global_es_contribution,global_es_share,hyperparameter_source_run,sampling_method
+calls_puts,elastic_net,compromise,False,False,False,3185,25000,0.1274,1.1369287626454376,2.9436439641529843,79.625,0.0,0.0,2026-11-16_154918_fast_2,standard_mc
+calls_puts,elastic_net,compromise,False,False,True,1756,25000,0.07024,4.562986613130205,16.257556948181257,43.900000000000006,5.268820291582476,0.5266420816546041,2026-11-16_154918_fast_2,standard_mc
+calls_puts,elastic_net,compromise,False,True,False,10,25000,0.0004,15.226341686178571,-15.226341686178571,0.25,0.0,0.0,2026-11-16_154918_fast_2,standard_mc
+calls_puts,elastic_net,compromise,False,True,True,1580,25000,0.0632,13.497012679689037,28.85983886807668,39.5,4.735735886360801,0.4733579183453961,2026-11-16_154918_fast_2,standard_mc
+calls_puts,elastic_net,compromise,True,False,False,18389,25000,0.73556,0.10229692401770961,0.4294297048080515,459.725,0.0,0.0,2026-11-16_154918_fast_2,standard_mc
+calls_puts,elastic_net,compromise,True,False,True,80,25000,0.0032,2.1196433972382724,-1.3758747636862125,2.0,0.0,0.0,2026-11-16_154918_fast_2,standard_mc
+calls_puts,elastic_net,compromise,True,True,False,0,25000,0.0,,,0.0,0.0,0.0,2026-11-16_154918_fast_2,standard_mc
+calls_puts,elastic_net,compromise,True,True,True,0,25000,0.0,,,0.0,0.0,0.0,2026-11-16_154918_fast_2,standard_mc
+full,elastic_net,compromise,False,False,False,3185,25000,0.1274,1.0229956999617165,2.0634546273618475,79.625,0.0,0.0,2026-11-16_154918_fast_2,standard_mc
+full,elastic_net,compromise,False,False,True,1756,25000,0.07024,4.512776436206929,15.286987388050257,43.900000000000006,5.291833103681345,0.6655360752112506,2026-11-16_154918_fast_2,standard_mc
+full,elastic_net,compromise,False,True,False,10,25000,0.0004,15.772515478272766,-15.772515478272766,0.25,0.0,0.0,2026-11-16_154918_fast_2,standard_mc
+full,elastic_net,compromise,False,True,True,1580,25000,0.0632,12.472365450573628,18.957538462769925,39.5,2.65940094775853,0.33446392478874953,2026-11-16_154918_fast_2,standard_mc
+full,elastic_net,compromise,True,False,False,18389,25000,0.73556,0.1923989868415178,0.7558547663077005,459.725,0.0,0.0,2026-11-16_154918_fast_2,standard_mc
+full,elastic_net,compromise,True,False,True,80,25000,0.0032,2.0060421953855796,-1.2154683665229982,2.0,0.0,0.0,2026-11-16_154918_fast_2,standard_mc
+full,elastic_net,compromise,True,True,False,0,25000,0.0,,,0.0,0.0,0.0,2026-11-16_154918_fast_2,standard_mc
+full,elastic_net,compromise,True,True,True,0,25000,0.0,,,0.0,0.0,0.0,2026-11-16_154918_fast_2,standard_mc

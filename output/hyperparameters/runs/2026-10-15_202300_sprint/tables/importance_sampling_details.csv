@@ -1,0 +1,193 @@
+﻿candidate_index,method,tilts,mixture_probabilities,seed,policy_key,penalty,objective,profile,es,tail_effective_sample_size,effective_sample_ratio,maximum_normalized_weight,family
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l0|penalized_es|rmse_priority,l0,penalized_es,rmse_priority,15.23108350726044,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l0|penalized_es|compromise,l0,penalized_es,compromise,15.23108350726044,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l0|penalized_es|es_priority,l0,penalized_es,es_priority,15.23108350726044,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l1|penalized_es|rmse_priority,l1,penalized_es,rmse_priority,5.846677762871607,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l1|penalized_es|compromise,l1,penalized_es,compromise,5.846677762871607,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l1|penalized_es|es_priority,l1,penalized_es,es_priority,5.846677762871607,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l1|constrained_es|compromise,l1,constrained_es,compromise,13.706070752941809,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l1|constrained_es|rmse_priority,l1,constrained_es,rmse_priority,6.239379693422749,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l2|penalized_es|rmse_priority,l2,penalized_es,rmse_priority,23.001492042389195,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l2|penalized_es|compromise,l2,penalized_es,compromise,23.001492042389195,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l2|penalized_es|es_priority,l2,penalized_es,es_priority,23.001492042389195,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",61000,elastic_net|penalized_es|rmse_priority,elastic_net,penalized_es,rmse_priority,8.28779040607298,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",61000,elastic_net|penalized_es|compromise,elastic_net,penalized_es,compromise,8.28779040607298,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",61000,elastic_net|penalized_es|es_priority,elastic_net,penalized_es,es_priority,8.961776030952809,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",61000,elastic_net|constrained_es|compromise,elastic_net,constrained_es,compromise,9.199684083760268,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",61000,elastic_net|constrained_es|rmse_priority,elastic_net,constrained_es,rmse_priority,6.076810014526127,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l0|penalized_es|rmse_priority,l0,penalized_es,rmse_priority,21.31912431845633,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l0|penalized_es|compromise,l0,penalized_es,compromise,21.31912431845633,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l0|penalized_es|es_priority,l0,penalized_es,es_priority,21.31912431845633,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l1|penalized_es|rmse_priority,l1,penalized_es,rmse_priority,11.052314704759175,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l1|penalized_es|compromise,l1,penalized_es,compromise,11.052314704759175,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l1|penalized_es|es_priority,l1,penalized_es,es_priority,11.052314704759175,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l1|constrained_es|compromise,l1,constrained_es,compromise,7.192328210526139,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l1|constrained_es|rmse_priority,l1,constrained_es,rmse_priority,12.236447268445083,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l2|penalized_es|rmse_priority,l2,penalized_es,rmse_priority,15.080072138044098,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l2|penalized_es|compromise,l2,penalized_es,compromise,15.080072138044098,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l2|penalized_es|es_priority,l2,penalized_es,es_priority,15.080072138044098,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",62000,elastic_net|penalized_es|rmse_priority,elastic_net,penalized_es,rmse_priority,8.70150752931004,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",62000,elastic_net|penalized_es|compromise,elastic_net,penalized_es,compromise,8.70150752931004,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",62000,elastic_net|penalized_es|es_priority,elastic_net,penalized_es,es_priority,5.528584998784536,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",62000,elastic_net|constrained_es|compromise,elastic_net,constrained_es,compromise,7.6566723984867275,5.000000000000009,1.0,0.005,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",62000,elastic_net|constrained_es|rmse_priority,elastic_net,constrained_es,rmse_priority,10.59989234775673,5.000000000000009,1.0,0.005,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l0|penalized_es|rmse_priority,l0,penalized_es,rmse_priority,22.264932606786743,7.6345135204285475,0.9324715025599296,0.007050443302322692,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l0|penalized_es|compromise,l0,penalized_es,compromise,22.264932606786743,7.6345135204285475,0.9324715025599296,0.007050443302322692,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l0|penalized_es|es_priority,l0,penalized_es,es_priority,22.264932606786743,7.6345135204285475,0.9324715025599296,0.007050443302322692,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l1|penalized_es|rmse_priority,l1,penalized_es,rmse_priority,9.22600534117834,9.699207548064885,0.9324715025599296,0.007050443302322692,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l1|penalized_es|compromise,l1,penalized_es,compromise,9.22600534117834,9.699207548064885,0.9324715025599296,0.007050443302322692,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l1|penalized_es|es_priority,l1,penalized_es,es_priority,9.22600534117834,9.699207548064885,0.9324715025599296,0.007050443302322692,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l1|constrained_es|compromise,l1,constrained_es,compromise,10.360602670511373,6.307697620543314,0.9324715025599296,0.007050443302322692,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l1|constrained_es|rmse_priority,l1,constrained_es,rmse_priority,9.493533502131033,8.631066348529444,0.9324715025599296,0.007050443302322692,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l2|penalized_es|rmse_priority,l2,penalized_es,rmse_priority,22.262573654376496,7.032874326696425,0.9324715025599296,0.007050443302322692,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l2|penalized_es|compromise,l2,penalized_es,compromise,22.262573654376496,7.032874326696425,0.9324715025599296,0.007050443302322692,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l2|penalized_es|es_priority,l2,penalized_es,es_priority,22.262573654376496,7.032874326696425,0.9324715025599296,0.007050443302322692,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,elastic_net|penalized_es|rmse_priority,elastic_net,penalized_es,rmse_priority,8.951751498624944,6.762706532449337,0.9324715025599296,0.007050443302322692,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,elastic_net|penalized_es|compromise,elastic_net,penalized_es,compromise,8.951751498624944,6.762706532449337,0.9324715025599296,0.007050443302322692,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,elastic_net|penalized_es|es_priority,elastic_net,penalized_es,es_priority,6.14059435426554,6.061405428433867,0.9324715025599296,0.007050443302322692,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,elastic_net|constrained_es|compromise,elastic_net,constrained_es,compromise,7.904441411934523,6.523483341443198,0.9324715025599296,0.007050443302322692,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,elastic_net|constrained_es|rmse_priority,elastic_net,constrained_es,rmse_priority,8.085523936747522,8.015768456230212,0.9324715025599296,0.007050443302322692,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l0|penalized_es|rmse_priority,l0,penalized_es,rmse_priority,22.6821791848117,8.013401916977001,0.9258865781397893,0.007038017346888206,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l0|penalized_es|compromise,l0,penalized_es,compromise,22.6821791848117,8.013401916977001,0.9258865781397893,0.007038017346888206,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l0|penalized_es|es_priority,l0,penalized_es,es_priority,22.6821791848117,8.013401916977001,0.9258865781397893,0.007038017346888206,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l1|penalized_es|rmse_priority,l1,penalized_es,rmse_priority,11.529010455727537,8.939327837297506,0.9258865781397893,0.007038017346888206,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l1|penalized_es|compromise,l1,penalized_es,compromise,11.529010455727537,8.939327837297506,0.9258865781397893,0.007038017346888206,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l1|penalized_es|es_priority,l1,penalized_es,es_priority,11.529010455727537,8.939327837297506,0.9258865781397893,0.007038017346888206,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l1|constrained_es|compromise,l1,constrained_es,compromise,9.372484000356039,7.159577850946191,0.9258865781397893,0.007038017346888206,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l1|constrained_es|rmse_priority,l1,constrained_es,rmse_priority,12.514274453067902,8.939327837297506,0.9258865781397893,0.007038017346888206,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l2|penalized_es|rmse_priority,l2,penalized_es,rmse_priority,20.695947981010676,9.29366508848019,0.9258865781397893,0.007038017346888206,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l2|penalized_es|compromise,l2,penalized_es,compromise,20.695947981010676,9.29366508848019,0.9258865781397893,0.007038017346888206,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l2|penalized_es|es_priority,l2,penalized_es,es_priority,20.695947981010676,9.29366508848019,0.9258865781397893,0.007038017346888206,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,elastic_net|penalized_es|rmse_priority,elastic_net,penalized_es,rmse_priority,9.154786789204376,9.524953279717755,0.9258865781397893,0.007038017346888206,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,elastic_net|penalized_es|compromise,elastic_net,penalized_es,compromise,9.154786789204376,9.524953279717755,0.9258865781397893,0.007038017346888206,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,elastic_net|penalized_es|es_priority,elastic_net,penalized_es,es_priority,6.102688845228913,7.159577850946191,0.9258865781397893,0.007038017346888206,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,elastic_net|constrained_es|compromise,elastic_net,constrained_es,compromise,7.838755258989021,7.536248185257495,0.9258865781397893,0.007038017346888206,calls_puts
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,elastic_net|constrained_es|rmse_priority,elastic_net,constrained_es,rmse_priority,10.926929067183906,8.888476301331044,0.9258865781397893,0.007038017346888206,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l0|penalized_es|rmse_priority,l0,penalized_es,rmse_priority,20.996003248573842,7.675823638149291,0.7560392320343543,0.009920702745887723,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l0|penalized_es|compromise,l0,penalized_es,compromise,20.996003248573842,7.675823638149291,0.7560392320343543,0.009920702745887723,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l0|penalized_es|es_priority,l0,penalized_es,es_priority,20.996003248573842,7.675823638149291,0.7560392320343543,0.009920702745887723,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l1|penalized_es|rmse_priority,l1,penalized_es,rmse_priority,8.419650318557098,8.535709953669523,0.7560392320343543,0.009920702745887723,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l1|penalized_es|compromise,l1,penalized_es,compromise,8.419650318557098,8.535709953669523,0.7560392320343543,0.009920702745887723,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l1|penalized_es|es_priority,l1,penalized_es,es_priority,8.419650318557098,8.535709953669523,0.7560392320343543,0.009920702745887723,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l1|constrained_es|compromise,l1,constrained_es,compromise,10.79710843900979,5.578138429798815,0.7560392320343543,0.009920702745887723,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l1|constrained_es|rmse_priority,l1,constrained_es,rmse_priority,8.9440581141899,7.849823217921732,0.7560392320343543,0.009920702745887723,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l2|penalized_es|rmse_priority,l2,penalized_es,rmse_priority,22.247554990003742,6.303196659446465,0.7560392320343543,0.009920702745887723,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l2|penalized_es|compromise,l2,penalized_es,compromise,22.247554990003742,6.303196659446465,0.7560392320343543,0.009920702745887723,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l2|penalized_es|es_priority,l2,penalized_es,es_priority,22.247554990003742,6.303196659446465,0.7560392320343543,0.009920702745887723,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,elastic_net|penalized_es|rmse_priority,elastic_net,penalized_es,rmse_priority,8.539785008828883,6.226107735667949,0.7560392320343543,0.009920702745887723,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,elastic_net|penalized_es|compromise,elastic_net,penalized_es,compromise,8.539785008828883,6.226107735667949,0.7560392320343543,0.009920702745887723,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,elastic_net|penalized_es|es_priority,elastic_net,penalized_es,es_priority,6.939258003539392,5.613491111152101,0.7560392320343543,0.009920702745887723,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,elastic_net|constrained_es|compromise,elastic_net,constrained_es,compromise,8.104160701767281,5.622700335606303,0.7560392320343543,0.009920702745887723,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,elastic_net|constrained_es|rmse_priority,elastic_net,constrained_es,rmse_priority,7.528728891058589,7.2793572457310205,0.7560392320343543,0.009920702745887723,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l0|penalized_es|rmse_priority,l0,penalized_es,rmse_priority,24.995305330678946,9.185479496559088,0.7401878706370648,0.009859986990930018,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l0|penalized_es|compromise,l0,penalized_es,compromise,24.995305330678946,9.185479496559088,0.7401878706370648,0.009859986990930018,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l0|penalized_es|es_priority,l0,penalized_es,es_priority,24.995305330678946,9.185479496559088,0.7401878706370648,0.009859986990930018,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l1|penalized_es|rmse_priority,l1,penalized_es,rmse_priority,14.811930092971046,12.331266488247996,0.7401878706370648,0.009859986990930018,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l1|penalized_es|compromise,l1,penalized_es,compromise,14.811930092971046,12.331266488247996,0.7401878706370648,0.009859986990930018,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l1|penalized_es|es_priority,l1,penalized_es,es_priority,14.811930092971046,12.331266488247996,0.7401878706370648,0.009859986990930018,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l1|constrained_es|compromise,l1,constrained_es,compromise,10.628953981827161,8.37852028249963,0.7401878706370648,0.009859986990930018,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l1|constrained_es|rmse_priority,l1,constrained_es,rmse_priority,15.920690860375439,11.81737025569733,0.7401878706370648,0.009859986990930018,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l2|penalized_es|rmse_priority,l2,penalized_es,rmse_priority,22.69406862131941,10.350651749410588,0.7401878706370648,0.009859986990930018,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l2|penalized_es|compromise,l2,penalized_es,compromise,22.69406862131941,10.350651749410588,0.7401878706370648,0.009859986990930018,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l2|penalized_es|es_priority,l2,penalized_es,es_priority,22.69406862131941,10.350651749410588,0.7401878706370648,0.009859986990930018,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,elastic_net|penalized_es|rmse_priority,elastic_net,penalized_es,rmse_priority,12.009525180186607,12.904951307651467,0.7401878706370648,0.009859986990930018,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,elastic_net|penalized_es|compromise,elastic_net,penalized_es,compromise,12.009525180186607,12.904951307651467,0.7401878706370648,0.009859986990930018,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,elastic_net|penalized_es|es_priority,elastic_net,penalized_es,es_priority,7.968515277373386,8.205734148869027,0.7401878706370648,0.009859986990930018,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,elastic_net|constrained_es|compromise,elastic_net,constrained_es,compromise,10.40118068194521,10.63652600042497,0.7401878706370648,0.009859986990930018,calls_puts
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,elastic_net|constrained_es|rmse_priority,elastic_net,constrained_es,rmse_priority,14.151636933724713,11.641159816198961,0.7401878706370648,0.009859986990930018,calls_puts
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l0|penalized_es|rmse_priority,l0,penalized_es,rmse_priority,14.596657233025258,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l0|penalized_es|compromise,l0,penalized_es,compromise,14.596657233025258,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l0|penalized_es|es_priority,l0,penalized_es,es_priority,9.339524149531616,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l1|penalized_es|rmse_priority,l1,penalized_es,rmse_priority,24.064276148829503,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l1|penalized_es|compromise,l1,penalized_es,compromise,24.064276148829503,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l1|penalized_es|es_priority,l1,penalized_es,es_priority,8.169500913425608,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l1|constrained_es|compromise,l1,constrained_es,compromise,13.710844323533019,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l1|constrained_es|rmse_priority,l1,constrained_es,rmse_priority,13.710844323533019,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l2|penalized_es|rmse_priority,l2,penalized_es,rmse_priority,30.0243975401231,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l2|penalized_es|compromise,l2,penalized_es,compromise,30.0243975401231,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",61000,l2|penalized_es|es_priority,l2,penalized_es,es_priority,30.0243975401231,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",61000,elastic_net|penalized_es|rmse_priority,elastic_net,penalized_es,rmse_priority,7.891699960119315,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",61000,elastic_net|penalized_es|compromise,elastic_net,penalized_es,compromise,7.891699960119315,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",61000,elastic_net|penalized_es|es_priority,elastic_net,penalized_es,es_priority,8.463171020815846,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",61000,elastic_net|constrained_es|compromise,elastic_net,constrained_es,compromise,9.211521418737986,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",61000,elastic_net|constrained_es|rmse_priority,elastic_net,constrained_es,rmse_priority,9.211521418737986,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l0|penalized_es|rmse_priority,l0,penalized_es,rmse_priority,10.106743204033076,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l0|penalized_es|compromise,l0,penalized_es,compromise,10.106743204033076,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l0|penalized_es|es_priority,l0,penalized_es,es_priority,5.505183609537834,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l1|penalized_es|rmse_priority,l1,penalized_es,rmse_priority,23.97295178535307,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l1|penalized_es|compromise,l1,penalized_es,compromise,23.97295178535307,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l1|penalized_es|es_priority,l1,penalized_es,es_priority,6.1257788424680655,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l1|constrained_es|compromise,l1,constrained_es,compromise,7.191055748402924,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l1|constrained_es|rmse_priority,l1,constrained_es,rmse_priority,7.191055748402924,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l2|penalized_es|rmse_priority,l2,penalized_es,rmse_priority,15.066120038379825,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l2|penalized_es|compromise,l2,penalized_es,compromise,15.066120038379825,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",62000,l2|penalized_es|es_priority,l2,penalized_es,es_priority,15.066120038379825,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",62000,elastic_net|penalized_es|rmse_priority,elastic_net,penalized_es,rmse_priority,10.027077250890837,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",62000,elastic_net|penalized_es|compromise,elastic_net,penalized_es,compromise,10.027077250890837,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",62000,elastic_net|penalized_es|es_priority,elastic_net,penalized_es,es_priority,5.504243740874095,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",62000,elastic_net|constrained_es|compromise,elastic_net,constrained_es,compromise,7.693328108140281,5.000000000000009,1.0,0.005,full
+-1,standard_mc,"(0.0,)","(1.0,)",62000,elastic_net|constrained_es|rmse_priority,elastic_net,constrained_es,rmse_priority,7.693328108140281,5.000000000000009,1.0,0.005,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l0|penalized_es|rmse_priority,l0,penalized_es,rmse_priority,15.702428456294342,6.9537628631317245,0.9324715025599296,0.007050443302322692,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l0|penalized_es|compromise,l0,penalized_es,compromise,15.702428456294342,6.9537628631317245,0.9324715025599296,0.007050443302322692,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l0|penalized_es|es_priority,l0,penalized_es,es_priority,6.987726635891105,6.166543713116813,0.9324715025599296,0.007050443302322692,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l1|penalized_es|rmse_priority,l1,penalized_es,rmse_priority,24.023018049122783,4.763163867648758,0.9324715025599296,0.007050443302322692,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l1|penalized_es|compromise,l1,penalized_es,compromise,24.023018049122783,4.763163867648758,0.9324715025599296,0.007050443302322692,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l1|penalized_es|es_priority,l1,penalized_es,es_priority,5.948785920688801,5.4793912609910915,0.9324715025599296,0.007050443302322692,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l1|constrained_es|compromise,l1,constrained_es,compromise,10.36410279461255,6.307697620543314,0.9324715025599296,0.007050443302322692,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l1|constrained_es|rmse_priority,l1,constrained_es,rmse_priority,10.36410279461255,6.307697620543314,0.9324715025599296,0.007050443302322692,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l2|penalized_es|rmse_priority,l2,penalized_es,rmse_priority,24.27811268387108,7.035442692778104,0.9324715025599296,0.007050443302322692,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l2|penalized_es|compromise,l2,penalized_es,compromise,24.27811268387108,7.035442692778104,0.9324715025599296,0.007050443302322692,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,l2|penalized_es|es_priority,l2,penalized_es,es_priority,24.27811268387108,7.035442692778104,0.9324715025599296,0.007050443302322692,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,elastic_net|penalized_es|rmse_priority,elastic_net,penalized_es,rmse_priority,8.917282102067833,8.276243903483099,0.9324715025599296,0.007050443302322692,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,elastic_net|penalized_es|compromise,elastic_net,penalized_es,compromise,8.917282102067833,8.276243903483099,0.9324715025599296,0.007050443302322692,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,elastic_net|penalized_es|es_priority,elastic_net,penalized_es,es_priority,5.814472071779039,6.385673545806745,0.9324715025599296,0.007050443302322692,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,elastic_net|constrained_es|compromise,elastic_net,constrained_es,compromise,7.899791196982486,6.523483341443198,0.9324715025599296,0.007050443302322692,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",61000,elastic_net|constrained_es|rmse_priority,elastic_net,constrained_es,rmse_priority,7.899791196982486,6.523483341443198,0.9324715025599296,0.007050443302322692,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l0|penalized_es|rmse_priority,l0,penalized_es,rmse_priority,12.965917640995684,8.757648564216582,0.9258865781397893,0.007038017346888206,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l0|penalized_es|compromise,l0,penalized_es,compromise,12.965917640995684,8.757648564216582,0.9258865781397893,0.007038017346888206,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l0|penalized_es|es_priority,l0,penalized_es,es_priority,8.176643722133786,6.747113116494811,0.9258865781397893,0.007038017346888206,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l1|penalized_es|rmse_priority,l1,penalized_es,rmse_priority,23.877725840105615,5.210699052568415,0.9258865781397893,0.007038017346888206,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l1|penalized_es|compromise,l1,penalized_es,compromise,23.877725840105615,5.210699052568415,0.9258865781397893,0.007038017346888206,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l1|penalized_es|es_priority,l1,penalized_es,es_priority,6.108289114806603,4.8345265932793415,0.9258865781397893,0.007038017346888206,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l1|constrained_es|compromise,l1,constrained_es,compromise,9.372198526731102,7.159577850946191,0.9258865781397893,0.007038017346888206,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l1|constrained_es|rmse_priority,l1,constrained_es,rmse_priority,9.372198526731102,7.159577850946191,0.9258865781397893,0.007038017346888206,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l2|penalized_es|rmse_priority,l2,penalized_es,rmse_priority,21.76417461729121,7.603636956533661,0.9258865781397893,0.007038017346888206,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l2|penalized_es|compromise,l2,penalized_es,compromise,21.76417461729121,7.603636956533661,0.9258865781397893,0.007038017346888206,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,l2|penalized_es|es_priority,l2,penalized_es,es_priority,21.76417461729121,7.603636956533661,0.9258865781397893,0.007038017346888206,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,elastic_net|penalized_es|rmse_priority,elastic_net,penalized_es,rmse_priority,10.123173128280403,8.888476301331044,0.9258865781397893,0.007038017346888206,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,elastic_net|penalized_es|compromise,elastic_net,penalized_es,compromise,10.123173128280403,8.888476301331044,0.9258865781397893,0.007038017346888206,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,elastic_net|penalized_es|es_priority,elastic_net,penalized_es,es_priority,6.133737963732756,7.159577850946191,0.9258865781397893,0.007038017346888206,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,elastic_net|constrained_es|compromise,elastic_net,constrained_es,compromise,7.899338169967721,7.536248185257495,0.9258865781397893,0.007038017346888206,full
+0,importance_sampling,"(0.0, -1.0)","(0.7, 0.3)",62000,elastic_net|constrained_es|rmse_priority,elastic_net,constrained_es,rmse_priority,7.899338169967721,7.536248185257495,0.9258865781397893,0.007038017346888206,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l0|penalized_es|rmse_priority,l0,penalized_es,rmse_priority,15.606207410259131,6.385054890192323,0.7560392320343543,0.009920702745887723,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l0|penalized_es|compromise,l0,penalized_es,compromise,15.606207410259131,6.385054890192323,0.7560392320343543,0.009920702745887723,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l0|penalized_es|es_priority,l0,penalized_es,es_priority,7.942213141432946,4.856798832844707,0.7560392320343543,0.009920702745887723,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l1|penalized_es|rmse_priority,l1,penalized_es,rmse_priority,22.633836431462704,3.9316269124100374,0.7560392320343543,0.009920702745887723,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l1|penalized_es|compromise,l1,penalized_es,compromise,22.633836431462704,3.9316269124100374,0.7560392320343543,0.009920702745887723,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l1|penalized_es|es_priority,l1,penalized_es,es_priority,7.728942327247504,4.611204318929743,0.7560392320343543,0.009920702745887723,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l1|constrained_es|compromise,l1,constrained_es,compromise,10.800714210726873,5.578138429798815,0.7560392320343543,0.009920702745887723,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l1|constrained_es|rmse_priority,l1,constrained_es,rmse_priority,10.800714210726873,5.578138429798815,0.7560392320343543,0.009920702745887723,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l2|penalized_es|rmse_priority,l2,penalized_es,rmse_priority,24.9358025185197,6.342674377279602,0.7560392320343543,0.009920702745887723,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l2|penalized_es|compromise,l2,penalized_es,compromise,24.9358025185197,6.342674377279602,0.7560392320343543,0.009920702745887723,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,l2|penalized_es|es_priority,l2,penalized_es,es_priority,24.9358025185197,6.342674377279602,0.7560392320343543,0.009920702745887723,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,elastic_net|penalized_es|rmse_priority,elastic_net,penalized_es,rmse_priority,7.94164765538989,7.2793572457310205,0.7560392320343543,0.009920702745887723,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,elastic_net|penalized_es|compromise,elastic_net,penalized_es,compromise,7.94164765538989,7.2793572457310205,0.7560392320343543,0.009920702745887723,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,elastic_net|penalized_es|es_priority,elastic_net,penalized_es,es_priority,6.529397317078955,5.613491111152101,0.7560392320343543,0.009920702745887723,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,elastic_net|constrained_es|compromise,elastic_net,constrained_es,compromise,8.098937150581577,5.622700335606303,0.7560392320343543,0.009920702745887723,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",61000,elastic_net|constrained_es|rmse_priority,elastic_net,constrained_es,rmse_priority,8.098937150581577,5.622700335606303,0.7560392320343543,0.009920702745887723,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l0|penalized_es|rmse_priority,l0,penalized_es,rmse_priority,13.040524512659772,8.696325806747646,0.7401878706370648,0.009859986990930018,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l0|penalized_es|compromise,l0,penalized_es,compromise,13.040524512659772,8.696325806747646,0.7401878706370648,0.009859986990930018,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l0|penalized_es|es_priority,l0,penalized_es,es_priority,8.383919106263104,7.955136927924958,0.7401878706370648,0.009859986990930018,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l1|penalized_es|rmse_priority,l1,penalized_es,rmse_priority,25.612168816196085,4.841674849138393,0.7401878706370648,0.009859986990930018,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l1|penalized_es|compromise,l1,penalized_es,compromise,25.612168816196085,4.841674849138393,0.7401878706370648,0.009859986990930018,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l1|penalized_es|es_priority,l1,penalized_es,es_priority,6.509613801550696,4.143360323975585,0.7401878706370648,0.009859986990930018,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l1|constrained_es|compromise,l1,constrained_es,compromise,10.628239987332282,8.37852028249963,0.7401878706370648,0.009859986990930018,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l1|constrained_es|rmse_priority,l1,constrained_es,rmse_priority,10.628239987332282,8.37852028249963,0.7401878706370648,0.009859986990930018,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l2|penalized_es|rmse_priority,l2,penalized_es,rmse_priority,23.554528287838046,9.034967027020924,0.7401878706370648,0.009859986990930018,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l2|penalized_es|compromise,l2,penalized_es,compromise,23.554528287838046,9.034967027020924,0.7401878706370648,0.009859986990930018,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,l2|penalized_es|es_priority,l2,penalized_es,es_priority,23.554528287838046,9.034967027020924,0.7401878706370648,0.009859986990930018,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,elastic_net|penalized_es|rmse_priority,elastic_net,penalized_es,rmse_priority,13.612757756995244,11.641159816198961,0.7401878706370648,0.009859986990930018,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,elastic_net|penalized_es|compromise,elastic_net,penalized_es,compromise,13.612757756995244,11.641159816198961,0.7401878706370648,0.009859986990930018,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,elastic_net|penalized_es|es_priority,elastic_net,penalized_es,es_priority,7.929492563376929,8.205734148869027,0.7401878706370648,0.009859986990930018,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,elastic_net|constrained_es|compromise,elastic_net,constrained_es,compromise,10.462871135561603,10.63652600042497,0.7401878706370648,0.009859986990930018,full
+1,importance_sampling,"(0.0, -1.0, -2.0)","(0.5, 0.3, 0.2)",62000,elastic_net|constrained_es|rmse_priority,elastic_net,constrained_es,rmse_priority,10.462871135561603,10.63652600042497,0.7401878706370648,0.009859986990930018,full

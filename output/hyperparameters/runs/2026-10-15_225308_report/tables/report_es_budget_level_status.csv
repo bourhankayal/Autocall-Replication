@@ -1,0 +1,25 @@
+﻿Famille,Pénalité,Niveau de plafond,Plafond commun (% nominal),Candidats admissibles,RMSE retenue (% nominal),ES retenu (% nominal),Options actives retenues,Budget d'optimisation retenu (% nominal),Budget d'optimisation respecté en validation,Statut
+calls_puts,l0,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,l0,intermédiaire,10.0,19,2.4138,7.2107,9.0,10.0,True,retenu
+calls_puts,l0,souple,15.0,21,2.4138,7.2107,9.0,10.0,True,retenu
+calls_puts,l1,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,l1,intermédiaire,10.0,20,2.3097,6.7246,158.0,10.0,True,retenu
+calls_puts,l1,souple,15.0,21,2.3097,6.7246,158.0,10.0,True,retenu
+calls_puts,l2,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,l2,intermédiaire,10.0,21,2.3048,6.6406,132.0,10.0,True,retenu
+calls_puts,l2,souple,15.0,21,2.3048,6.6406,132.0,10.0,True,retenu
+calls_puts,elastic_net,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+calls_puts,elastic_net,intermédiaire,10.0,124,2.3094,6.7288,125.0,15.0,True,retenu
+calls_puts,elastic_net,souple,15.0,126,2.3094,6.7288,125.0,15.0,True,retenu
+full,l0,strict,5.0,0,,,,,,aucun candidat sous ce plafond
+full,l0,intermédiaire,10.0,7,3.283,6.2312,5.0,5.0,False,retenu
+full,l0,souple,15.0,21,2.9044,10.4261,5.0,10.0,False,retenu
+full,l1,strict,5.0,1,2.294,4.9688,119.0,5.0,True,retenu
+full,l1,intermédiaire,10.0,21,2.2574,5.8305,305.0,10.0,True,retenu
+full,l1,souple,15.0,21,2.2574,5.8305,305.0,10.0,True,retenu
+full,l2,strict,5.0,5,2.311,4.867,264.0,5.0,True,retenu
+full,l2,intermédiaire,10.0,21,2.2733,6.1308,264.0,10.0,True,retenu
+full,l2,souple,15.0,21,2.2733,6.1308,264.0,10.0,True,retenu
+full,elastic_net,strict,5.0,1,2.2961,4.9747,167.0,5.0,True,retenu
+full,elastic_net,intermédiaire,10.0,125,2.2579,5.9554,206.0,10.0,True,retenu
+full,elastic_net,souple,15.0,125,2.2579,5.9554,206.0,10.0,True,retenu

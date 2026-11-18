@@ -1,0 +1,15 @@
+﻿Famille,Étape,Restantes,Éliminées
+calls_puts,Solutions calculées,91,0
+calls_puts,Convergence numérique,91,0
+calls_puts,Budget respecté en calibration,91,0
+calls_puts,Budget respecté en validation,35,56
+calls_puts,Mesures de validation finies,35,0
+calls_puts,Frontière non dominée,13,22
+calls_puts,Politiques distinctes retenues,3,10
+full,Solutions calculées,91,0
+full,Convergence numérique,91,0
+full,Budget respecté en calibration,91,0
+full,Budget respecté en validation,45,46
+full,Mesures de validation finies,45,0
+full,Frontière non dominée,16,29
+full,Politiques distinctes retenues,3,13

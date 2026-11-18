@@ -1,0 +1,7 @@
+﻿Famille,Profil,Ratio L1 (ρ),Alpha relatif
+calls_puts,performance,0.9,0.0032
+calls_puts,compromise,0.9,0.0075
+calls_puts,parsimony,0.9,0.0178
+full,performance,0.9,0.0075
+full,compromise,0.9,0.0075
+full,parsimony,0.9,0.0133

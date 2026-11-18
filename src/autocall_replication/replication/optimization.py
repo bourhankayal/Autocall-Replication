@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 
 import numpy as np
 
@@ -22,6 +22,9 @@ class SolverConfig:
     eps: float = 1e-12
     max_iter: int = 5000
     tolerance: float = 1e-6
+    objective_tolerance: float = 1e-8
+    support_patience: int = 10
+    active_threshold: float = 1e-6
     unpenalized_indices: tuple[int, ...] = (0,)
     penalty_weights: tuple[float, ...] | None = None
     fixed_cost_strength: float = 1.0
@@ -43,6 +46,13 @@ class SolverResult:
     n_iterations: int | None
     objective_value: float | None
     message: str
+    termination_reason: str | None = None
+    final_relative_weight_change: float | None = None
+    final_relative_objective_change: float | None = None
+    final_support_size: int | None = None
+    support_change_count: int | None = None
+    support_stable_iterations: int | None = None
+    objective_monotone: bool | None = None
 
     def metadata(self) -> dict[str, object]:
         """Retourne les informations sérialisables sans dupliquer les poids."""
@@ -54,6 +64,66 @@ class SolverResult:
 def available_solvers() -> tuple[str, ...]:
     """Liste stable des solveurs accessibles par l'interface."""
     return ("legacy", "fista", "proximal")
+
+
+def solve_l0_multistart(
+    A: np.ndarray,
+    b: np.ndarray,
+    config: SolverConfig,
+    *,
+    seed: int = 2718,
+    random_starts: int = 1,
+) -> tuple[SolverResult, list[dict[str, object]]]:
+    """Fit L0 from independent starts; choose by training objective only.
+
+    Cold and ridge-initialized proximal fits are always compared. Reproducible
+    random perturbations of the ridge start are run only when the two fits
+    disagree materially or either fails to converge. This is a local-search
+    audit, not a certificate of the global non-convex optimum.
+    """
+    if config.penalty != "l0" or config.solver != "proximal":
+        raise ValueError("Le contrôle multistart requiert L0 et le solveur proximal.")
+    if random_starts < 0:
+        raise ValueError("random_starts doit être positif ou nul.")
+    cold = solve_replication(A, b, config)
+    ridge_config = replace(config, solver="fista", penalty="l2", alpha=1e-4)
+    ridge = solve_replication(A, b, ridge_config)
+    ridge_start = solve_replication(A, b, config, initial_weights=ridge.weights)
+    candidates = [("cold", cold), ("ridge_start", ridge_start)]
+    mask = np.ones(len(cold.weights), dtype=bool)
+    mask[list(config.unpenalized_indices)] = False
+    cold_support = mask & (np.abs(cold.weights) > config.active_threshold)
+    ridge_support = mask & (np.abs(ridge_start.weights) > config.active_threshold)
+    gap = abs(float(cold.objective_value) - float(ridge_start.objective_value))
+    scale = max(1.0, abs(float(cold.objective_value)))
+    triggered = bool(
+        not cold.converged
+        or not ridge_start.converged
+        or not np.array_equal(cold_support, ridge_support)
+        or gap / scale > 1e-6
+    )
+    if triggered:
+        rng = np.random.default_rng(seed)
+        anchor = min(candidates, key=lambda item: float(item[1].objective_value))[1].weights
+        for index in range(random_starts):
+            perturbation = rng.normal(0.0, 0.25 * np.maximum(np.abs(anchor), 1e-3))
+            perturbation[~mask] = 0.0
+            fitted = solve_replication(A, b, config, initial_weights=anchor + perturbation)
+            candidates.append((f"random_{index + 1}", fitted))
+    converged = [item for item in candidates if item[1].converged]
+    pool = converged or candidates
+    selected_name, selected = min(pool, key=lambda item: float(item[1].objective_value))
+    audit = [{
+        "initialization": name,
+        "converged": bool(result.converged),
+        "objective_train": float(result.objective_value),
+        "n_options_active": int(np.count_nonzero(
+            mask & (np.abs(result.weights) > config.active_threshold)
+        )),
+        "selected": name == selected_name,
+        "random_multistart_triggered": triggered,
+    } for name, result in candidates]
+    return selected, audit
 
 
 def _validate_problem(
@@ -84,6 +154,17 @@ def _validate_problem(
         raise ValueError("max_iter doit être strictement positif.")
     if not np.isfinite(config.tolerance) or config.tolerance <= 0.0:
         raise ValueError("tolerance doit être un nombre fini strictement positif.")
+    if (
+        not np.isfinite(config.objective_tolerance)
+        or config.objective_tolerance <= 0.0
+    ):
+        raise ValueError(
+            "objective_tolerance doit être un nombre fini strictement positif."
+        )
+    if config.support_patience <= 0:
+        raise ValueError("support_patience doit être strictement positif.")
+    if not np.isfinite(config.active_threshold) or config.active_threshold < 0.0:
+        raise ValueError("active_threshold doit être fini et positif ou nul.")
 
     unpenalized = tuple(config.unpenalized_indices)
     if len(set(unpenalized)) != len(unpenalized):
@@ -278,6 +359,26 @@ def _solve_fista(
     momentum = 1.0
     converged = False
     n_iterations = 0
+    uses_nonconvex_support = fixed_cost_strength > 0.0
+    previous_objective = _fista_objective(
+        A=A_fit,
+        b=b,
+        weights=weights,
+        alpha=config.alpha,
+        l1_strength=l1_strength,
+        l2_strength=l2_strength,
+        penalized_mask=penalized_mask,
+        penalty_weights=penalty_weights,
+        fixed_cost_strength=fixed_cost_strength,
+        proportional_cost_strength=proportional_cost_strength,
+    )
+    previous_support = np.abs((weights / column_scale)[penalized_mask]) > config.active_threshold
+    support_change_count = 0
+    support_stable_iterations = 0
+    objective_monotone = True
+    final_relative_weight_change = float("inf")
+    final_relative_objective_change = float("inf")
+    termination_reason = "max_iter"
 
     for iteration in range(1, config.max_iter + 1):
         residual = A_fit @ extrapolated - b
@@ -305,11 +406,60 @@ def _solve_fista(
 
         difference = np.linalg.norm(next_weights - weights)
         reference = max(1.0, np.linalg.norm(next_weights))
+        final_relative_weight_change = float(difference / reference)
+        next_objective = _fista_objective(
+            A=A_fit,
+            b=b,
+            weights=next_weights,
+            alpha=config.alpha,
+            l1_strength=l1_strength,
+            l2_strength=l2_strength,
+            penalized_mask=penalized_mask,
+            penalty_weights=penalty_weights,
+            fixed_cost_strength=fixed_cost_strength,
+            proportional_cost_strength=proportional_cost_strength,
+        )
+        objective_reference = max(1.0, abs(previous_objective))
+        final_relative_objective_change = float(
+            abs(next_objective - previous_objective) / objective_reference
+        )
+        if next_objective > (
+            previous_objective
+            + config.objective_tolerance * objective_reference
+        ):
+            objective_monotone = False
+
+        next_support = (
+            np.abs((next_weights / column_scale)[penalized_mask])
+            > config.active_threshold
+        )
+        if np.array_equal(next_support, previous_support):
+            support_stable_iterations += 1
+        else:
+            support_change_count += 1
+            support_stable_iterations = 0
+
         n_iterations = iteration
-        if difference <= config.tolerance * reference:
+        weights_are_stable = final_relative_weight_change <= config.tolerance
+        objective_is_stable = (
+            final_relative_objective_change <= config.objective_tolerance
+        )
+        support_is_stable = support_stable_iterations >= config.support_patience
+        if weights_are_stable and (
+            not uses_nonconvex_support
+            or (objective_is_stable and support_is_stable)
+        ):
             weights = next_weights
             converged = True
+            termination_reason = (
+                "weight_objective_and_support_stable"
+                if uses_nonconvex_support
+                else "weights_stable"
+            )
             break
+
+        previous_objective = next_objective
+        previous_support = next_support
 
         # Les pénalités contenant L0 sont non convexes : on utilise alors un
         # gradient proximal sans accélération afin d'éviter que le momentum ne
@@ -364,8 +514,27 @@ def _solve_fista(
         converged=converged,
         n_iterations=n_iterations,
         objective_value=objective_value,
+        termination_reason=termination_reason,
+        final_relative_weight_change=final_relative_weight_change,
+        final_relative_objective_change=final_relative_objective_change,
+        final_support_size=int(
+            np.count_nonzero(
+                np.abs(final_weights[penalized_mask]) > config.active_threshold
+            )
+        ),
+        support_change_count=support_change_count,
+        support_stable_iterations=support_stable_iterations,
+        objective_monotone=objective_monotone,
         message=(
-            ("Gradient proximal a convergé." if config.solver == "proximal" else "FISTA a convergé.")
+            (
+                "Gradient proximal a convergé : poids, objectif et support stabilisés."
+                if uses_nonconvex_support
+                else (
+                    "Gradient proximal a convergé."
+                    if config.solver == "proximal"
+                    else "FISTA a convergé."
+                )
+            )
             if converged
             else (
                 "Gradient proximal a atteint max_iter avant le critère de convergence."
@@ -384,7 +553,8 @@ def solve_replication(
 ) -> SolverResult:
     """Résout la calibration avec une interface commune et rétrocompatible.
 
-    ``legacy`` préserve les résultats historiques via ``fit_linear``. ``fista``
+    ``legacy`` préserve les résultats historiques via ``fit_linear`` et expose
+    notamment ``penalty='none'`` comme référence OLS dense à ``alpha=0``. ``fista``
     traite les objectifs convexes L1, L2, Elastic Net et L1 pondérée.
     ``proximal`` traite L0 et la combinaison coût fixe + proportionnel par
     seuillage dur, sans garantie d'optimum global. L1, L1 pondérée et Elastic

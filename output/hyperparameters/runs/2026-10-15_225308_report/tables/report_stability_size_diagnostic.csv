@@ -1,0 +1,17 @@
+﻿Famille,Pénalité,Profils représentés,Options initiales,Options moyennes,Options min.,Options max.,Rapport moyen / initial,Jaccard entre graines,Convergences,Graines
+full,l0,"compromise, performance",5,166.7,11,185,33.34,0.9375,30,30
+full,l0,parsimony,2,31.7333,4,125,15.8667,0.8,30,30
+calls_puts,l0,"compromise, parsimony, performance",8,50.2333,9,124,6.2792,0.8,30,30
+calls_puts,l2,"compromise, parsimony, performance",136,149.0,149,149,1.0956,1.0,30,30
+full,l2,"compromise, parsimony, performance",272,298.0,298,298,1.0956,1.0,30,30
+calls_puts,elastic_net,compromise,19,18.9,18,20,0.9947,1.0,30,30
+calls_puts,l1,performance,25,24.5,22,26,0.98,0.8846,30,30
+calls_puts,l1,compromise,19,18.1333,18,19,0.9544,1.0,30,30
+calls_puts,elastic_net,performance,27,24.9,23,28,0.9222,0.92,30,30
+calls_puts,l1,parsimony,15,13.0,13,13,0.8667,1.0,30,30
+full,l1,performance,27,22.8,22,24,0.8444,0.9565,30,30
+calls_puts,elastic_net,parsimony,16,13.0,13,13,0.8125,1.0,30,30
+full,elastic_net,"compromise, performance",32,23.8667,23,25,0.7458,1.0,30,30
+full,elastic_net,parsimony,26,18.5,16,19,0.7115,1.0,30,30
+full,l1,compromise,24,16.9,16,18,0.7042,1.0,30,30
+full,l1,parsimony,23,14.2667,14,15,0.6203,0.9333,30,30

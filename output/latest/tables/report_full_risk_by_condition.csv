@@ -1,0 +1,5 @@
+﻿Régime,Observations,condition_frequency,quantile_reliability
+all,2500,1.0,sufficient
+recalled,1819,0.7276,sufficient
+maturity,681,0.2724,sufficient
+barrier_hit,165,0.066,warning_low_observation_count

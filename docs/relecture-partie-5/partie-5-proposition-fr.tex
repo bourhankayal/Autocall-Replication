@@ -1,0 +1,285 @@
+\section{Résultats}
+
+Les références OLS isolent d'abord l'effet du dictionnaire et du conditionnement. On compare ensuite deux objectifs d'ajustement des flux, puis on présente les hyperparamètres des profils retenus et leur risque sur de nouvelles trajectoires. Les dernières expériences examinent la précision de l'estimation de l'ES et l'effet d'une contrainte d'ES sur la calibration.
+
+Les montants sont exprimés en points de nominal, sauf indication contraire. Le nominal de référence vaut 100. Chaque comparaison indique son échantillon. Les écarts aux dernières décimales sont à lire à la lumière de la précision des simulations.
+
+\subsection{Capacité du dictionnaire dans les références OLS}
+
+Le tableau~\ref{tab:ols-capacity} croise deux dictionnaires et deux formulations. Les quatre références estiment les positions par moindres carrés ordinaires, avec $\alpha=0$ fixé dès le départ. La comparaison porte sur le déficit de flux actualisés, sur les mêmes 1 250 trajectoires d'évaluation que le tableau~\ref{tab:unified-comparison}. La méthode conditionnelle A ajuste les flux par échéance.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llrr}
+\toprule
+Formulation & Univers & RMSE & ES à 97,5\% \\
+\midrule
+Statique & Calls + Puts & 48,596 & 93,464 \\
+Conditionnelle & Calls + Puts & 21,010 & 47,824 \\
+Statique & Full & 53,092 & 97,423 \\
+Conditionnelle & Full & 1,035 & 0,944 \\
+\bottomrule
+\end{tabular}
+\caption{Références OLS calibrées par moindres carrés ordinaires, avec $\alpha=0$ fixé d'emblée et sans recherche d'hyperparamètres. La RMSE et l'ES sont mesurées sur les mêmes trajectoires d'évaluation indépendantes, en points de nominal.}
+\label{tab:ols-capacity}
+\end{table}
+
+Le conditionnement réduit la RMSE et l'ES dans les deux dictionnaires. En statique, l'ajout de digitales augmente la RMSE de 48,60 à 53,09 dans cette comparaison. Avec le conditionnement, le dictionnaire Full ramène la RMSE de 21,01 à 1,03 et l'ES de 47,82 à 0,94. Dans ce contrat, les digitales représentent les sauts du payoff et le conditionnement tient compte de l'état observable. Ces résultats mesurent la capacité des références denses dans le modèle simulé. La stabilité, le risque et le financement des portefeuilles retenus sont examinés ensuite.
+
+\subsection{Ajustement par échéance et ajustement du total actualisé}
+
+Le diagnostic A/B compare les deux objectifs sur 625 trajectoires communes. Le tableau~\ref{tab:capacity}, en annexe, conserve les résultats des ajustements pénalisés avec leurs hyperparamètres propres. La Figure~\ref{fig:conditional-objective-tradeoff} montre comment les deux objectifs répartissent l'erreur entre les paiements et leur total actualisé.
+
+Deux objectifs d'ajustement révèlent une distinction importante. La méthode A ajuste séparément chaque date de paiement. La méthode B ajuste le passif total actualisé par trajectoire. Pour Calls + Puts, la méthode B atteint une RMSE terminale d'environ 1,47--1,57\%, mais sa RMSE sur les flux datés approche 50\%. La méthode A abaisse la RMSE des paiements datés à environ 11,28--11,54\%, tout en laissant la RMSE terminale proche de 23,08--23,66\%. Pour l'univers Full, la méthode A reproduit presque les paiements datés, avec une RMSE comprise entre 0,02\% et 0,50\% pour les pénalisations convexes affichées, tandis que la méthode B présente une RMSE terminale d'environ 1,47--1,64\% et une RMSE des paiements proche de 50\%. Les erreurs à différentes dates peuvent donc se compenser dans le total actualisé.
+
+\reportfigure{\reportfigurefile{method_objective_tradeoff.pdf}}{Effet du choix de l'objectif d'ajustement sur la RMSE des paiements datés et la RMSE du total actualisé. Les barres comparent, pour chaque pénalisation et univers d'instruments, l'objectif par échéance (A) et l'objectif portant sur le total (B).}{fig:conditional-objective-tradeoff}
+
+Ce résultat modifie l'interprétation du projet. Un portefeuille peut bien approcher le payoff terminal tout en échouant à financer les flux contractuels lorsqu'ils surviennent. Des diagnostics de financement et de calendrier sont donc nécessaires avant même l'introduction des coûts de marché.
+
+Sur ces mêmes trajectoires, le besoin de financement au 95e percentile des portefeuilles Elastic Net Calls + Puts vaut 36,65 points avec A et 0,83 avec B. Le classement selon la RMSE par échéance peut donc différer du classement selon le financement. Sur un autre échantillon de 250 trajectoires, le compte autofinancé du profil compromis Elastic Net requiert au 95e percentile 3,22 points pour Calls + Puts, et 3,28 pour Full, aussi bien avec les digitales théoriques qu'avec leur approximation par spreads. Ces grandeurs reposent sur des conventions de capital et de prix théoriques propres à chaque exercice.
+
+\subsection{Hyperparamètres et profils compromis retenus}
+
+La section 4.2 décrit la sélection des profils. Le tableau~\ref{tab:selected} donne ici les hyperparamètres de la sélection du 15 octobre, utilisée pour construire les portefeuilles évalués dans cette partie. Pour chaque compromis, il indique l'intensité $\alpha$ de la pénalisation et, pour Elastic Net, le ratio $\rho$. La RMSE de validation et la taille des paniers décrivent le résultat de cette sélection. Les Figures~\ref{fig:decision-dashboard} et~\ref{fig:stability} illustrent le diagnostic distinct de novembre.
+
+Un nœud de politique ne désigne pas seulement une échéance. Il associe une date de paiement à l'état observable du produit à la date de décision : état initial, barrière non touchée, barrière touchée ou état mutualisé lorsque l'échantillon d'un état est insuffisant. Après un rappel, la trajectoire ne visite plus les nœuds ultérieurs. Le nombre moyen d'options par nœud est donc pondéré par la fréquence effective de visite des nœuds. Il mesure la taille attendue du panier lorsqu'une décision est réellement prise, et non une moyenne arithmétique sur les quatre échéances. Le maximum est la plus grande taille rencontrée dans un nœud. La position de trésorerie est exclue de ces deux mesures.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llrrrr}
+\toprule
+Univers & Pénalisation & $\alpha$ & RMSE valid. & Moy./nœud & Max/nœud \\
+\midrule
+Calls + Puts & $L^0$ & 0.00420 & 2.670 & 0.756 & 3 \\
+Calls + Puts & Lasso & 0.02845 & 1.979 & 2.838 & 4 \\
+Calls + Puts & Ridge & 0.00377 & 1.995 & 25.024 & 26 \\
+Calls + Puts & Elastic Net ($\rho=0.90$) & 0.03162 & 1.996 & 2.838 & 4 \\
+Full & $L^0$ & 0.00873 & 3.020 & 0.677 & 4 \\
+Full & Lasso & 0.05060 & 1.994 & 3.119 & 6 \\
+Full & Ridge & 0.00793 & 1.979 & 50.049 & 52 \\
+Full & Elastic Net ($\rho=0.90$) & 0.03162 & 1.944 & 5.240 & 7 \\
+\bottomrule
+\end{tabular}
+\caption{Profils compromis sélectionnés. La moyenne est pondérée par les visites effectives des nœuds et exclut le cash. Les échelles d'alpha sont propres à chaque pénalisation.}
+\label{tab:selected}
+\end{table}
+
+\subsubsection*{Lecture des profils sélectionnés}
+
+Dans Calls~+~Puts, les politiques compromis Lasso et Elastic Net utilisent en moyenne 2,838 options par nœud visité, avec un maximum de 4, et présentent une RMSE de validation proche de 1,98--2,00. Ridge en utilise en moyenne 25,024, avec un maximum de 26, pour un résultat similaire. La majeure partie du dictionnaire dense semble donc inutile pour ce critère de validation.
+
+Dans Full, Elastic Net affiche la plus faible RMSE de validation du profil compromis et utilise en moyenne 5,240 options par nœud, avec un maximum de 7, y compris des digitales théoriques. Lasso est légèrement moins précis avec une moyenne de 3,119 et un maximum de 6. L'écart est trop faible pour justifier une préférence sans éléments sur la stabilité, la queue et l'implémentation. Le tableau soutient donc une liste restreinte plutôt qu'un vainqueur.
+
+Les profils $L^0$ sont beaucoup plus petits mais présentent une erreur de validation nettement supérieure. Ils sont utiles si le nombre de lignes est une contrainte dominante, mais leur estimation non convexe et la sensibilité de leur support exigent un audit renforcé. À l'autre extrême, Ridge décrit une référence dense orientée vers la précision.
+
+\reportfigure[0.97\linewidth]{\reportfigurefile{alpha_tail_frontier_calls_puts.pdf}}{Frontière de validation pour l'univers Calls + Puts. Chaque point est un candidat de régularisation évalué sur l'échantillon de validation indépendant ; les axes indiquent la RMSE résiduelle et l'ES$_{97.5}$, la taille des marqueurs reflète le nombre d'options actives et les étoiles identifient les profils précédemment retenus.}{fig:alpha-tail-frontier-cp}
+
+\reportfigure[0.97\linewidth]{\reportfigurefile{alpha_tail_frontier_full.pdf}}{Frontière de validation pour l'univers Full incluant les options digitales. Le graphique présente conjointement la RMSE résiduelle, l'ES$_{97.5}$ et la taille du portefeuille sur l'échantillon de validation indépendant ; les étoiles identifient les profils précédemment retenus.}{fig:alpha-tail-frontier-full}
+
+Les deux frontières montrent pourquoi l'optimum de RMSE de validation ne peut sélectionner à lui seul une politique sûre dans la queue. Des candidats d'erreur moyenne similaire peuvent présenter une Expected Shortfall et une taille de support sensiblement différentes. Ces figures sont des diagnostics de sélection, non des résultats du test final.
+
+\subsubsection*{Informations restant à ajouter au tableau des profils}
+
+La taille moyenne et le maximum par nœud ne révèlent ni le nombre total d'instruments distincts mobilisés par toute la politique, ni les quantités brutes, ni les positions longues et courtes qui se compensent, ni la concentration par maturité, ni la sensibilité aux faibles mouvements du spot. Le tableau doit être accompagné de cartes de chaleur maturité--strike et de statistiques d'exposition brute.
+
+\subsection{Risque résiduel hors échantillon}
+
+Sur 2 500 trajectoires d'évaluation indépendantes, la RMSE passe de 7,94 points pour le passif centré à environ 2,11 points pour les quatre profils compromis Lasso et Elastic Net, soit une baisse de 73,4 à 73,5\%. L'ES à 97,5\% passe de 4,49 à 7,96--8,18 points. Le tableau~\ref{tab:risk} donne les valeurs par profil et la Figure~\ref{fig:compromise-risk-comparison} montre la baisse de RMSE et la hausse d'ES sur le même échantillon.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llrrrr}
+\toprule
+Univers & Pénalisation & \shortstack[r]{RMSE\\résiduelle} & \shortstack[r]{Réduction\\RMSE} & \shortstack[r]{ES$_{97.5}$\\résiduelle} & \shortstack[r]{Perte\\maximale} \\
+\midrule
+Calls + Puts & Lasso & 2.112 & 73.4\% & 8.170 & 26.810 \\
+Calls + Puts & Elastic Net & 2.114 & 73.4\% & 8.175 & 26.441 \\
+Full & Lasso & 2.108 & 73.4\% & 8.036 & 26.246 \\
+Full & Elastic Net & 2.107 & 73.5\% & 7.958 & 26.744 \\
+\midrule
+Passif brut & --- & 7.940 & --- & 4.488 & --- \\
+\bottomrule
+\end{tabular}
+\caption{Risque résiduel des politiques compromis sur 2 500 trajectoires d'évaluation indépendantes, en points de nominal. La perte maximale est le plus grand résidu observé, non une borne dans la population.}
+\label{tab:risk}
+\end{table}
+
+Le tableau~\ref{tab:secondary-risk-metrics} complète les deux métriques principales.
+Il distingue le biais moyen, l'erreur typique et la fréquence des déficits.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llrrr}
+\toprule
+Univers & Pénalisation & Erreur moyenne & MAE & Sous-réplication \\
+\midrule
+Calls + Puts & Lasso & 0.064 & 0.506 & 25.3\% \\
+Calls + Puts & Elastic Net & 0.068 & 0.510 & 25.8\% \\
+Full & Lasso & 0.069 & 0.488 & 62.4\% \\
+Full & Elastic Net & 0.058 & 0.507 & 28.8\% \\
+\bottomrule
+\end{tabular}
+\caption{Diagnostics secondaires des politiques compromis sur le même échantillon indépendant, en points de nominal sauf pour le taux de sous-réplication.}
+\label{tab:secondary-risk-metrics}
+\end{table}
+
+\reportfigure{\reportfigurefile{report_compromise_comparison.pdf}}{RMSE résiduelle et ES$_{97.5}$ des profils compromis sur l'échantillon d'évaluation indépendant commun. Le panneau d'Expected Shortfall inclut le seuil décisionnel indicatif de 10\% du projet.}{fig:compromise-risk-comparison}
+
+\resultbox{Les politiques compromis expliquent l'essentiel de la variation ordinaire mais concentrent les erreurs dans un nombre réduit de scénarios défavorables. Cela est cohérent avec un objectif $L^2$ et des discontinuités de barrière : quelques erreurs sévères peuvent coexister avec une faible erreur quadratique moyenne.}
+
+Les erreurs moyennes restent inférieures à 0,07 point de nominal : aucune politique
+n'affiche donc un biais moyen important. Les MAE, comprises entre 0,49 et 0,51,
+sont proches malgré des fréquences de sous-réplication différentes. Full Lasso
+sous-réplique dans 62,4\% des trajectoires, contre environ 25--29\% pour les trois
+autres politiques. Il produit donc plus souvent un petit déficit, sans présenter
+pour autant l'ES la plus élevée. Les pertes maximales observées restent proches,
+entre 26,25 et 26,81 points ; elles constituent des diagnostics d'échantillon,
+tandis que l'ES reste la principale mesure de sévérité de queue.
+
+\subsubsection*{Interprétation de la réduction de RMSE}
+
+La valorisation moyenne de 100,538 points provient de l'échantillon de valorisation. Dans l'échantillon de risque, les flux avant couverture sont centrés sur leur propre moyenne, ce qui donne la RMSE de 7,94 points. Après couverture, la RMSE du résidu $H-G$ est proche de 2,11 points. Dans ce modèle, un petit nombre d'options peut donc reproduire une grande part des variations usuelles du passif simulé.
+
+Cette conclusion reste conditionnelle. Les trajectoires de risque partagent le modèle Black--Scholes utilisé pour la construction ; l'expérience mesure donc la généralisation au sein du modèle, non la robustesse à une mauvaise spécification.
+
+\subsubsection*{Dégradation du risque de queue}
+
+L'ES$_{97.5}$ brute vaut 4,49 sous la référence centrée, contre environ 7,96--8,18 pour les politiques parcimonieuses affichées. Ces portefeuilles créent donc des pertes plus importantes dans les pires états résiduels simulés, malgré la réduction de l'erreur quadratique moyenne. Une recommandation de couverture exigerait d'expliquer et de maîtriser cette détérioration.
+
+\subsubsection*{États à l'origine de la perte résiduelle de queue}
+
+La décomposition par régime localise plus précisément la perte. Pour la politique compromis Elastic Net Calls + Puts, les trajectoires arrivant à maturité sans franchissement préalable de la barrière de protection représentent 84,1\% de l'ES$_{97.5}$ et les trajectoires à maturité ayant franchi cette barrière 15,9\% ; aucune trajectoire rappelée ne contribue à la queue dans cet échantillon. Pour Full Elastic Net, les parts correspondantes sont 87,8\% et 12,2\%. La queue résiduelle provient surtout des trajectoires qui atteignent la maturité.
+
+\reportfigure{\reportfigurefile{tail_risk_concentration.pdf}}{Concentration des pertes résiduelles de queue et nombre effectif de scénarios contributeurs.}{fig:tail-concentration}
+
+La Figure~\ref{fig:tail-concentration} complète cette décomposition en mesurant la concentration des contributions positives à l'ES. À 97,5\%, le nombre effectif de contributeurs est proche de 47 pour les deux profils Elastic Net en Monte Carlo standard. À 99\%, il se rapproche de 22 et les ES atteignent respectivement 12,65 points pour Calls + Puts et 12,32 pour Full.
+
+\subsubsection*{Comparaison descriptive avec les principales références}
+
+Le tableau~\ref{tab:unified-comparison} place les politiques retenues à côté des
+principales références avec les six métriques conservées. Les lignes delta utilisent
+un P\&L terminal autofinancé, tandis que les politiques d'options utilisent des
+déficits de flux actualisés. La comparaison est donc descriptive : les colonnes ont
+la même définition statistique, mais ne suffisent pas à aligner le capital initial,
+les instruments ni les coûts. Pour le passif centré, la fréquence $L>0$ désigne la
+part des flux supérieurs à leur moyenne, non un taux de sous-réplication.
+
+\begin{table}[htbp]
+\centering
+\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lrrrrrr}
+\toprule
+Méthode & Erreur moy. & MAE & RMSE & Fréq. $L>0$ & ES$_{97.5}$ & Perte max. \\
+\midrule
+Passif centré & 0.000 & 4.193 & 8.646 & 92.4\% & 4.833 & 4.833 \\
+Delta quotidien & 0.032 & 0.605 & 1.222 & 51.6\% & 3.976 & 21.682 \\
+Delta cinq jours & -0.023 & 1.103 & 2.175 & 49.2\% & 6.517 & 29.796 \\
+Calls + Puts conditionnel B Elastic Net & 0.109 & 0.591 & 2.475 & 27.0\% & 9.852 & 28.225 \\
+Calls + Puts conditionnel B $L^0$ & 0.134 & 0.706 & 2.672 & 68.1\% & 10.954 & 30.719 \\
+Calls + Puts conditionnel B Lasso & 0.112 & 0.591 & 2.484 & 26.7\% & 9.905 & 28.673 \\
+Calls + Puts conditionnel B Ridge & 0.077 & 0.679 & 2.558 & 49.3\% & 10.098 & 29.363 \\
+Calls + Puts conditionnel A OLS & -0.387 & 13.335 & 21.010 & 51.8\% & 47.824 & 64.279 \\
+Calls + Puts statique OLS & 0.223 & 40.210 & 48.596 & 48.6\% & 93.464 & 106.107 \\
+Full conditionnel B Elastic Net & 0.094 & 0.563 & 2.413 & 28.3\% & 9.344 & 26.818 \\
+Full conditionnel B $L^0$ & 0.113 & 0.989 & 3.417 & 65.8\% & 14.723 & 33.994 \\
+Full conditionnel B Lasso & 0.101 & 0.544 & 2.414 & 62.2\% & 9.471 & 26.926 \\
+Full conditionnel B Ridge & 0.076 & 0.727 & 2.553 & 55.5\% & 9.801 & 26.227 \\
+Full conditionnel A OLS & -0.037 & 0.084 & 1.035 & 23.8\% & 0.944 & 12.657 \\
+Full statique OLS & -0.381 & 44.425 & 53.092 & 47.5\% & 97.423 & 107.708 \\
+\bottomrule
+\end{tabular}}
+\caption{Comparaison descriptive des principales références. Les montants sont exprimés en points de nominal ; la fréquence $L>0$ est exprimée en pourcentage. A ajuste les flux par échéance et B leur total actualisé. Les 15 lignes sont évaluées sur les mêmes 1 250 trajectoires indépendantes.}
+\label{tab:unified-comparison}
+\end{table}
+
+Les politiques conditionnelles B Lasso et Elastic Net ont une MAE comprise entre
+0,54 et 0,59, proche de celle du delta quotidien (0,61). Leur RMSE reste toutefois
+environ deux fois plus élevée et leur ES dépasse 9 points, contre 3,98 pour le
+delta quotidien et 6,52 pour le delta cinq jours. Les politiques B sous $L^0$
+présentent ici des erreurs et des pertes de queue plus élevées que Lasso et Elastic Net.
+
+Les références non pénalisées distinguent aussi les deux dictionnaires : la
+politique conditionnelle A Full atteint une RMSE de 1,03 et une ES de 0,94,
+contre 21,01 et 47,82 pour Calls + Puts. Les paniers statiques non pénalisés
+restent nettement moins précis. Ce résultat concerne ces références et ces
+objectifs précis, pas un classement général des pénalisations.
+
+\subsection{Estimation du risque de queue à positions fixées}
+
+Pour la politique compromis Elastic Net Calls + Puts, le Monte Carlo standard estime l'ES$_{97.5}$ à 8,175, contre 9,927 par importance sampling. Pour Full Elastic Net, les estimations correspondantes sont 7,958 et 9,046. Les intervalles de confiance bootstrap se chevauchent dans les deux cas ; les écarts ne révèlent donc pas de conflit statistiquement détectable entre les estimateurs.
+
+Les poids de la proposition restent utilisables : le ratio ESS global vaut environ 71,5\% pour Calls + Puts et 77,2\% pour Full, soit des tailles d'échantillon effectives d'environ 1 788 et 1 931 sur 2 500. Les poids normalisés maximaux restent inférieurs à 0,08\%. La masse de queue du Monte Carlo standard correspond à 62,5 équivalents-trajectoires à 97,5\% et à 25 à 99\%.
+
+\reportfigure{\reportfigurefile{importance_sampling_es.pdf}}{Estimations de l'Expected Shortfall et intervalles d'incertitude sous Monte Carlo standard et importance sampling pour les politiques figées.}{fig:is-es-comparison}
+
+Dans la Figure~\ref{fig:is-es-comparison}, les intervalles bootstrap se chevauchent pour les deux portefeuilles. Leur largeur passe de 3,58 à 2,81 points pour Calls + Puts et de 2,65 à 2,17 pour Full. Dans cette comparaison à positions fixées, les intervalles sont plus étroits avec le mélange et les estimations ponctuelles sont plus élevées.
+
+Les ratios ESS indiquent que les poids de vraisemblance ne sont pas globalement dominés par une poignée de trajectoires. Toutefois, une ESS globale élevée ne garantit pas une ESS de queue élevée. Les pertes résiduelles les plus sévères peuvent encore se concentrer dans un petit sous-ensemble. C'est pourquoi la concentration de queue et les diagnostics par composante complètent l'ESS agrégée.
+
+\subsection{Calibration avec contrainte d'ES}
+
+L'expérience 2$\times$2 croise le mode de simulation, standard ou importance sampling, avec la présence ou l'absence d'une contrainte d'ES. Les quatre cas utilisent une RMSE pénalisée par Elastic Net et sont recalibrés sur 375 trajectoires par plan de simulation. Seules les trajectoires d'importance sampling sont pondérées. On compare les portefeuilles obtenus sur 1 250 trajectoires d'évaluation communes à cette expérience.
+
+Avec une calibration standard, la contrainte d'ES ramène l'ES$_{97.5}$ de 20,71 à 8,29 pour Calls + Puts et de 8,33 à 6,97 pour Full. Sous calibration par importance sampling, les valeurs correspondantes sont 8,73 contre 8,60 pour Calls + Puts et 8,31 contre 8,52 pour Full.
+
+Ces résultats montrent un effet marqué de la contrainte d'ES sous calibration standard, surtout pour Calls + Puts, mais peu d'effet sous calibration par importance sampling. La comparaison reste exploratoire, car elle appartient à un exercice de calibration séparé et n'a pas été promue dans les politiques parcimonieuses retenues.
+
+Sans contrainte d'ES, le passage du Monte Carlo standard à l'importance sampling fait passer l'ES de 20,71 à 8,73 points pour Calls + Puts, avec une RMSE qui passe de 5,27 à 2,48. Dans Full, la même comparaison donne 8,33 à 8,31 points d'ES et 2,64 à 2,48 points de RMSE. Lorsqu'on impose la contrainte, l'ES passe de 8,29 à 8,60 pour Calls + Puts et de 6,97 à 8,52 pour Full. Les effets de l'échantillonnage et de la contrainte dépendent donc du dictionnaire et de la combinaison considérée. La Figure~\ref{fig:tail-four} montre les quatre cas pour chaque univers.
+
+\reportfigure{\reportfigurefile{tail_risk_four_experiments.pdf}}{Comparaison exploratoire du schéma d'échantillonnage et de la contrainte de risque de queue.}{fig:tail-four}
+
+\subsubsection*{Portée exploratoire de l'expérience}
+
+Une contrainte d'ES transforme un problème de pure approximation en problème de budget de risque. Elle ne peut améliorer la queue que si l'échantillon de calibration contient assez de scénarios défavorables informatifs et si le dictionnaire peut les représenter. La faisabilité en calibration ne garantit pas le respect de la contrainte en validation ou en test.
+
+L'expérience est utile car elle montre que la détérioration de la queue n'est pas mécaniquement imposée par le dictionnaire d'instruments. Elle ne constitue pas encore une politique retenue, et la réponse contrastée à la contrainte empêche de choisir la ligne la plus favorable comme solution générale. Une politique promue devrait passer les mêmes contrôles de stabilité, de parcimonie et d'évaluation indépendante que l'étude principale d'hyperparamètres.
+
+\subsection{Enseignements de l'étude de cas}
+
+Ensemble, les expériences soutiennent cinq conclusions :
+
+\begin{enumerate}
+\item Un processus de valorisation fondé sur une définition précise du payoff peut produire des cibles d'approximation reproductibles.
+\item Dans le cas de l'autocall, le conditionnement sur l'état observable accroît sensiblement la capacité d'approximation.
+\item Des fonctions de base alignées sur les discontinuités améliorent la représentation mais peuvent soulever des questions d'implémentation.
+\item Une régularisation parcimonieuse peut préserver la RMSE de validation avec beaucoup moins de positions qu'une référence dense.
+\item Un portefeuille sélectionné pour l'approximation moyenne n'est pas automatiquement une couverture de queue. L'ES doit être contrôlée et estimée par des méthodes dédiées.
+\end{enumerate}
+
+Ces constats montrent le comportement du cadre sur une créance exigeante. Ils n'établissent ni la réplication exacte de payoffs arbitraires, ni une meilleure stratégie exécutable, ni un prix de marché, ni une robustesse hors de Black--Scholes.
+
+% Inserer cette annexe avant la section sur les details de l importance sampling.
+
+\section{Ajustements pénalisés des flux et essais complémentaires}\label{app:capacity-supplement}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{llrr}
+\toprule
+Méthode & Univers / pénalisation & RMSE de test & Options actives \\
+\midrule
+Flux statiques & Calls + Puts, $L^0$ & 30.541 & 2 \\
+Flux statiques & Calls + Puts, Lasso & 26.314 & 103 \\
+Flux statiques & Full, Ridge & 24.616 & 206 \\
+Flux conditionnels & Calls + Puts, Elastic Net & 10.843 & --- \\
+Flux conditionnels & Full, Ridge & $<0.001$ & --- \\
+Flux conditionnels & Full, $L^0$ & 0.007 & --- \\
+\bottomrule
+\end{tabular}
+\caption{Ajustements pénalisés des flux par échéance, avec les hyperparamètres sélectionnés pour chaque benchmark. La RMSE est mesurée sur les trajectoires de test. Le nombre d'options actives est renseigné pour les paniers statiques.}
+\label{tab:capacity}
+\end{table}
+
+La RMSE statique Calls~+~Puts reste supérieure à 26 même avec plus de cent options actives : un panier non conditionnel unique peine à reproduire un passif dont la date de paiement et l'état de survie varient selon la trajectoire. La solution $L^0$ à deux positions est plus simple mais encore moins précise, ce qui illustre le coût d'une parcimonie extrême.
+
+L'ajout de digitales n'améliore que modérément la référence statique, car les discontinuités ne sont pas la seule difficulté : l'état de la trajectoire et la maturité aléatoire subsistent. À l'inverse, la référence Full conditionnelle peut presque interpoler les flux datés. L'association du conditionnement sur l'état et des fonctions digitales traite à la fois l'information manquante et les sauts du payoff.
+
+L'erreur presque nulle, obtenue avec un vaste dictionnaire théorique et potentiellement sensible à la grille simulée, constitue un diagnostic de capacité. Le problème restant consiste à obtenir une approximation parcimonieuse, stable et maîtrisée dans la queue.
+
+Le notebook exploratoire étudie aussi l'ajustement de la surface de prix date--spot, du payoff moyen et un contrôle du total actualisé par trajectoire avec un seul panier. Ces exercices utilisent d'autres cibles ou d'autres formulations que celles du corps du rapport. Les scénarios OTC pour les digitales et l'examen des coûts de marché sont exploratoires. Les résultats numériques correspondants seront rapprochés de leur propre protocole et de leurs exports avant d'être cités.

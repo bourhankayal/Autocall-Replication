@@ -11,6 +11,42 @@ from autocall_replication.replication.static_cashflows import run_naive_benchmar
 
 
 class FistaPipelineTests(unittest.TestCase):
+    def test_conditional_elastic_net_reuses_paths_for_ratio_search(self):
+        common = dict(
+            product=AutocallProduct(coupon_rate=0.02, down_barrier=0.70),
+            spot0=100.0, valuation_date="2026-06-20",
+            maturity_date="2027-06-22", rate=0.03,
+            dividend_yield=0.01, vol=0.20, family="calls",
+            penalty="elastic_net", solver="legacy", alpha=0.1,
+            n_paths=30, seed=421, min_state_paths=100,
+        )
+        first = run_conditional_benchmark_curve(**common, l1_ratio=0.2)
+        second = run_conditional_benchmark_curve(
+            **common, l1_ratio=0.8, precomputed_dataset=first["dataset"],
+        )
+        self.assertIs(second["dataset"], first["dataset"])
+        self.assertEqual(len(first["dataset"]), 30)
+        self.assertEqual(set(first["optimization"]["l1_ratio"]), {0.2})
+        self.assertEqual(set(second["optimization"]["l1_ratio"]), {0.8})
+
+    def test_l0_multistart_runs_through_both_temporal_benchmarks(self):
+        common = dict(
+            product=AutocallProduct(coupon_rate=0.02, down_barrier=0.70),
+            spot0=100.0, valuation_date="2026-06-20",
+            maturity_date="2027-06-22", rate=0.03,
+            dividend_yield=0.01, vol=0.20, family="calls",
+            penalty="l0", solver="proximal", alpha=0.02,
+            n_paths=20, seed=421,
+        )
+        static = run_naive_benchmark_curve(**common)
+        conditional = run_conditional_benchmark_curve(
+            **common, min_state_paths=100,
+        )
+        self.assertGreaterEqual(len(static["l0_initialization_audit"]), 2)
+        self.assertEqual(set(static["l0_initialization_audit"]["selected"]), {False, True})
+        self.assertGreaterEqual(len(conditional["l0_initialization_audit"]), 2)
+        self.assertEqual(set(conditional["optimization"]["solver"]), {"proximal"})
+
     def test_fista_runs_through_all_five_replication_pipelines(self):
         product = AutocallProduct(coupon_rate=0.02, down_barrier=0.70)
         common = dict(

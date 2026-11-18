@@ -1,0 +1,9 @@
+﻿family,penalty,selected_optimisation_budget_pct_notional,selected_validation_rmse_pct_notional,selected_validation_es_pct_notional,selected_n_options_active,status
+calls_puts,l0,10.0,2.4138160840545626,7.210675444160446,9.0,retenu
+calls_puts,l1,10.0,2.309748624837734,6.7245854183712455,158.0,retenu
+calls_puts,l2,10.0,2.3048236898779755,6.6405700016933835,132.0,retenu
+calls_puts,elastic_net,15.0,2.309409918567672,6.728764414426203,125.0,retenu
+full,l0,5.0,3.2829942578217928,6.231183526010733,5.0,retenu
+full,l1,10.0,2.257394156313392,5.8305378021397924,305.0,retenu
+full,l2,10.0,2.2733314253457277,6.1307578664759275,264.0,retenu
+full,elastic_net,10.0,2.2578942656911942,5.955376185837514,206.0,retenu

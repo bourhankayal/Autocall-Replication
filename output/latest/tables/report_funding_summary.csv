@@ -1,0 +1,13 @@
+﻿Famille,Pénalité,Profil,Implémentation,Coût initial (% nominal),P&L moyen (% nominal),Capital P95 (% nominal),"ES perte 97,5 % (% nominal)"
+calls_puts,l0,compromise,Calls + Puts calibré,101.215,0.2463,4.2521,10.4383
+calls_puts,l1,compromise,Calls + Puts calibré,101.2162,0.3048,4.2811,7.3551
+calls_puts,l2,compromise,Calls + Puts calibré,101.2255,0.5332,4.4366,4.6767
+calls_puts,elastic_net,compromise,Calls + Puts calibré,101.2851,0.287,4.0791,8.302
+full,l0,compromise,Full — binaires théoriques,101.215,0.2307,4.0908,8.7077
+full,l0,compromise,Full — binaires remplacées par spreads,101.215,0.3139,4.0166,6.8008
+full,l1,compromise,Full — binaires théoriques,102.4235,-0.1024,4.6551,13.6812
+full,l1,compromise,Full — binaires remplacées par spreads,102.4747,0.2215,4.4183,7.0739
+full,l2,compromise,Full — binaires théoriques,101.521,0.2981,3.8163,6.0992
+full,l2,compromise,Full — binaires remplacées par spreads,101.5253,0.3458,3.7648,6.0173
+full,elastic_net,compromise,Full — binaires théoriques,101.3128,0.2495,4.031,6.5949
+full,elastic_net,compromise,Full — binaires remplacées par spreads,101.3163,0.3039,4.0668,6.1816

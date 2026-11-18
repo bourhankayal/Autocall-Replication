@@ -1,0 +1,7 @@
+﻿family,profile,searched_l1_ratio,alpha_relative
+calls_puts,performance,0.05,0.02371373705661655
+calls_puts,compromise,0.25,0.056234132519034905
+calls_puts,parsimony,0.9,0.4216965034285822
+full,performance,0.05,0.03162277660168379
+full,compromise,0.25,0.07498942093324558
+full,parsimony,0.9,0.7498942093324559

@@ -1,0 +1,25 @@
+﻿Famille,Pénalité,Profil,Événements,Cash minimum
+calls_puts,elastic_net,compromise,1250,-17.7186
+calls_puts,elastic_net,parsimony,1250,-8.958
+calls_puts,elastic_net,performance,1250,-10.6129
+calls_puts,l0,compromise,1250,-18.3456
+calls_puts,l0,parsimony,1250,-18.3456
+calls_puts,l0,performance,1250,-18.3456
+calls_puts,l1,compromise,1250,-13.7658
+calls_puts,l1,parsimony,1250,-13.7658
+calls_puts,l1,performance,1250,-13.7658
+calls_puts,l2,compromise,1250,-4.8487
+calls_puts,l2,parsimony,1250,-4.4818
+calls_puts,l2,performance,1250,-7.8183
+full,elastic_net,compromise,2500,-11.9679
+full,elastic_net,parsimony,2500,-6.9226
+full,elastic_net,performance,2500,-10.1999
+full,l0,compromise,2500,-18.0677
+full,l0,parsimony,2500,-18.0677
+full,l0,performance,2500,-18.0677
+full,l1,compromise,2500,-34.1644
+full,l1,parsimony,2500,-35.0276
+full,l1,performance,2500,-34.1644
+full,l2,compromise,2500,-10.8651
+full,l2,parsimony,2500,-4.4797
+full,l2,performance,2500,-9.3072

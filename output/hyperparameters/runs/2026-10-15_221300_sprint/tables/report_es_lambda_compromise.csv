@@ -1,0 +1,9 @@
+﻿family,penalty,lambda_es,validation_rmse_pct_notional,validation_es_pct_notional,n_options_active,status
+calls_puts,l0,0.0,5.025275593339779,14.167433397550738,15.0,retenu
+calls_puts,l1,0.25,6.563929628567973,24.84464054823442,126.0,retenu
+calls_puts,l2,0.25,5.441145269196011,15.464616852433275,109.0,retenu
+calls_puts,elastic_net,0.0,4.966087239983102,16.5786861836078,127.0,retenu
+full,l0,0.0,6.110657439353628,23.087187953909666,14.0,retenu
+full,l1,,,,,aucun profil admissible
+full,l2,0.25,5.482099063663403,18.448860899381536,218.0,retenu
+full,elastic_net,0.0,7.1076514511781985,13.241056560161649,174.0,retenu

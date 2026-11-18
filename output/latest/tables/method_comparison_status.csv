@@ -1,0 +1,9 @@
+﻿family,penalty,status
+calls_puts,l0,comparé
+calls_puts,l2,comparé
+calls_puts,l1,comparé
+calls_puts,elastic_net,comparé
+full,l0,comparé
+full,l2,comparé
+full,l1,comparé
+full,elastic_net,comparé
